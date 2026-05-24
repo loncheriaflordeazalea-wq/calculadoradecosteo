@@ -1,1 +1,1081 @@
-a
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flor de Azalea · Panel Admin</title>
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Google Fonts: Playfair Display + DM Sans -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['Playfair Display', 'serif'],
+          body: ['DM Sans', 'sans-serif'],
+          mono: ['DM Mono', 'monospace'],
+        },
+        colors: {
+          ink:     { DEFAULT: '#0F0E0C', 50: '#FAF9F7', 100: '#F2F0EB', 200: '#E0DDD5', 300: '#C4BFB4', 400: '#9A9288', 500: '#716A60', 600: '#504A42', 700: '#363028', 800: '#211D18', 900: '#0F0E0C' },
+          leaf:    { DEFAULT: '#2D6A4F', 50: '#EDF7F2', 100: '#C8E8D9', 200: '#94D1B5', 300: '#52B388', 400: '#2D9D68', 500: '#2D6A4F', 600: '#22523C', 700: '#183B2B', 800: '#0F251A', 900: '#071209' },
+          amber:   { DEFAULT: '#C9882A', 50: '#FEF6E9', 100: '#FDEAC8', 200: '#F9D08A', 300: '#F4B44A', 400: '#E9982E', 500: '#C9882A', 600: '#9E6A1D', 700: '#744E12', 800: '#4A310A', 900: '#211604' },
+          cream:   '#FAF8F4',
+          surface: '#F4F1EB',
+        },
+        boxShadow: {
+          'card':  '0 1px 3px rgba(15,14,12,0.08), 0 8px 24px rgba(15,14,12,0.06)',
+          'modal': '0 4px 6px rgba(15,14,12,0.05), 0 20px 60px rgba(15,14,12,0.20)',
+          'glow':  '0 0 0 3px rgba(45,106,79,0.25)',
+        },
+      }
+    }
+  }
+</script>
+
+<style>
+  * { font-family: 'DM Sans', sans-serif; }
+  
+  body {
+    background: #FAF8F4;
+    color: #0F0E0C;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px; border-radius: 10px;
+    color: #504A42; font-weight: 500; font-size: 14px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .sidebar-item:hover  { background: #E0DDD5; color: #0F0E0C; }
+  .sidebar-item.active { background: #2D6A4F; color: #fff; }
+  .sidebar-item.active svg { color: #fff; }
+
+  /* ── Wizard de 3 pasos ── */
+  .step-indicator {
+    display: flex; align-items: center; gap: 0;
+  }
+  .step-dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600;
+    border: 2px solid #C4BFB4; color: #9A9288;
+    background: white; transition: all 0.3s;
+    position: relative; z-index: 1;
+  }
+  .step-dot.active  { border-color: #2D6A4F; background: #2D6A4F; color: white; }
+  .step-dot.done    { border-color: #2D6A4F; background: #EDF7F2; color: #2D6A4F; }
+  .step-line {
+    flex: 1; height: 2px; background: #C4BFB4; margin: 0 -1px;
+  }
+  .step-line.done { background: #2D6A4F; }
+
+  /* ── Inputs custom ── */
+  .field-group { display: flex; flex-direction: column; gap: 6px; }
+  .field-label { font-size: 12px; font-weight: 600; color: #504A42; text-transform: uppercase; letter-spacing: 0.06em; }
+  .field-input {
+    padding: 10px 14px; border-radius: 10px;
+    border: 1.5px solid #E0DDD5; background: white;
+    font-size: 14px; color: #0F0E0C; outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .field-input:focus { border-color: #2D6A4F; box-shadow: 0 0 0 3px rgba(45,106,79,0.12); }
+  .field-input::placeholder { color: #C4BFB4; }
+
+  select.field-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239A9288' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 38px; }
+
+  /* ── Cards ── */
+  .card { background: white; border-radius: 16px; box-shadow: 0 1px 3px rgba(15,14,12,0.08), 0 8px 24px rgba(15,14,12,0.06); }
+
+  /* ── Botones ── */
+  .btn-primary {
+    background: #2D6A4F; color: white; border-radius: 10px;
+    padding: 11px 24px; font-weight: 600; font-size: 14px;
+    cursor: pointer; transition: all 0.15s; border: none;
+  }
+  .btn-primary:hover { background: #22523C; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  .btn-secondary {
+    background: white; color: #504A42; border-radius: 10px;
+    padding: 11px 24px; font-weight: 500; font-size: 14px;
+    cursor: pointer; transition: all 0.15s;
+    border: 1.5px solid #E0DDD5;
+  }
+  .btn-secondary:hover { border-color: #C4BFB4; background: #FAF9F7; }
+
+  .btn-amber {
+    background: #C9882A; color: white; border-radius: 10px;
+    padding: 11px 24px; font-weight: 600; font-size: 14px;
+    cursor: pointer; transition: all 0.15s; border: none;
+  }
+  .btn-amber:hover { background: #9E6A1D; }
+
+  /* ── Tabla ── */
+  .data-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  .data-table th { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #9A9288; padding: 10px 16px; border-bottom: 1.5px solid #E0DDD5; text-align: left; }
+  .data-table td { padding: 12px 16px; border-bottom: 1px solid #F4F1EB; font-size: 14px; vertical-align: middle; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: #FAF9F7; }
+
+  /* ── Tags ── */
+  .tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .tag-green  { background: #C8E8D9; color: #183B2B; }
+  .tag-amber  { background: #FDEAC8; color: #4A310A; }
+  .tag-gray   { background: #F2F0EB; color: #504A42; }
+
+  /* ── Margen badge ── */
+  .margin-bar { height: 4px; border-radius: 2px; background: #E0DDD5; overflow: hidden; }
+  .margin-fill { height: 100%; border-radius: 2px; background: #2D6A4F; transition: width 0.5s; }
+
+  /* ── Toast notifications ── */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 500;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 20px 40px rgba(0,0,0,0.12);
+    transform: translateY(80px); opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { background: #2D6A4F; color: white; }
+  .toast.error   { background: #DC2626; color: white; }
+
+  /* ── Tabs ── */
+  .tab-btn { padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; color: #9A9288; transition: all 0.15s; background: none; border: none; }
+  .tab-btn.active { background: #2D6A4F; color: white; }
+  .tab-btn:hover:not(.active) { background: #F2F0EB; color: #504A42; }
+
+  /* ── Merma slider ── */
+  input[type="range"] { accent-color: #2D6A4F; cursor: pointer; }
+
+  /* ── Animaciones ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .anim-in { animation: fadeUp 0.3s ease forwards; }
+
+  /* ── Overlay modal ── */
+  .modal-overlay { background: rgba(15,14,12,0.5); backdrop-filter: blur(4px); }
+
+  /* ── Número con unidad ── */
+  .input-with-unit { position: relative; }
+  .input-with-unit .unit-badge { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 11px; font-weight: 600; color: #9A9288; background: #F4F1EB; padding: 2px 8px; border-radius: 6px; pointer-events: none; }
+</style>
+</head>
+
+<body>
+
+<!-- ════════════════════════════════════════════════════════
+     LAYOUT PRINCIPAL
+════════════════════════════════════════════════════════ -->
+<div class="flex h-screen overflow-hidden">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="w-60 flex-shrink-0 flex flex-col bg-white border-r border-ink-100" style="border-right:1.5px solid #E0DDD5">
+    <!-- Logo -->
+    <div class="p-6 pb-4 border-b border-ink-100">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-leaf flex items-center justify-center">
+          <span class="text-white text-lg">🌺</span>
+        </div>
+        <div>
+          <div class="font-display text-sm font-bold text-ink-900 leading-tight">Flor de Azalea</div>
+          <div class="text-xs text-ink-400 font-mono">Panel Admin</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 p-3 space-y-1">
+      <div onclick="showSection('dashboard')" class="sidebar-item active" id="nav-dashboard">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </div>
+      <div onclick="showSection('insumos')" class="sidebar-item" id="nav-insumos">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Insumos
+      </div>
+      <div onclick="showSection('proveedores')" class="sidebar-item" id="nav-proveedores">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Proveedores
+      </div>
+      <div onclick="showSection('recetas')" class="sidebar-item" id="nav-recetas">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Recetas
+      </div>
+      <div onclick="showSection('menus')" class="sidebar-item" id="nav-menus">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h18v4H3zM3 10h18v4H3zM3 17h18v4H3z"/></svg>
+        Menús & Precios
+      </div>
+    </nav>
+
+    <!-- Config -->
+    <div class="p-3 border-t border-ink-100">
+      <div onclick="openTokenModal()" class="sidebar-item text-ink-400">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Configurar Token
+      </div>
+      <div class="mt-2 px-4 py-2">
+        <div class="text-xs font-mono text-ink-300 truncate" id="api-url-preview">Sin URL de API</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── CONTENIDO PRINCIPAL ── -->
+  <main class="flex-1 overflow-y-auto">
+
+    <!-- ══════════════════════════════════════════════
+         DASHBOARD
+    ══════════════════════════════════════════════ -->
+    <section id="section-dashboard" class="p-8 anim-in">
+      <div class="mb-8">
+        <h1 class="font-display text-3xl text-ink-900 mb-1">Buenos días 👋</h1>
+        <p class="text-ink-400 text-sm">Sistema de costeo gastronómico · Lonchería Flor de Azalea</p>
+      </div>
+
+      <!-- KPIs -->
+      <div class="grid grid-cols-4 gap-5 mb-8">
+        <div class="card p-5">
+          <div class="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-3">Insumos activos</div>
+          <div class="font-display text-3xl text-ink-900" id="kpi-insumos">—</div>
+          <div class="text-xs text-ink-300 mt-1">en catálogo</div>
+        </div>
+        <div class="card p-5">
+          <div class="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-3">Recetas</div>
+          <div class="font-display text-3xl text-ink-900" id="kpi-recetas">—</div>
+          <div class="text-xs text-ink-300 mt-1">en el sistema</div>
+        </div>
+        <div class="card p-5">
+          <div class="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-3">Margen promedio</div>
+          <div class="font-display text-3xl text-leaf" id="kpi-margen">—</div>
+          <div class="text-xs text-ink-300 mt-1">en menú activo</div>
+        </div>
+        <div class="card p-5">
+          <div class="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-3">Platillo + caro</div>
+          <div class="font-display text-3xl text-amber" id="kpi-caro">—</div>
+          <div class="text-xs text-ink-300 mt-1">costo/porción</div>
+        </div>
+      </div>
+
+      <!-- Quick access -->
+      <div class="card p-6">
+        <h2 class="font-semibold text-ink-800 mb-4 text-sm uppercase tracking-wider">Acceso rápido</h2>
+        <div class="grid grid-cols-3 gap-4">
+          <button onclick="showSection('insumos'); setTimeout(() => openWizard(), 200)" class="flex items-center gap-3 p-4 rounded-12 border-1.5 border-ink-100 hover:border-leaf hover:bg-leaf-50 transition-all text-left group" style="border:1.5px solid #E0DDD5; border-radius:12px;">
+            <div class="w-10 h-10 rounded-10 bg-leaf-50 flex items-center justify-center text-xl flex-shrink-0" style="border-radius:10px">📦</div>
+            <div>
+              <div class="font-semibold text-sm text-ink-800 group-hover:text-leaf">Nuevo insumo</div>
+              <div class="text-xs text-ink-400">Alta con código de barras</div>
+            </div>
+          </button>
+          <button onclick="showSection('recetas')" class="flex items-center gap-3 p-4 rounded-12 border-1.5 border-ink-100 hover:border-amber hover:bg-amber-50 transition-all text-left group" style="border:1.5px solid #E0DDD5; border-radius:12px;">
+            <div class="w-10 h-10 rounded-10 bg-amber-50 flex items-center justify-center text-xl flex-shrink-0" style="border-radius:10px">📋</div>
+            <div>
+              <div class="font-semibold text-sm text-ink-800 group-hover:text-amber">Nueva receta</div>
+              <div class="text-xs text-ink-400">Con costos y mermas</div>
+            </div>
+          </button>
+          <button onclick="showSection('menus')" class="flex items-center gap-3 p-4 rounded-12 border-1.5 border-ink-100 hover:border-ink-300 hover:bg-ink-50 transition-all text-left group" style="border:1.5px solid #E0DDD5; border-radius:12px;">
+            <div class="w-10 h-10 rounded-10 bg-ink-100 flex items-center justify-center text-xl flex-shrink-0" style="border-radius:10px">💰</div>
+            <div>
+              <div class="font-semibold text-sm text-ink-800">Ver márgenes</div>
+              <div class="text-xs text-ink-400">Menú activo</div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         INSUMOS — con Wizard de 3 pasos
+    ══════════════════════════════════════════════ -->
+    <section id="section-insumos" class="p-8 hidden anim-in">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="font-display text-3xl text-ink-900">Insumos</h1>
+          <p class="text-ink-400 text-sm mt-1">Catálogo de materias primas y materiales</p>
+        </div>
+        <button onclick="openWizard()" class="btn-primary flex items-center gap-2">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nuevo insumo
+        </button>
+      </div>
+
+      <!-- Tabla -->
+      <div class="card overflow-hidden">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Unidad</th>
+              <th>Precio compra</th>
+              <th>Costo/g</th>
+              <th>Proveedor</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tabla-insumos">
+            <tr><td colspan="7" class="text-center text-ink-400 py-12 text-sm">
+              <div class="flex flex-col items-center gap-3">
+                <div class="text-4xl opacity-30">📦</div>
+                <div>Conecta el API para ver insumos</div>
+              </div>
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         PROVEEDORES
+    ══════════════════════════════════════════════ -->
+    <section id="section-proveedores" class="p-8 hidden anim-in">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="font-display text-3xl text-ink-900">Proveedores</h1>
+          <p class="text-ink-400 text-sm mt-1">Directorio de abastecedores</p>
+        </div>
+        <button onclick="openModalProveedor()" class="btn-primary flex items-center gap-2">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nuevo proveedor
+        </button>
+      </div>
+      <div class="card overflow-hidden">
+        <table class="data-table">
+          <thead><tr><th>Nombre</th><th>Contacto</th><th>Teléfono</th><th>Días entrega</th></tr></thead>
+          <tbody id="tabla-proveedores">
+            <tr><td colspan="4" class="text-center text-ink-400 py-12 text-sm">Sin datos</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         RECETAS
+    ══════════════════════════════════════════════ -->
+    <section id="section-recetas" class="p-8 hidden anim-in">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="font-display text-3xl text-ink-900">Recetas</h1>
+          <p class="text-ink-400 text-sm mt-1">Con costos, mermas y tiempos de proceso</p>
+        </div>
+        <button class="btn-primary flex items-center gap-2">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nueva receta
+        </button>
+      </div>
+      <div class="card p-12 text-center">
+        <div class="text-5xl opacity-20 mb-4">📋</div>
+        <div class="text-ink-400 text-sm">Módulo de recetas — próximamente en esta UI</div>
+        <div class="text-xs text-ink-300 mt-2">Las recetas se gestionan vía API directamente</div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         MENÚS
+    ══════════════════════════════════════════════ -->
+    <section id="section-menus" class="p-8 hidden anim-in">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="font-display text-3xl text-ink-900">Menús & Márgenes</h1>
+          <p class="text-ink-400 text-sm mt-1">Análisis de rentabilidad por platillo</p>
+        </div>
+      </div>
+      <div class="card overflow-hidden">
+        <table class="data-table">
+          <thead><tr>
+            <th>Platillo</th>
+            <th>Costo/porción</th>
+            <th>Precio venta</th>
+            <th>Margen real</th>
+            <th>vs objetivo</th>
+          </tr></thead>
+          <tbody id="tabla-menus">
+            <tr><td colspan="5" class="text-center text-ink-400 py-12 text-sm">Sin datos</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     WIZARD: ALTA DE INSUMO — 3 PASOS (ESTILO FILLET)
+════════════════════════════════════════════════════════ -->
+<div id="wizard-overlay" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
+  <div class="card w-full max-w-lg relative anim-in" style="box-shadow:0 4px 6px rgba(0,0,0,0.05),0 20px 60px rgba(0,0,0,0.20)">
+
+    <!-- Header del wizard -->
+    <div class="p-6 pb-4 border-b border-ink-100">
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <h2 class="font-display text-xl text-ink-900">Nuevo insumo</h2>
+          <p class="text-ink-400 text-sm mt-0.5" id="wizard-step-desc">Paso 1 de 3 · Identificación del producto</p>
+        </div>
+        <button onclick="closeWizard()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-ink-100 transition-colors">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Step indicators -->
+      <div class="step-indicator">
+        <div class="step-dot active" id="sdot-1">1</div>
+        <div class="step-line" id="sline-1"></div>
+        <div class="step-dot" id="sdot-2">2</div>
+        <div class="step-line" id="sline-2"></div>
+        <div class="step-dot" id="sdot-3">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PASO 1: Datos / Código ── -->
+    <div id="wizard-step-1" class="p-6 space-y-4">
+
+      <!-- Código de barras -->
+      <div class="field-group">
+        <label class="field-label">Código de barras / SKU</label>
+        <div class="relative">
+          <input type="text" id="f-codigo" class="field-input w-full pr-12" placeholder="7501234567890 o escanear...">
+          <button class="absolute right-3 top-1/2 -translate-y-1/2 text-ink-300 hover:text-leaf transition-colors" title="Simular escaneo" onclick="simularEscaneo()">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9V6a2 2 0 0 1 2-2h2M21 9V6a2 2 0 0 1-2-2h-2M3 15v3a2 2 0 0 0 2 2h2M21 15v3a2 2 0 0 0-2 2h-2M7 12h0M12 12h0M17 12h0"/></svg>
+          </button>
+        </div>
+        <div class="text-xs text-ink-300">Opcional · Se puede agregar después</div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="field-group col-span-2">
+          <label class="field-label">Nombre del insumo <span class="text-red-400">*</span></label>
+          <input type="text" id="f-nombre" class="field-input w-full" placeholder="Ej: Tasajo de res, Tortillas maíz...">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Unidad comercial</label>
+          <select id="f-unidad" class="field-input">
+            <option value="kg">kg (kilogramo)</option>
+            <option value="g">g (gramo)</option>
+            <option value="l">l (litro)</option>
+            <option value="ml">ml (mililitro)</option>
+            <option value="pza">pza (pieza)</option>
+            <option value="manojo">manojo</option>
+            <option value="oz">oz (onza)</option>
+            <option value="lb">lb (libra)</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Densidad (g/ml)</label>
+          <div class="input-with-unit">
+            <input type="number" id="f-densidad" class="field-input w-full" value="1" step="0.01" min="0.1">
+            <span class="unit-badge">g/ml</span>
+          </div>
+          <div class="text-xs text-ink-300">1 para sólidos · 0.789 alcohol · 1.03 leche</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Notas internas</label>
+        <input type="text" id="f-nota" class="field-input w-full" placeholder="Observaciones, temporada, sustituto...">
+      </div>
+    </div>
+
+    <!-- ── PASO 2: Proveedor / Precio ── -->
+    <div id="wizard-step-2" class="p-6 space-y-4 hidden">
+
+      <div class="field-group">
+        <label class="field-label">Proveedor</label>
+        <select id="f-proveedor" class="field-input">
+          <option value="">— Sin proveedor asignado —</option>
+        </select>
+        <button onclick="openModalProveedor()" class="text-xs text-leaf font-semibold mt-1 hover:underline text-left">+ Agregar nuevo proveedor</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="field-group">
+          <label class="field-label">Precio de compra <span class="text-red-400">*</span></label>
+          <div class="input-with-unit">
+            <input type="number" id="f-precio" class="field-input w-full" placeholder="0.00" step="0.01" min="0">
+            <span class="unit-badge">MXN</span>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Cantidad en presentación <span class="text-red-400">*</span></label>
+          <div class="input-with-unit">
+            <input type="number" id="f-cantidad" class="field-input w-full" placeholder="1000" step="1" min="0.01">
+            <span class="unit-badge" id="f-cantidad-unit">g</span>
+          </div>
+          <div class="text-xs text-ink-300">En unidad base (g, ml, pza)</div>
+        </div>
+      </div>
+
+      <!-- Preview calculado -->
+      <div class="bg-leaf-50 rounded-12 p-4" style="border-radius:12px; border:1px solid #C8E8D9">
+        <div class="text-xs font-semibold text-leaf-600 uppercase tracking-wider mb-2" style="color:#183B2B">💡 Costo calculado</div>
+        <div class="flex justify-between items-baseline">
+          <span class="text-sm text-leaf-700" style="color:#22523C">Costo por gramo / ml / pza:</span>
+          <span class="font-mono font-semibold text-leaf text-lg" id="costo-preview">$—</span>
+        </div>
+        <div class="flex justify-between items-baseline mt-1">
+          <span class="text-sm text-leaf-700" style="color:#22523C">Costo por 100g / 100ml:</span>
+          <span class="font-mono font-semibold text-leaf" id="costo-100g-preview">$—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PASO 3: Tiempos / Mermas (confirmación) ── -->
+    <div id="wizard-step-3" class="p-6 space-y-4 hidden">
+
+      <div class="field-group">
+        <label class="field-label">% Merma típica del insumo</label>
+        <div class="flex items-center gap-3">
+          <input type="range" id="f-merma" min="0" max="60" value="0" step="1" class="flex-1" oninput="updateMermaDisplay(this.value)">
+          <span class="font-mono font-semibold text-amber w-12 text-right" id="merma-display">0%</span>
+        </div>
+        <div class="text-xs text-ink-300">Ejemplo: tasajo 20-30%, verduras 15%, carne limpia 10%</div>
+      </div>
+
+      <!-- Resumen final -->
+      <div class="bg-ink-50 rounded-12 p-4 space-y-2" style="border-radius:12px">
+        <div class="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-3">Resumen del insumo</div>
+        <div class="flex justify-between text-sm"><span class="text-ink-500">Nombre</span><span class="font-medium text-ink-800" id="sum-nombre">—</span></div>
+        <div class="flex justify-between text-sm"><span class="text-ink-500">Unidad</span><span class="font-medium text-ink-800" id="sum-unidad">—</span></div>
+        <div class="flex justify-between text-sm"><span class="text-ink-500">Precio</span><span class="font-medium text-ink-800" id="sum-precio">—</span></div>
+        <div class="flex justify-between text-sm"><span class="text-ink-500">Costo base</span><span class="font-semibold text-leaf" id="sum-costo">—</span></div>
+        <div class="flex justify-between text-sm"><span class="text-ink-500">Merma registrada</span><span class="font-medium text-amber" id="sum-merma">—</span></div>
+        <div class="flex justify-between text-sm pt-2 border-t border-ink-200"><span class="text-ink-500">Costo real (con merma)</span><span class="font-semibold text-amber" id="sum-costo-merma">—</span></div>
+      </div>
+    </div>
+
+    <!-- Footer con botones -->
+    <div class="px-6 pb-6 flex items-center justify-between">
+      <button id="btn-back" class="btn-secondary" onclick="wizardBack()" style="display:none">← Atrás</button>
+      <div id="btn-back-placeholder"></div>
+      <div class="flex items-center gap-3">
+        <button onclick="closeWizard()" class="btn-secondary">Cancelar</button>
+        <button id="btn-next" class="btn-primary" onclick="wizardNext()">Siguiente →</button>
+        <button id="btn-save" class="btn-amber hidden" onclick="guardarInsumo()">
+          <span id="btn-save-text">Guardar insumo</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     MODAL: NUEVO PROVEEDOR
+════════════════════════════════════════════════════════ -->
+<div id="modal-proveedor" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
+  <div class="card w-full max-w-md anim-in" style="box-shadow:0 4px 6px rgba(0,0,0,0.05),0 20px 60px rgba(0,0,0,0.20)">
+    <div class="p-6 border-b border-ink-100 flex justify-between items-center">
+      <h2 class="font-display text-xl text-ink-900">Nuevo proveedor</h2>
+      <button onclick="closeModalProveedor()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-ink-100">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="p-6 space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="field-group col-span-2"><label class="field-label">Nombre <span class="text-red-400">*</span></label><input type="text" id="prov-nombre" class="field-input w-full" placeholder="Nombre del proveedor"></div>
+        <div class="field-group"><label class="field-label">Contacto</label><input type="text" id="prov-contacto" class="field-input w-full" placeholder="Nombre del vendedor"></div>
+        <div class="field-group"><label class="field-label">Teléfono</label><input type="tel" id="prov-tel" class="field-input w-full" placeholder="951 000 0000"></div>
+        <div class="field-group col-span-2"><label class="field-label">Días de entrega</label><input type="text" id="prov-dias" class="field-input w-full" placeholder="Ej: Lunes, Miércoles, Viernes"></div>
+      </div>
+    </div>
+    <div class="px-6 pb-6 flex justify-end gap-3">
+      <button onclick="closeModalProveedor()" class="btn-secondary">Cancelar</button>
+      <button onclick="guardarProveedor()" class="btn-primary">Guardar proveedor</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     MODAL: CONFIGURAR TOKEN / URL API
+════════════════════════════════════════════════════════ -->
+<div id="modal-token" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
+  <div class="card w-full max-w-md anim-in" style="box-shadow:0 4px 6px rgba(0,0,0,0.05),0 20px 60px rgba(0,0,0,0.20)">
+    <div class="p-6 border-b border-ink-100">
+      <h2 class="font-display text-xl text-ink-900">Configurar conexión API</h2>
+      <p class="text-ink-400 text-sm mt-1">URL del Web App de Google Apps Script</p>
+    </div>
+    <div class="p-6 space-y-4">
+      <div class="field-group">
+        <label class="field-label">URL del Web App (Apps Script)</label>
+        <input type="url" id="conf-url" class="field-input w-full font-mono text-xs" placeholder="https://script.google.com/macros/s/AK.../exec">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Token Admin</label>
+        <input type="password" id="conf-token" class="field-input w-full font-mono" placeholder="Tu ADMIN_TOKEN secreto">
+      </div>
+      <div class="bg-amber-50 rounded-10 p-3 text-xs text-amber-700 flex gap-2" style="border-radius:10px; background:#FEF6E9; color:#4A310A">
+        <span>⚠️</span>
+        <span>El token se guarda en localStorage solo en este dispositivo. Nunca lo compartas.</span>
+      </div>
+    </div>
+    <div class="px-6 pb-6 flex justify-between">
+      <button onclick="testConexion()" class="btn-secondary flex items-center gap-2">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
+        Probar
+      </button>
+      <div class="flex gap-3">
+        <button onclick="closeTokenModal()" class="btn-secondary">Cancelar</button>
+        <button onclick="guardarConfig()" class="btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toast" class="toast"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════════ -->
+<script>
+// ── Configuración persistente ──
+let API_URL   = localStorage.getItem('fas_api_url')   || '';
+let API_TOKEN = localStorage.getItem('fas_api_token') || '';
+
+// ── Estado del wizard ──
+let wizardStep = 1;
+let savedProveedores = [];
+
+// ─────────────────────────────────────────────────────────
+// NAVEGACIÓN
+// ─────────────────────────────────────────────────────────
+function showSection(name) {
+  document.querySelectorAll('[id^="section-"]').forEach(s => s.classList.add('hidden'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  
+  const sec = document.getElementById(`section-${name}`);
+  if (sec) { sec.classList.remove('hidden'); sec.classList.add('anim-in'); }
+  
+  const nav = document.getElementById(`nav-${name}`);
+  if (nav) nav.classList.add('active');
+
+  // Cargar datos según sección
+  if (name === 'insumos')     cargarInsumos();
+  if (name === 'proveedores') cargarProveedores();
+  if (name === 'menus')       cargarMenus();
+  if (name === 'dashboard')   cargarDashboard();
+}
+
+// ─────────────────────────────────────────────────────────
+// API HELPER
+// ─────────────────────────────────────────────────────────
+async function apiPost(action, payload = {}) {
+  if (!API_URL) { toast('Configura la URL del API primero', 'error'); throw new Error('No API URL'); }
+  const resp = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action, token: API_TOKEN, ...payload }),
+  });
+  const data = await resp.json();
+  if (!data.ok) throw new Error(data.error || 'Error del servidor');
+  return data.data !== undefined ? data.data : data;
+}
+
+async function apiGet(action, params = {}) {
+  if (!API_URL) { toast('Configura la URL del API primero', 'error'); throw new Error('No API URL'); }
+  const qs = new URLSearchParams({ action, ...params }).toString();
+  const resp = await fetch(`${API_URL}?${qs}`);
+  const data = await resp.json();
+  if (!data.ok) throw new Error(data.error || 'Error del servidor');
+  return data.data !== undefined ? data.data : data;
+}
+
+// ─────────────────────────────────────────────────────────
+// WIZARD — INSUMOS
+// ─────────────────────────────────────────────────────────
+function openWizard() {
+  wizardStep = 1;
+  document.getElementById('wizard-overlay').classList.remove('hidden');
+  renderWizardStep();
+  cargarProveedoresEnSelector();
+}
+
+function closeWizard() {
+  document.getElementById('wizard-overlay').classList.add('hidden');
+  // Limpiar campos
+  ['f-codigo','f-nombre','f-nota','f-precio','f-cantidad'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('f-unidad').value = 'kg';
+  document.getElementById('f-densidad').value = '1';
+  document.getElementById('f-merma').value = '0';
+  updateMermaDisplay(0);
+  updateCostoPreview();
+}
+
+function wizardNext() {
+  if (!validateWizardStep()) return;
+  if (wizardStep < 3) {
+    wizardStep++;
+    renderWizardStep();
+    if (wizardStep === 3) updateResumenFinal();
+  }
+}
+
+function wizardBack() {
+  if (wizardStep > 1) { wizardStep--; renderWizardStep(); }
+}
+
+function validateWizardStep() {
+  if (wizardStep === 1) {
+    const nombre = document.getElementById('f-nombre').value.trim();
+    if (!nombre) { toast('El nombre del insumo es requerido', 'error'); return false; }
+  }
+  if (wizardStep === 2) {
+    const precio = parseFloat(document.getElementById('f-precio').value);
+    const cantidad = parseFloat(document.getElementById('f-cantidad').value);
+    if (!precio || precio <= 0) { toast('Ingresa un precio de compra válido', 'error'); return false; }
+    if (!cantidad || cantidad <= 0) { toast('Ingresa la cantidad de la presentación', 'error'); return false; }
+  }
+  return true;
+}
+
+function renderWizardStep() {
+  // Mostrar/ocultar pasos
+  for (let i = 1; i <= 3; i++) {
+    const s = document.getElementById(`wizard-step-${i}`);
+    s.classList.toggle('hidden', i !== wizardStep);
+  }
+
+  // Step dots
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById(`sdot-${i}`);
+    dot.className = 'step-dot';
+    if (i < wizardStep) { dot.classList.add('done'); dot.innerHTML = '✓'; }
+    else if (i === wizardStep) { dot.classList.add('active'); dot.textContent = i; }
+    else { dot.textContent = i === 3 ? '✓' : i; }
+  }
+
+  // Step lines
+  for (let i = 1; i <= 2; i++) {
+    const line = document.getElementById(`sline-${i}`);
+    line.classList.toggle('done', i < wizardStep);
+  }
+
+  // Botones
+  document.getElementById('btn-back').style.display = wizardStep > 1 ? 'block' : 'none';
+  document.getElementById('btn-back-placeholder').style.display = wizardStep > 1 ? 'none' : 'block';
+  document.getElementById('btn-next').classList.toggle('hidden', wizardStep === 3);
+  document.getElementById('btn-save').classList.toggle('hidden', wizardStep !== 3);
+
+  // Descripción
+  const descs = ['Paso 1 de 3 · Identificación del producto', 'Paso 2 de 3 · Proveedor y precio de compra', 'Paso 3 de 3 · Mermas y confirmación'];
+  document.getElementById('wizard-step-desc').textContent = descs[wizardStep - 1];
+
+  // Actualizar unidad en Paso 2
+  if (wizardStep === 2) {
+    const unidad = document.getElementById('f-unidad').value;
+    const unidadBase = ['kg','g','lb','oz'].includes(unidad) ? 'g' : ['l','ml'].includes(unidad) ? 'ml' : unidad;
+    document.getElementById('f-cantidad-unit').textContent = unidadBase;
+  }
+}
+
+function updateMermaDisplay(val) {
+  document.getElementById('merma-display').textContent = val + '%';
+}
+
+function updateCostoPreview() {
+  const precio = parseFloat(document.getElementById('f-precio')?.value || 0);
+  const cantidad = parseFloat(document.getElementById('f-cantidad')?.value || 0);
+  if (precio > 0 && cantidad > 0) {
+    const costo = precio / cantidad;
+    document.getElementById('costo-preview').textContent = `$${costo.toFixed(4)}`;
+    document.getElementById('costo-100g-preview').textContent = `$${(costo * 100).toFixed(2)}`;
+  } else {
+    document.getElementById('costo-preview').textContent = '$—';
+    document.getElementById('costo-100g-preview').textContent = '$—';
+  }
+}
+
+function updateResumenFinal() {
+  const nombre   = document.getElementById('f-nombre').value;
+  const unidad   = document.getElementById('f-unidad').value;
+  const precio   = parseFloat(document.getElementById('f-precio').value);
+  const cantidad = parseFloat(document.getElementById('f-cantidad').value);
+  const merma    = parseInt(document.getElementById('f-merma').value);
+
+  const costoBase = precio / cantidad;
+  const costoMerma = costoBase / (1 - merma / 100);
+
+  document.getElementById('sum-nombre').textContent  = nombre;
+  document.getElementById('sum-unidad').textContent  = unidad;
+  document.getElementById('sum-precio').textContent  = `$${precio.toFixed(2)} MXN`;
+  document.getElementById('sum-costo').textContent   = `$${costoBase.toFixed(4)}/unidad base`;
+  document.getElementById('sum-merma').textContent   = `${merma}%`;
+  document.getElementById('sum-costo-merma').textContent = `$${costoMerma.toFixed(4)}/unidad neta`;
+}
+
+async function guardarInsumo() {
+  const btn = document.getElementById('btn-save');
+  const txt = document.getElementById('btn-save-text');
+  btn.disabled = true;
+  txt.textContent = 'Guardando...';
+
+  try {
+    const payload = {
+      nombre:            document.getElementById('f-nombre').value.trim(),
+      codigo:            document.getElementById('f-codigo').value.trim(),
+      densidad:          parseFloat(document.getElementById('f-densidad').value),
+      unidadComercial:   document.getElementById('f-unidad').value,
+      proveedorId:       document.getElementById('f-proveedor').value,
+      precioCompra:      parseFloat(document.getElementById('f-precio').value),
+      cantidadComercial: parseFloat(document.getElementById('f-cantidad').value),
+      nota:              document.getElementById('f-nota').value.trim(),
+    };
+
+    await apiPost('crearInsumo', payload);
+    toast('✅ Insumo guardado correctamente', 'success');
+    closeWizard();
+    cargarInsumos();
+  } catch (err) {
+    toast(`Error: ${err.message}`, 'error');
+  } finally {
+    btn.disabled = false;
+    txt.textContent = 'Guardar insumo';
+  }
+}
+
+function simularEscaneo() {
+  const mockCodigos = ['7501234567890', '7509546028013', '7501031300018'];
+  document.getElementById('f-codigo').value = mockCodigos[Math.floor(Math.random() * mockCodigos.length)];
+  toast('📷 Código escaneado (simulado)', 'success');
+}
+
+// ─────────────────────────────────────────────────────────
+// CARGAR DATOS
+// ─────────────────────────────────────────────────────────
+async function cargarInsumos() {
+  const tbody = document.getElementById('tabla-insumos');
+  try {
+    const data = await apiPost('listarInsumos');
+    if (!data || !data.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center text-ink-400 py-8 text-sm">No hay insumos registrados. Agrega el primero.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(ins => `
+      <tr>
+        <td>
+          <div class="font-medium text-ink-800">${ins['Nombre'] || '—'}</div>
+          <div class="text-xs text-ink-400 font-mono">${ins['Código'] || ''}</div>
+        </td>
+        <td><span class="tag tag-gray">${ins['UnidadComercial'] || '—'}</span></td>
+        <td class="font-mono text-sm">$${parseFloat(ins['PrecioCompra'] || 0).toFixed(2)}</td>
+        <td class="font-mono text-xs text-ink-500">$${parseFloat(ins['CostoBaseUnitario'] || 0).toFixed(4)}</td>
+        <td class="text-sm text-ink-500">${ins['ProveedorID'] || '—'}</td>
+        <td><span class="tag ${ins['Activo'] !== false ? 'tag-green' : 'tag-gray'}">${ins['Activo'] !== false ? 'Activo' : 'Inactivo'}</span></td>
+        <td>
+          <button class="text-xs text-ink-400 hover:text-leaf transition-colors px-2 py-1 rounded hover:bg-leaf-50">Editar</button>
+        </td>
+      </tr>
+    `).join('');
+    document.getElementById('kpi-insumos').textContent = data.length;
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="7" class="text-center text-amber py-8 text-sm">⚠️ ${err.message}</td></tr>`;
+  }
+}
+
+async function cargarProveedores() {
+  const tbody = document.getElementById('tabla-proveedores');
+  try {
+    const data = await apiPost('listarProveedores');
+    savedProveedores = data || [];
+    if (!data || !data.length) {
+      tbody.innerHTML = '<tr><td colspan="4" class="text-center text-ink-400 py-8 text-sm">No hay proveedores registrados.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(p => `
+      <tr>
+        <td class="font-medium text-ink-800">${p['Nombre'] || '—'}</td>
+        <td class="text-sm text-ink-500">${p['Contacto'] || '—'}</td>
+        <td class="font-mono text-sm">${p['Telefono'] || '—'}</td>
+        <td><span class="tag tag-gray text-xs">${p['DiasEntrega'] || 'Sin especificar'}</span></td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="4" class="text-center text-amber py-8 text-sm">⚠️ ${err.message}</td></tr>`;
+  }
+}
+
+async function cargarProveedoresEnSelector() {
+  const sel = document.getElementById('f-proveedor');
+  try {
+    if (!savedProveedores.length) {
+      const data = await apiPost('listarProveedores');
+      savedProveedores = data || [];
+    }
+    sel.innerHTML = '<option value="">— Sin proveedor asignado —</option>';
+    savedProveedores.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p['ProveedorID'];
+      opt.textContent = p['Nombre'];
+      sel.appendChild(opt);
+    });
+  } catch (_) {}
+}
+
+async function cargarMenus() {
+  const tbody = document.getElementById('tabla-menus');
+  try {
+    const data = await apiPost('listarMenus');
+    if (!data || !data.length) {
+      tbody.innerHTML = '<tr><td colspan="5" class="text-center text-ink-400 py-8 text-sm">No hay menús creados.</td></tr>';
+      return;
+    }
+    let totalMargen = 0;
+    let maxCosto = 0; let maxNombre = '';
+    
+    tbody.innerHTML = data.map(m => {
+      const margen = parseFloat(m['MargenReal'] || 0);
+      const objetivo = parseFloat(m['MargenDeseado'] || 65);
+      const costo = parseFloat(m['CostoTotal'] || 0);
+      totalMargen += margen;
+      if (costo > maxCosto) { maxCosto = costo; maxNombre = m['Nombre']; }
+      const margenColor = margen >= objetivo ? 'text-leaf' : margen >= objetivo * 0.85 ? 'text-amber' : 'text-red-500';
+      return `
+        <tr>
+          <td class="font-medium text-ink-800">${m['Nombre'] || '—'}</td>
+          <td class="font-mono text-sm">$${costo.toFixed(2)}</td>
+          <td class="font-mono text-sm">$${parseFloat(m['PrecioVenta'] || 0).toFixed(2)}</td>
+          <td>
+            <div class="flex items-center gap-2">
+              <div class="margin-bar w-20"><div class="margin-fill" style="width:${Math.min(margen,100)}%"></div></div>
+              <span class="font-mono text-sm font-semibold ${margenColor}">${margen.toFixed(1)}%</span>
+            </div>
+          </td>
+          <td>
+            <span class="tag ${margen >= objetivo ? 'tag-green' : 'tag-amber'}">
+              ${margen >= objetivo ? '✓ Objetivo' : `${(margen - objetivo).toFixed(1)}%`}
+            </span>
+          </td>
+        </tr>`;
+    }).join('');
+    
+    if (data.length > 0) {
+      document.getElementById('kpi-margen').textContent = (totalMargen / data.length).toFixed(1) + '%';
+      document.getElementById('kpi-caro').textContent = '$' + maxCosto.toFixed(0);
+    }
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="5" class="text-center text-amber py-8 text-sm">⚠️ ${err.message}</td></tr>`;
+  }
+}
+
+async function cargarDashboard() {
+  try {
+    const insumos = await apiPost('listarInsumos');
+    document.getElementById('kpi-insumos').textContent = (insumos || []).length;
+    const recetas = await apiGet('listarRecetas');
+    document.getElementById('kpi-recetas').textContent = (recetas || []).length;
+  } catch (_) {}
+}
+
+// ─────────────────────────────────────────────────────────
+// PROVEEDOR MODAL
+// ─────────────────────────────────────────────────────────
+function openModalProveedor() { document.getElementById('modal-proveedor').classList.remove('hidden'); }
+function closeModalProveedor() { document.getElementById('modal-proveedor').classList.add('hidden'); }
+
+async function guardarProveedor() {
+  const nombre = document.getElementById('prov-nombre').value.trim();
+  if (!nombre) { toast('El nombre del proveedor es requerido', 'error'); return; }
+  try {
+    const data = await apiPost('crearProveedor', {
+      nombre,
+      contacto:    document.getElementById('prov-contacto').value.trim(),
+      telefono:    document.getElementById('prov-tel').value.trim(),
+      diasEntrega: document.getElementById('prov-dias').value.trim(),
+    });
+    toast('✅ Proveedor guardado', 'success');
+    closeModalProveedor();
+    savedProveedores = []; // invalidar cache
+    cargarProveedoresEnSelector();
+  } catch (err) {
+    toast(`Error: ${err.message}`, 'error');
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+// CONFIG MODAL
+// ─────────────────────────────────────────────────────────
+function openTokenModal() {
+  document.getElementById('conf-url').value   = API_URL;
+  document.getElementById('conf-token').value = API_TOKEN;
+  document.getElementById('modal-token').classList.remove('hidden');
+}
+function closeTokenModal() { document.getElementById('modal-token').classList.add('hidden'); }
+
+function guardarConfig() {
+  API_URL   = document.getElementById('conf-url').value.trim();
+  API_TOKEN = document.getElementById('conf-token').value.trim();
+  localStorage.setItem('fas_api_url',   API_URL);
+  localStorage.setItem('fas_api_token', API_TOKEN);
+  document.getElementById('api-url-preview').textContent = API_URL ? '🟢 API conectada' : 'Sin URL de API';
+  toast('✅ Configuración guardada', 'success');
+  closeTokenModal();
+}
+
+async function testConexion() {
+  const url = document.getElementById('conf-url').value.trim();
+  if (!url) { toast('Ingresa una URL primero', 'error'); return; }
+  try {
+    const resp = await fetch(`${url}?action=ping`);
+    const data = await resp.json();
+    if (data.ok) toast('✅ Conexión exitosa', 'success');
+    else toast('⚠️ El servidor respondió con error', 'error');
+  } catch (_) {
+    toast('❌ No se pudo conectar', 'error');
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────────────────────
+let toastTimer;
+function toast(msg, type = 'success') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+// ─────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Actualizar preview de API
+  if (API_URL) document.getElementById('api-url-preview').textContent = '🟢 API conectada';
+
+  // Live preview del costo en paso 2
+  ['f-precio', 'f-cantidad'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateCostoPreview);
+  });
+
+  // Cerrar modales con Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeWizard();
+      closeModalProveedor();
+      closeTokenModal();
+    }
+  });
+
+  // Cerrar wizard al hacer click en overlay
+  document.getElementById('wizard-overlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeWizard();
+  });
+});
+</script>
+</body>
+</html>
