@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flor de Azalea · Panel Admin</title>
+<title>Panel Admin · Sistema de Costeo</title>
 
 <!-- Tailwind CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -181,10 +181,10 @@
     <div class="p-6 pb-4 border-b border-ink-100">
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-xl bg-leaf flex items-center justify-center">
-          <span class="text-white text-lg">🌺</span>
+          <span class="text-white text-lg" id="sidebar-icon-emoji">🍽</span>
         </div>
         <div>
-          <div class="font-display text-sm font-bold text-ink-900 leading-tight">Flor de Azalea</div>
+          <div class="font-display text-sm font-bold text-ink-900 leading-tight" id="sidebar-nombre">Mi Negocio</div>
           <div class="text-xs text-ink-400 font-mono">Panel Admin</div>
         </div>
       </div>
@@ -235,7 +235,7 @@
     <section id="section-dashboard" class="p-8 anim-in">
       <div class="mb-8">
         <h1 class="font-display text-3xl text-ink-900 mb-1">Buenos días 👋</h1>
-        <p class="text-ink-400 text-sm">Sistema de costeo gastronómico · Lonchería Flor de Azalea</p>
+        <p class="text-ink-400 text-sm">Sistema de costeo gastronómico · <span id="dashboard-nombre">Mi Negocio</span></p>
       </div>
 
       <!-- KPIs -->
@@ -606,6 +606,10 @@
     </div>
     <div class="p-6 space-y-4">
       <div class="field-group">
+        <label class="field-label">Nombre del negocio</label>
+        <input type="text" id="conf-nombre" class="field-input w-full" placeholder="Ej: Mi Cocina, Lonchería Central…">
+      </div>
+      <div class="field-group">
         <label class="field-label">URL del Web App (Apps Script)</label>
         <input type="url" id="conf-url" class="field-input w-full font-mono text-xs" placeholder="https://script.google.com/macros/s/AK.../exec">
       </div>
@@ -667,28 +671,32 @@ function showSection(name) {
 }
 
 // ─────────────────────────────────────────────────────────
-// API HELPER
+// API HELPER — Todo por GET para evitar preflight CORS
+// Apps Script bloquea OPTIONS/preflight cuando se usa POST
+// con Content-Type: application/json desde un navegador.
+// Solución: todo como GET, payload en parámetro "p" (JSON codificado).
 // ─────────────────────────────────────────────────────────
-async function apiPost(action, payload = {}) {
-  if (!API_URL) { toast('Configura la URL del API primero', 'error'); throw new Error('No API URL'); }
-  const resp = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action, token: API_TOKEN, ...payload }),
-  });
+async function apiCall(action, payload = {}, requireToken = true) {
+  if (!API_URL) {
+    toast('Configura la URL del API primero', 'error');
+    throw new Error('No API URL');
+  }
+  const params = new URLSearchParams({ action });
+  if (requireToken && API_TOKEN) params.set('t', API_TOKEN);
+  if (Object.keys(payload).length > 0) {
+    params.set('p', encodeURIComponent(JSON.stringify(payload)));
+  }
+  const url  = `${API_URL}?${params.toString()}`;
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
   const data = await resp.json();
   if (!data.ok) throw new Error(data.error || 'Error del servidor');
   return data.data !== undefined ? data.data : data;
 }
 
-async function apiGet(action, params = {}) {
-  if (!API_URL) { toast('Configura la URL del API primero', 'error'); throw new Error('No API URL'); }
-  const qs = new URLSearchParams({ action, ...params }).toString();
-  const resp = await fetch(`${API_URL}?${qs}`);
-  const data = await resp.json();
-  if (!data.ok) throw new Error(data.error || 'Error del servidor');
-  return data.data !== undefined ? data.data : data;
-}
+// Alias para compatibilidad con llamadas existentes
+async function apiPost(action, payload = {}) { return apiCall(action, payload, true); }
+async function apiGet(action, params = {})   { return apiCall(action, params, false); }
 
 // ─────────────────────────────────────────────────────────
 // WIZARD — INSUMOS
@@ -1008,8 +1016,9 @@ async function guardarProveedor() {
 // CONFIG MODAL
 // ─────────────────────────────────────────────────────────
 function openTokenModal() {
-  document.getElementById('conf-url').value   = API_URL;
-  document.getElementById('conf-token').value = API_TOKEN;
+  document.getElementById('conf-url').value    = API_URL;
+  document.getElementById('conf-token').value  = API_TOKEN;
+  document.getElementById('conf-nombre').value = localStorage.getItem('fas_nombre') || '';
   document.getElementById('modal-token').classList.remove('hidden');
 }
 function closeTokenModal() { document.getElementById('modal-token').classList.add('hidden'); }
@@ -1017,11 +1026,22 @@ function closeTokenModal() { document.getElementById('modal-token').classList.ad
 function guardarConfig() {
   API_URL   = document.getElementById('conf-url').value.trim();
   API_TOKEN = document.getElementById('conf-token').value.trim();
+  const nombre = document.getElementById('conf-nombre').value.trim() || 'Mi Negocio';
   localStorage.setItem('fas_api_url',   API_URL);
   localStorage.setItem('fas_api_token', API_TOKEN);
+  localStorage.setItem('fas_nombre',    nombre);
+  _aplicarNombre(nombre);
   document.getElementById('api-url-preview').textContent = API_URL ? '🟢 API conectada' : 'Sin URL de API';
   toast('✅ Configuración guardada', 'success');
   closeTokenModal();
+}
+
+function _aplicarNombre(n) {
+  const nb = document.getElementById('sidebar-nombre');
+  const dn = document.getElementById('dashboard-nombre');
+  if (nb) nb.textContent = n;
+  if (dn) dn.textContent = n;
+  document.title = n + ' · Panel Admin';
 }
 
 async function testConexion() {
@@ -1053,6 +1073,9 @@ function toast(msg, type = 'success') {
 // INIT
 // ─────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  // Aplicar nombre guardado
+  const nombreGuardado = localStorage.getItem('fas_nombre') || 'Mi Negocio';
+  _aplicarNombre(nombreGuardado);
   // Actualizar preview de API
   if (API_URL) document.getElementById('api-url-preview').textContent = '🟢 API conectada';
 
