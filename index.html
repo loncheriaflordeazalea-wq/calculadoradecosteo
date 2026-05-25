@@ -100,6 +100,18 @@ textarea.field-input{resize:vertical;line-height:1.7}
 .semaforo-rojo{background:#EF4444}
 .overflow-hidden{overflow:hidden}
 
+/* ── DETAILS / SECCIONES COLAPSABLES ─────────────── */
+details{border:1px solid var(--borde);border-radius:10px;overflow:hidden;margin-top:4px}
+details summary{padding:10px 14px;font-size:12px;font-weight:600;color:var(--texto2);background:#FAF9F7;cursor:pointer;user-select:none;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:'＋';font-size:14px}
+details[open] summary::after{content:'−'}
+details[open] summary{border-bottom:1px solid var(--borde);color:var(--texto);background:white}
+details .details-body{padding:16px}
+
+/* ── MODAL VER RECETA ────────────────────────────── */
+#modal-ver-receta .comp-row{margin-bottom:6px}
+
 /* ── MOBILE HEADER ───────────────────────────────── */
 .mob-header{display:none;align-items:center;gap:12px;padding:12px 16px;background:white;border-bottom:1.5px solid var(--borde);position:sticky;top:0;z-index:40}
 .mob-btn{background:none;border:none;cursor:pointer;padding:6px 8px;border-radius:8px;font-size:20px;line-height:1;color:var(--texto);font-family:'DM Sans',sans-serif}
@@ -135,6 +147,10 @@ textarea.field-input{resize:vertical;line-height:1.7}
   .modal-overlay>.card{border-radius:16px 16px 6px 6px;max-height:90vh;overflow-y:auto;width:100%}
   .wiz-wide{max-width:100%!important}
   .card.p-5{padding:14px}
+  /* Botones de modal: más espacio en la parte inferior */
+  .modal-overlay>.card>.px-6.pb-6{padding-bottom:max(24px,env(safe-area-inset-bottom,24px))!important}
+  .modal-overlay>.card>.px-6.pb-5{padding-bottom:max(20px,env(safe-area-inset-bottom,20px))!important}
+  .modal-overlay>.card>.px-6.pb-5.pt-4{padding-bottom:max(20px,env(safe-area-inset-bottom,20px))!important}
   /* Wizard grids internos: forzar 1 col en paso 1 */
   #wi-p1 .grid-cols-2,#wr-p1 .grid-cols-2{grid-template-columns:1fr 1fr}
   /* Filtro grupos wrap */
@@ -379,6 +395,23 @@ textarea.field-input{resize:vertical;line-height:1.7}
         <span class="addon">MXN</span>
       </div>
     </div>
+    <details id="wi-nut-details">
+      <summary>🧪 Info nutricional <span style="color:var(--texto3);font-weight:400;text-transform:none">(opcional · por 100g o 100ml)</span></summary>
+      <div class="details-body grid grid-cols-2 gap-3">
+        <div class="field-group"><label class="field-label">Calorías</label>
+          <div class="input-addon"><input id="wi-kcal" class="field-input" type="number" placeholder="0" min="0" step="1" style="padding-right:44px"><span class="addon">kcal</span></div>
+        </div>
+        <div class="field-group"><label class="field-label">Proteínas</label>
+          <div class="input-addon"><input id="wi-prot" class="field-input" type="number" placeholder="0" min="0" step="0.1" style="padding-right:28px"><span class="addon">g</span></div>
+        </div>
+        <div class="field-group"><label class="field-label">Carbohidratos</label>
+          <div class="input-addon"><input id="wi-carb" class="field-input" type="number" placeholder="0" min="0" step="0.1" style="padding-right:28px"><span class="addon">g</span></div>
+        </div>
+        <div class="field-group"><label class="field-label">Grasas</label>
+          <div class="input-addon"><input id="wi-gras" class="field-input" type="number" placeholder="0" min="0" step="0.1" style="padding-right:28px"><span class="addon">g</span></div>
+        </div>
+      </div>
+    </details>
     <div id="wi-preview" class="hidden rounded-xl overflow-hidden" style="border:1px solid var(--borde)">
       <div class="px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="background:#F2F0EB;color:#716A60">Costo resultante</div>
       <div class="p-4 space-y-2">
@@ -717,6 +750,23 @@ textarea.field-input{resize:vertical;line-height:1.7}
 </div>
 </div>
 
+<!-- ══════════ MODAL VER RECETA ══════════ -->
+<div id="modal-ver-receta" class="modal-overlay hidden">
+<div class="card w-full anim-in wiz-wide" style="max-width:580px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 4px 6px rgba(0,0,0,.05),0 20px 60px rgba(0,0,0,.22)">
+  <div class="p-6 pb-4 flex items-center justify-between flex-shrink-0" style="border-bottom:1px solid var(--borde)">
+    <div style="min-width:0;flex:1;margin-right:12px">
+      <h2 class="font-display text-xl truncate" id="vr-nombre">Receta</h2>
+      <div id="vr-badges" class="flex gap-2 mt-1 flex-wrap"></div>
+    </div>
+    <button onclick="closeModalVerReceta()" style="background:#F2F0EB;border:none;cursor:pointer;border-radius:50%;width:32px;height:32px;font-size:16px;flex-shrink:0">×</button>
+  </div>
+  <div id="vr-contenido" style="overflow-y:auto;flex:1;padding:20px 24px" class="space-y-4"></div>
+  <div class="px-6 pb-6 pt-4 flex-shrink-0" style="border-top:1px solid #F2F0EB">
+    <button onclick="closeModalVerReceta()" class="btn-secondary btn-sm w-full">Cerrar</button>
+  </div>
+</div>
+</div>
+
 <div id="toast" class="toast"></div>
 
 <script>
@@ -785,11 +835,12 @@ function showSection(n){
 // ══ WIZARD INSUMO ═════════════════════════════════════════
 function openWizardInsumo(editData){
   wiStep=1; wiEditMode=!!editData; wiEditId=editData?editData.insumoId:null;
-  ['wi-nombre','wi-codigo','wi-nota','wi-precio'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  ['wi-nombre','wi-codigo','wi-nota','wi-precio','wi-kcal','wi-prot','wi-carb','wi-gras'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
   document.getElementById('wi-unidad').value='kg';
   document.getElementById('wi-proveedor').value='';
   document.getElementById('wi-grupo-custom').value='';
   document.getElementById('wi-preview').classList.add('hidden');
+  const nutDet=document.getElementById('wi-nut-details');if(nutDet)nutDet.removeAttribute('open');
   document.querySelectorAll('.grupo-chip').forEach(c=>c.classList.remove('active'));
   document.querySelector('.grupo-chip').classList.add('active');
   wiGrupo='Carnes';
@@ -806,6 +857,10 @@ function openWizardInsumo(editData){
     } else {
       document.getElementById('wi-cantidad').value='1';
     }
+    if(editData.calorias)      {document.getElementById('wi-kcal').value=editData.calorias;document.getElementById('wi-nut-details').setAttribute('open','');}
+    if(editData.proteinas)     document.getElementById('wi-prot').value=editData.proteinas;
+    if(editData.carbohidratos) document.getElementById('wi-carb').value=editData.carbohidratos;
+    if(editData.grasas)        document.getElementById('wi-gras').value=editData.grasas;
     if(editData.grupo){
       wiGrupo=editData.grupo;
       const chip=[...document.querySelectorAll('.grupo-chip')].find(c=>c.textContent.includes(editData.grupo));
@@ -896,6 +951,10 @@ async function guardarInsumo(){
     precioCompra:     precio,
     cantidadComercial:baseVal,
     costoBaseUnitario:costoBase,
+    calorias:         parseFloat(document.getElementById('wi-kcal').value)||null,
+    proteinas:        parseFloat(document.getElementById('wi-prot').value)||null,
+    carbohidratos:    parseFloat(document.getElementById('wi-carb').value)||null,
+    grasas:           parseFloat(document.getElementById('wi-gras').value)||null,
   };
   const btn=document.getElementById('wi-save');btn.disabled=true;
   document.getElementById('wi-save-txt').textContent='Guardando…';
@@ -1079,28 +1138,51 @@ function onInsSelChange(){
   const sel=document.getElementById('c-ins-sel');
   const id=sel.value;
   if(!id)return;
-  // Auto-set unidad desde el insumo seleccionado
+  const unidSel=document.getElementById('c-ins-unidad');
   const ins=_ins.find(i=>i.insumoId===id);
   if(ins&&ins.unidadComercial){
     const u=ins.unidadComercial;
-    const unidSel=document.getElementById('c-ins-unidad');
-    // Busca la opción más cercana a la unidad base del insumo
     const base=u==='kg'||u==='lb'||u==='oz'?'g':u==='l'?'ml':u;
     const opt=[...unidSel.options].find(o=>o.value===base);
     if(opt) unidSel.value=base;
+  } else {
+    // Es subreceta: ajustar unidad a "porciones"
+    const rec=_rec.find(r=>r.recetaId===id);
+    if(rec){
+      const ru=rec.unidadRendimiento||'porciones';
+      let opt=[...unidSel.options].find(o=>o.value===ru);
+      if(!opt){const no=new Option(ru,ru);unidSel.appendChild(no);opt=no;}
+      unidSel.value=ru;
+    }
   }
   previewIngrediente();
 }
 function filtrarInsSel(q){
   const sel=document.getElementById('c-ins-sel');
-  const q2=q.toLowerCase().trim();
-  Array.from(sel.options).forEach(opt=>{
-    if(!opt.value){opt.hidden=false;return;}
-    opt.hidden=q2?!opt.textContent.toLowerCase().includes(q2):false;
-  });
-  const vis=Array.from(sel.options).filter(o=>o.value&&!o.hidden);
+  const q2=(q||'').toLowerCase().trim();
+  // Rebuild selector from in-memory arrays (compatible con todos los browsers/móviles)
+  sel.innerHTML='<option value="">— Seleccionar —</option>';
+  const fi=q2?_ins.filter(i=>i.nombre.toLowerCase().includes(q2)):_ins;
+  const fr=q2?_rec.filter(r=>r.nombre.toLowerCase().includes(q2)):_rec;
+  if(fi.length){
+    const grupos=[...new Set(fi.map(i=>i.grupo||'Sin grupo'))];
+    grupos.forEach(g=>{
+      const og=document.createElement('optgroup');og.label='📦 '+g;
+      fi.filter(i=>(i.grupo||'Sin grupo')===g).forEach(i=>{
+        const base=getBase(i.unidadComercial||'g');
+        og.appendChild(new Option(`${i.nombre} · $${(i.costoBaseUnitario||0).toFixed(3)}/${base}`,i.insumoId));
+      });
+      sel.appendChild(og);
+    });
+  }
+  if(fr.length){
+    const og=document.createElement('optgroup');og.label='🔗 Subrecetas';
+    fr.forEach(r=>og.appendChild(new Option(`${r.nombre} · $${(r.costoPorPorcion||0).toFixed(3)}/porción`,r.recetaId)));
+    sel.appendChild(og);
+  }
+  if(!fi.length&&!fr.length){sel.innerHTML+='<option value="" disabled>Sin resultados</option>';return;}
+  const vis=Array.from(sel.options).filter(o=>o.value);
   if(vis.length===1){sel.value=vis[0].value;onInsSelChange();}
-  else if(!q2){sel.value='';}
 }
 function getCostoBaseUnitario(id){
   const ins=_ins.find(i=>i.insumoId===id);
@@ -1172,6 +1254,28 @@ function mostrarResumenReceta(){
   const nombre=document.getElementById('wr-nombre').value;
   const rinde=parseFloat(document.getElementById('wr-rinde').value)||1;
   const total=wrComps.reduce((a,c)=>a+(c.costoLinea||0),0);
+  // Calcular nutrición desde ingredientes cargados en memoria
+  let tKcal=0,tProt=0,tCarb=0,tGras=0,hasNut=false;
+  wrComps.filter(c=>c.tipo==='insumo').forEach(c=>{
+    const ins=_ins.find(i=>i.insumoId===c.componenteId);
+    if(ins&&ins.calorias>0){
+      hasNut=true;
+      const {val}=convertirABase(c.cantidadUsada,c.unidadMedida);
+      const f=val/100;
+      tKcal+=(ins.calorias||0)*f; tProt+=(ins.proteinas||0)*f;
+      tCarb+=(ins.carbohidratos||0)*f; tGras+=(ins.grasas||0)*f;
+    }
+  });
+  const nutHTML=hasNut?`
+    <div class="mt-2 pt-2" style="border-top:1px solid var(--verde-ll)">
+      <div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#52B388">Nutrición total receta</div>
+      <div class="grid grid-cols-4 gap-1">
+        <div class="text-center"><div class="font-mono font-bold text-sm">${tKcal.toFixed(0)}</div><div style="font-size:10px;color:#52B388">kcal</div></div>
+        <div class="text-center"><div class="font-mono font-bold text-sm">${tProt.toFixed(1)}g</div><div style="font-size:10px;color:#52B388">prot</div></div>
+        <div class="text-center"><div class="font-mono font-bold text-sm">${tCarb.toFixed(1)}g</div><div style="font-size:10px;color:#52B388">carbs</div></div>
+        <div class="text-center"><div class="font-mono font-bold text-sm">${tGras.toFixed(1)}g</div><div style="font-size:10px;color:#52B388">grasas</div></div>
+      </div>
+    </div>`:'';
   document.getElementById('wr-resumen-contenido').innerHTML=`
     <div class="flex justify-between text-sm"><span style="color:#22523C">Receta</span><span class="font-semibold">${nombre}</span></div>
     <div class="flex justify-between text-sm mt-1"><span style="color:#22523C">Componentes</span><span>${wrComps.length}</span></div>
@@ -1183,7 +1287,7 @@ function mostrarResumenReceta(){
     <div class="flex justify-between text-sm mt-1">
       <span style="color:#183B2B;font-weight:600">Costo por porción</span>
       <span class="font-mono font-bold" style="color:var(--verde)">$${(total/rinde).toFixed(2)} MXN</span>
-    </div>`;
+    </div>${nutHTML}`;
   document.getElementById('wr-resumen').classList.remove('hidden');
 }
 
@@ -1440,7 +1544,7 @@ async function cargarRecetas(){
       <td class="mob-hide">${r.rendimiento||1} porción(es)</td>
       <td class="font-mono mob-hide" style="color:var(--verde)">${r.costoTotal>0?'$'+r.costoTotal.toFixed(2):'—'}</td>
       <td class="font-mono font-semibold" style="color:var(--verde)">${r.costoPorPorcion>0?'$'+r.costoPorPorcion.toFixed(2):'—'}</td>
-      <td><button class="btn-icon-sm" style="color:var(--texto2)">Ver</button></td>
+      <td><button class="btn-icon-sm" onclick="verReceta('${r.recetaId}')">Ver</button></td>
     </tr>`).join('');
     document.getElementById('kpi-rec').textContent=_rec.length;
   }catch(e){tb.innerHTML=`<tr><td colspan="6" class="text-center p-6 text-sm" style="color:var(--amber)">⚠️ ${e.message}</td></tr>`;}
@@ -1547,11 +1651,10 @@ async function cargarInsEnSelector(){
       });
       sel.appendChild(og);
     });
-    const bases=_rec.filter(r=>r.tipoServicio==='Base');
-    if(bases.length){
+    if(_rec.length){
       const og=document.createElement('optgroup');
-      og.label='🔗 Subrecetas / Bases';
-      bases.forEach(r=>{og.appendChild(new Option(`${r.nombre} · $${(r.costoPorPorcion||0).toFixed(3)}/porción`,r.recetaId));});
+      og.label='🔗 Subrecetas / Recetas base';
+      _rec.forEach(r=>{og.appendChild(new Option(`${r.nombre} · $${(r.costoPorPorcion||0).toFixed(3)}/porción`,r.recetaId));});
       sel.appendChild(og);
     }
   }catch(_){}
@@ -1580,6 +1683,134 @@ async function cargarRecEnSelector(selId){
     sel.innerHTML='<option value="">— Seleccionar receta —</option>';
     _rec.forEach(r=>{sel.appendChild(new Option(r.nombre,r.recetaId));});
   }catch(_){}
+}
+
+// ══ VER RECETA MODAL ══════════════════════════════════════
+function closeModalVerReceta(){
+  document.getElementById('modal-ver-receta').classList.add('hidden');
+}
+
+async function verReceta(id){
+  const modal=document.getElementById('modal-ver-receta');
+  const cont=document.getElementById('vr-contenido');
+  const titulo=document.getElementById('vr-nombre');
+  const badges=document.getElementById('vr-badges');
+  modal.classList.remove('hidden');
+  cont.innerHTML='<p class="text-center p-8" style="color:var(--texto2)">Cargando…</p>';
+  badges.innerHTML='';
+  titulo.textContent='Receta';
+  try{
+    const r=await api('obtenerRecetaAdmin',{recetaId:id});
+    titulo.textContent=r.nombre||'Receta';
+    // badges
+    const badgeItems=[];
+    if(r.tipoServicio) badgeItems.push(`<span class="tag tag-purple">${r.tipoServicio}</span>`);
+    if(r.rendimiento)  badgeItems.push(`<span class="tag tag-blue">Rinde: ${r.rendimiento} ${r.unidadRendimiento||''}</span>`);
+    if(r.costoTotal)   badgeItems.push(`<span class="tag tag-green">Costo total: $${Number(r.costoTotal).toFixed(2)}</span>`);
+    if(r.costoPorPorcion) badgeItems.push(`<span class="tag tag-amber">Por porción: $${Number(r.costoPorPorcion).toFixed(2)}</span>`);
+    badges.innerHTML=badgeItems.join('');
+
+    const secciones=[];
+
+    // componentes
+    const comps=Array.isArray(r.componentes)?r.componentes:[];
+    if(comps.length){
+      const filas=comps.map(c=>{
+        const nombre=c.nombre||c.componenteId||'—';
+        const cant=`${c.cantidadUsada||0} ${c.unidadMedida||''}`;
+        const merma=c.porcentajeMerma>0?` <span style="color:var(--texto3);font-size:11px">(merma ${c.porcentajeMerma}%)</span>`:'';
+        const costo=c.costoCalculado!=null?`<span class="font-mono font-semibold" style="color:var(--verde)">$${Number(c.costoCalculado).toFixed(3)}</span>`:'';
+        const tipo=c.tipoComponente==='subreceta'?'🔗 ':c.tipoComponente==='proceso'?'⏱ ':'📦 ';
+        return `<div class="comp-row flex items-center gap-2" style="padding:6px 0;border-bottom:1px solid #F5F4F1">
+          <span style="flex:1;font-size:13px">${tipo}<strong>${nombre}</strong>${merma}</span>
+          <span style="font-size:12px;color:var(--texto2);white-space:nowrap">${cant}</span>
+          ${costo}
+        </div>`;
+      }).join('');
+      secciones.push(`<div>
+        <p class="text-xs font-semibold mb-2" style="color:var(--texto2);text-transform:uppercase;letter-spacing:.05em">Ingredientes y procesos</p>
+        ${filas}
+      </div>`);
+    }
+
+    // info nutricional
+    let nutHtml='';
+    let totalKcal=0,totalProt=0,totalCarb=0,totalGras=0,hayNut=false;
+    comps.forEach(c=>{
+      if(c.tipoComponente!=='insumo') return;
+      const ins=_ins.find(i=>i.insumoId===c.componenteId);
+      if(!ins||!ins.calorias) return;
+      const baseG=convertirABase(c.cantidadUsada||0,c.unidadMedida||'g');
+      const factor=baseG/100;
+      totalKcal+=(ins.calorias||0)*factor;
+      totalProt+=(ins.proteinas||0)*factor;
+      totalCarb+=(ins.carbohidratos||0)*factor;
+      totalGras+=(ins.grasas||0)*factor;
+      hayNut=true;
+    });
+    if(hayNut){
+      const porciones=Number(r.rendimiento)||1;
+      nutHtml=`<div>
+        <p class="text-xs font-semibold mb-2" style="color:var(--texto2);text-transform:uppercase;letter-spacing:.05em">Información nutricional estimada</p>
+        <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:12px">
+          <div class="grid grid-cols-2 gap-2" style="margin-bottom:8px">
+            <div style="text-align:center;padding:8px;background:white;border-radius:8px;border:1px solid #D1FAE5">
+              <p style="font-size:18px;font-weight:700;color:#059669">${totalKcal.toFixed(0)}</p>
+              <p style="font-size:10px;color:#6B7280">kcal total</p>
+            </div>
+            <div style="text-align:center;padding:8px;background:white;border-radius:8px;border:1px solid #D1FAE5">
+              <p style="font-size:18px;font-weight:700;color:#059669">${(totalKcal/porciones).toFixed(0)}</p>
+              <p style="font-size:10px;color:#6B7280">kcal/porción</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <div style="text-align:center;padding:6px;background:white;border-radius:8px;border:1px solid #D1FAE5">
+              <p style="font-size:14px;font-weight:600;color:#374151">${totalProt.toFixed(1)}g</p>
+              <p style="font-size:10px;color:#6B7280">Proteínas</p>
+            </div>
+            <div style="text-align:center;padding:6px;background:white;border-radius:8px;border:1px solid #D1FAE5">
+              <p style="font-size:14px;font-weight:600;color:#374151">${totalCarb.toFixed(1)}g</p>
+              <p style="font-size:10px;color:#6B7280">Carbohidratos</p>
+            </div>
+            <div style="text-align:center;padding:6px;background:white;border-radius:8px;border:1px solid #D1FAE5">
+              <p style="font-size:14px;font-weight:600;color:#374151">${totalGras.toFixed(1)}g</p>
+              <p style="font-size:10px;color:#6B7280">Grasas</p>
+            </div>
+          </div>
+        </div>
+      </div>`;
+      secciones.push(nutHtml);
+    }
+
+    // notas de preparación
+    if(r.notasPreparacion){
+      secciones.push(`<div>
+        <p class="text-xs font-semibold mb-1" style="color:var(--texto2);text-transform:uppercase;letter-spacing:.05em">Notas de preparación</p>
+        <p style="font-size:13px;color:var(--texto);line-height:1.6">${r.notasPreparacion}</p>
+      </div>`);
+    }
+
+    // paso a paso
+    if(r.pasoAPaso){
+      const pasos=String(r.pasoAPaso).split('||').map(p=>p.trim()).filter(Boolean);
+      if(pasos.length){
+        const li=pasos.map((p,i)=>`<div style="display:flex;gap:10px;margin-bottom:8px;align-items:flex-start">
+          <span style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--verde);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">${i+1}</span>
+          <p style="font-size:13px;color:var(--texto);line-height:1.5;margin:0;padding-top:2px">${p}</p>
+        </div>`).join('');
+        secciones.push(`<div>
+          <p class="text-xs font-semibold mb-2" style="color:var(--texto2);text-transform:uppercase;letter-spacing:.05em">Paso a paso</p>
+          ${li}
+        </div>`);
+      }
+    }
+
+    cont.innerHTML=secciones.length
+      ? `<div class="space-y-5">${secciones.join('')}</div>`
+      : '<p class="text-center p-6 text-sm" style="color:var(--texto2)">Sin detalles disponibles.</p>';
+  }catch(e){
+    cont.innerHTML=`<p class="text-center p-6 text-sm" style="color:var(--amber)">⚠️ Error al cargar: ${e.message}</p>`;
+  }
 }
 
 // ══ UTILS ═════════════════════════════════════════════════
@@ -1614,6 +1845,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(e.key==='Escape'){
       closeWizardInsumo();closeWizardReceta();closeWizardMenu();
       closeModalProveedor();closeTokenModal();closeModalMovimiento();closeModalProceso();
+      closeModalVerReceta();
     }
   });
 });
