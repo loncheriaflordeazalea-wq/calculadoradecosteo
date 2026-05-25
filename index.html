@@ -99,11 +99,59 @@ textarea.field-input{resize:vertical;line-height:1.7}
 .semaforo-amarillo{background:#F59E0B}
 .semaforo-rojo{background:#EF4444}
 .overflow-hidden{overflow:hidden}
+
+/* ── MOBILE HEADER ───────────────────────────────── */
+.mob-header{display:none;align-items:center;gap:12px;padding:12px 16px;background:white;border-bottom:1.5px solid var(--borde);position:sticky;top:0;z-index:40}
+.mob-btn{background:none;border:none;cursor:pointer;padding:6px 8px;border-radius:8px;font-size:20px;line-height:1;color:var(--texto);font-family:'DM Sans',sans-serif}
+.mob-btn:active{background:#F2F0EB}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(15,14,12,.45);z-index:49;backdrop-filter:blur(2px)}
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media(max-width:768px){
+  .mob-header{display:flex}
+  #app-wrapper{display:block;height:auto;overflow:visible}
+  aside{position:fixed;left:-240px;top:0;height:100%;z-index:50;transition:left .25s cubic-bezier(.4,0,.2,1);width:240px;overflow-y:auto}
+  aside.open{left:0;box-shadow:8px 0 32px rgba(15,14,12,.2)}
+  .sidebar-overlay.show{display:block}
+  main{height:auto;overflow-y:visible}
+  section.p-8{padding:16px!important}
+  .grid-cols-4{grid-template-columns:1fr 1fr}
+  #section-dashboard .grid-cols-3{grid-template-columns:1fr}
+  #section-insumos>.flex.items-center{flex-wrap:wrap;gap:10px}
+  #section-insumos>.flex.items-center>div:first-child{flex:1 1 100%;order:-1}
+  /* Tablas: scroll horizontal + columnas prioritarias */
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .card.overflow-hidden{overflow:visible}
+  .tbl-wrap>.data-table,.tbl-wrap+.data-table,.tbl-wrap .data-table{min-width:0}
+  .data-table{width:100%;min-width:0}
+  .data-table th,.data-table td{padding:8px 10px;font-size:12px;white-space:nowrap}
+  .mob-hide{display:none!important}
+  /* Section headers flex-wrap */
+  [id^="section-"]>.flex.items-center.justify-between{flex-wrap:wrap;gap:10px}
+  [id^="section-"]>.flex.items-center.justify-between>div:first-child{flex:1 1 100%}
+  .font-display.text-3xl{font-size:22px}
+  /* Modales como bottom-sheets */
+  .modal-overlay{padding:8px;align-items:flex-end}
+  .modal-overlay>.card{border-radius:16px 16px 6px 6px;max-height:90vh;overflow-y:auto;width:100%}
+  .wiz-wide{max-width:100%!important}
+  .card.p-5{padding:14px}
+  /* Wizard grids internos: forzar 1 col en paso 1 */
+  #wi-p1 .grid-cols-2,#wr-p1 .grid-cols-2{grid-template-columns:1fr 1fr}
+  /* Filtro grupos wrap */
+  #filtro-grupos{max-width:calc(100vw - 130px);overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}
+}
+@media(max-width:480px){
+  .grid-cols-4{grid-template-columns:1fr 1fr}
+  #section-dashboard .grid-cols-3{grid-template-columns:1fr}
+  section.p-8{padding:12px!important}
+}
 </style>
 </head>
 <body>
 
-<div class="flex h-screen overflow-hidden">
+<div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<div id="app-wrapper" class="flex h-screen overflow-hidden">
 
 <!-- ═══ SIDEBAR ═══ -->
 <aside class="flex-shrink-0 flex flex-col" style="width:220px;background:white;border-right:1.5px solid var(--borde)">
@@ -134,6 +182,14 @@ textarea.field-input{resize:vertical;line-height:1.7}
 <!-- ═══ MAIN ═══ -->
 <main class="flex-1 overflow-y-auto">
 
+<!-- HEADER MÓVIL -->
+<div class="mob-header">
+  <button class="mob-btn" onclick="toggleSidebar()" aria-label="Menú">☰</button>
+  <span class="font-display font-bold text-sm" id="mob-nombre">Mi Negocio</span>
+  <span style="flex:1"></span>
+  <span id="mob-api-dot" style="font-size:11px;color:var(--texto3)"></span>
+</div>
+
 <!-- DASHBOARD -->
 <section id="section-dashboard" class="p-8 anim-in">
   <div class="mb-8"><h1 class="font-display text-3xl mb-1">Buenos días 👋</h1><p class="text-sm" style="color:var(--texto2)">Sistema de costeo · <span id="dashboard-nombre">Mi Negocio</span></p></div>
@@ -162,9 +218,11 @@ textarea.field-input{resize:vertical;line-height:1.7}
     </div>
   </div>
   <div class="card overflow-hidden">
-    <table class="data-table"><thead><tr><th>Nombre</th><th>Grupo</th><th>Compra</th><th>Costo base</th><th>Estado</th><th></th></tr></thead>
+    <div class="tbl-wrap">
+    <table class="data-table"><thead><tr><th>Nombre</th><th class="mob-hide">Grupo</th><th>Compra</th><th>Costo base</th><th class="mob-hide">Estado</th><th></th></tr></thead>
     <tbody id="tabla-insumos"><tr><td colspan="6" class="text-center p-8 text-sm" style="color:var(--texto2)"><div style="font-size:32px;opacity:.2;margin-bottom:8px">📦</div>Sin insumos · Crea el primero</td></tr></tbody>
     </table>
+    </div>
   </div>
 </section>
 
@@ -175,9 +233,11 @@ textarea.field-input{resize:vertical;line-height:1.7}
     <button onclick="openModalProveedor()" class="btn-primary btn-sm">+ Nuevo proveedor</button>
   </div>
   <div class="card overflow-hidden">
-    <table class="data-table"><thead><tr><th>Nombre</th><th>Contacto</th><th>Teléfono</th><th>Días entrega</th></tr></thead>
+    <div class="tbl-wrap">
+    <table class="data-table"><thead><tr><th>Nombre</th><th class="mob-hide">Contacto</th><th>Teléfono</th><th class="mob-hide">Días entrega</th></tr></thead>
     <tbody id="tabla-proveedores"><tr><td colspan="4" class="text-center p-8 text-sm" style="color:var(--texto2)">Sin proveedores</td></tr></tbody>
     </table>
+    </div>
   </div>
 </section>
 
@@ -188,9 +248,11 @@ textarea.field-input{resize:vertical;line-height:1.7}
     <button onclick="openModalProceso()" class="btn-primary btn-sm">+ Nuevo proceso</button>
   </div>
   <div class="card overflow-hidden">
-    <table class="data-table"><thead><tr><th>Nombre</th><th>Costo/min</th><th>Descripción</th><th></th></tr></thead>
+    <div class="tbl-wrap">
+    <table class="data-table"><thead><tr><th>Nombre</th><th>Costo/min</th><th class="mob-hide">Descripción</th><th></th></tr></thead>
     <tbody id="tabla-procesos"><tr><td colspan="4" class="text-center p-8 text-sm" style="color:var(--texto2)">Sin procesos · Crea el primero</td></tr></tbody>
     </table>
+    </div>
   </div>
 </section>
 
@@ -201,9 +263,11 @@ textarea.field-input{resize:vertical;line-height:1.7}
     <button onclick="openWizardReceta()" class="btn-primary btn-sm">+ Nueva receta</button>
   </div>
   <div class="card overflow-hidden">
-    <table class="data-table"><thead><tr><th>Nombre</th><th>Tipo</th><th>Rinde</th><th>Costo total</th><th>Costo/porción</th><th></th></tr></thead>
+    <div class="tbl-wrap">
+    <table class="data-table"><thead><tr><th>Nombre</th><th>Tipo</th><th class="mob-hide">Rinde</th><th class="mob-hide">Costo total</th><th>Costo/porción</th><th></th></tr></thead>
     <tbody id="tabla-recetas"><tr><td colspan="6" class="text-center p-8 text-sm" style="color:var(--texto2)"><div style="font-size:32px;opacity:.2;margin-bottom:8px">📋</div>Sin recetas</td></tr></tbody>
     </table>
+    </div>
   </div>
 </section>
 
@@ -214,9 +278,11 @@ textarea.field-input{resize:vertical;line-height:1.7}
     <button onclick="openWizardMenu()" class="btn-primary btn-sm">+ Agregar al menú</button>
   </div>
   <div class="card overflow-hidden">
-    <table class="data-table"><thead><tr><th>Platillo</th><th>Costo/porción</th><th>Precio venta</th><th>Margen real</th><th>vs Objetivo</th></tr></thead>
+    <div class="tbl-wrap">
+    <table class="data-table"><thead><tr><th>Platillo</th><th class="mob-hide">Costo/porción</th><th>Precio venta</th><th>Margen real</th><th class="mob-hide">vs Objetivo</th></tr></thead>
     <tbody id="tabla-menus"><tr><td colspan="5" class="text-center p-8 text-sm" style="color:var(--texto2)"><div style="font-size:32px;opacity:.2;margin-bottom:8px">💰</div>Sin platillos en menú</td></tr></tbody>
     </table>
+    </div>
   </div>
 </section>
 
@@ -228,15 +294,19 @@ textarea.field-input{resize:vertical;line-height:1.7}
   </div>
   <div class="card overflow-hidden mb-6">
     <div class="p-4 pb-2 font-semibold text-sm uppercase tracking-wider" style="color:var(--texto2)">Stock actual por insumo</div>
-    <table class="data-table"><thead><tr><th></th><th>Insumo</th><th>Stock actual</th><th>Unidad</th><th>Último mov.</th></tr></thead>
+    <div class="tbl-wrap">
+    <table class="data-table"><thead><tr><th></th><th>Insumo</th><th>Stock actual</th><th>Unidad</th><th class="mob-hide">Último mov.</th></tr></thead>
     <tbody id="tabla-stock"><tr><td colspan="5" class="text-center p-8 text-sm" style="color:var(--texto2)">Sin movimientos registrados</td></tr></tbody>
     </table>
+    </div>
   </div>
   <div class="card overflow-hidden">
     <div class="p-4 pb-2 font-semibold text-sm uppercase tracking-wider" style="color:var(--texto2)">Historial de movimientos</div>
-    <table class="data-table"><thead><tr><th>Fecha</th><th>Insumo</th><th>Tipo</th><th>Cantidad</th><th>Stock resultante</th><th>Nota</th></tr></thead>
+    <div class="tbl-wrap">
+    <table class="data-table"><thead><tr><th>Fecha</th><th>Insumo</th><th>Tipo</th><th>Cantidad</th><th class="mob-hide">Stock resultante</th><th class="mob-hide">Nota</th></tr></thead>
     <tbody id="tabla-historial"><tr><td colspan="6" class="text-center p-8 text-sm" style="color:var(--texto2)">Sin movimientos</td></tr></tbody>
     </table>
+    </div>
   </div>
 </section>
 
@@ -284,13 +354,16 @@ textarea.field-input{resize:vertical;line-height:1.7}
   <div id="wi-p2" class="p-6 space-y-4 hidden">
     <div class="rounded-xl p-4 text-sm" style="background:var(--amber-l);border:1px solid var(--amber-ll)">
       <div class="font-semibold mb-1" style="color:#4A310A">¿Cómo funciona el costo?</div>
-      <div style="color:#716A60;font-size:13px;line-height:1.6">Dime cuánto <strong>compraste</strong> y cuánto <strong>pagaste</strong>.<br>Ejemplo: 1 kg por $250 → sistema calcula $0.25/g automáticamente.</div>
+      <div style="color:#716A60;font-size:13px;line-height:1.6">Dime <strong>cuánto compraste</strong>, en qué unidad y <strong>cuánto pagaste en total</strong>.<br>Ejemplo: compré 10 kg por $1,000 → el sistema calcula $0.10/g automáticamente.</div>
     </div>
     <div class="field-group"><label class="field-label">Proveedor</label>
       <select id="wi-proveedor" class="field-input"><option value="">— Sin proveedor —</option></select>
       <button onclick="openModalProveedor()" class="text-xs font-semibold mt-1" style="color:var(--verde);background:none;border:none;cursor:pointer">+ Agregar nuevo proveedor</button>
     </div>
     <div class="grid grid-cols-2 gap-4">
+      <div class="field-group"><label class="field-label">Cantidad comprada *</label>
+        <input id="wi-cantidad" class="field-input" type="number" placeholder="10" step="0.001" min="0.001" value="1" oninput="calcCostoInsumo()">
+      </div>
       <div class="field-group"><label class="field-label">Unidad de compra</label>
         <select id="wi-unidad" class="field-input" onchange="calcCostoInsumo()">
           <option value="kg">kg · kilogramo</option><option value="g">g · gramo</option>
@@ -299,11 +372,11 @@ textarea.field-input{resize:vertical;line-height:1.7}
           <option value="oz">oz · onza</option><option value="lb">lb · libra</option>
         </select>
       </div>
-      <div class="field-group"><label class="field-label">Precio que pagué *</label>
-        <div class="input-addon">
-          <input id="wi-precio" class="field-input" type="number" placeholder="250.00" step="0.01" min="0.01" oninput="calcCostoInsumo()" style="padding-right:58px">
-          <span class="addon">MXN</span>
-        </div>
+    </div>
+    <div class="field-group"><label class="field-label">Precio total pagado *</label>
+      <div class="input-addon">
+        <input id="wi-precio" class="field-input" type="number" placeholder="1000.00" step="0.01" min="0.01" oninput="calcCostoInsumo()" style="padding-right:58px">
+        <span class="addon">MXN</span>
       </div>
     </div>
     <div id="wi-preview" class="hidden rounded-xl overflow-hidden" style="border:1px solid var(--borde)">
@@ -379,7 +452,7 @@ textarea.field-input{resize:vertical;line-height:1.7}
 
 <!-- ══════════ WIZARD RECETA ══════════ -->
 <div id="wiz-receta" class="modal-overlay hidden">
-<div class="card w-full anim-in" style="max-width:620px;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 4px 6px rgba(0,0,0,.05),0 20px 60px rgba(0,0,0,.22)">
+<div class="card w-full anim-in wiz-wide" style="max-width:620px;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 4px 6px rgba(0,0,0,.05),0 20px 60px rgba(0,0,0,.22)">
   <div class="p-6 pb-4 flex-shrink-0" style="border-bottom:1px solid var(--borde)">
     <div class="flex items-center justify-between mb-4">
       <div><h2 class="font-display text-xl">Nueva receta</h2><p class="text-sm mt-1" style="color:var(--texto2)" id="wr-desc">Paso 1 de 3 · Información general</p></div>
@@ -398,19 +471,30 @@ textarea.field-input{resize:vertical;line-height:1.7}
         <input id="wr-nombre" class="field-input" type="text" placeholder="Ej: Tasajo asado, Pasta de frijoles…">
       </div>
       <div class="grid grid-cols-2 gap-4">
-        <div class="field-group"><label class="field-label">Tipo</label>
-          <select id="wr-tipo" class="field-input">
-            <option value="Plato">Plato principal</option>
-            <option value="Base">Base / Subreceta</option>
-            <option value="Bebida">Bebida</option>
-            <option value="Postre">Postre</option>
-            <option value="Entrada">Entrada / Guarnición</option>
-          </select>
+        <div class="field-group"><label class="field-label">Tipo <span style="color:var(--texto3);font-weight:400;text-transform:none">(editable)</span></label>
+          <input id="wr-tipo" class="field-input" list="wr-tipo-opts" placeholder="Plato, Base, Bebida…" value="Plato">
+          <datalist id="wr-tipo-opts">
+            <option value="Plato">
+            <option value="Base">
+            <option value="Bebida">
+            <option value="Postre">
+            <option value="Entrada">
+            <option value="Guarnición">
+            <option value="Snack">
+          </datalist>
         </div>
-        <div class="field-group"><label class="field-label">¿Cuántas porciones produce? *</label>
-          <div class="input-addon">
-            <input id="wr-rinde" class="field-input" type="number" placeholder="1" min="0.1" step="0.5" value="1" style="padding-right:72px">
-            <span class="addon">porciones</span>
+        <div class="field-group"><label class="field-label">Rendimiento *</label>
+          <div class="flex gap-2">
+            <input id="wr-rinde" class="field-input" type="number" placeholder="1" min="0.1" step="0.5" value="1" style="flex:2">
+            <input id="wr-unidad-rinde" class="field-input" list="wr-urinde-opts" placeholder="porciones" value="porciones" style="flex:3">
+            <datalist id="wr-urinde-opts">
+              <option value="porciones">
+              <option value="piezas">
+              <option value="litros">
+              <option value="kg">
+              <option value="g">
+              <option value="ml">
+            </datalist>
           </div>
         </div>
       </div>
@@ -440,7 +524,8 @@ textarea.field-input{resize:vertical;line-height:1.7}
       <!-- Form insumo -->
       <div id="form-ins" class="rounded-xl p-4 space-y-3" style="background:#FAF9F7;border:1px solid var(--borde)">
         <div class="field-group"><label class="field-label">Insumo o subreceta</label>
-          <select id="c-ins-sel" class="field-input" onchange="previewIngrediente()"><option value="">— Seleccionar —</option></select>
+          <input type="text" id="ins-buscar" class="field-input" placeholder="🔍 Escribe para buscar…" oninput="filtrarInsSel(this.value)" style="margin-bottom:4px">
+          <select id="c-ins-sel" class="field-input" onchange="onInsSelChange()"><option value="">— Seleccionar —</option></select>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div class="field-group"><label class="field-label">Cantidad a usar *</label>
@@ -502,10 +587,12 @@ textarea.field-input{resize:vertical;line-height:1.7}
     </div>
     <!-- Paso 3 -->
     <div id="wr-p3" class="p-6 space-y-3 hidden">
-      <div class="font-semibold text-sm">Pasos de preparación</div>
-      <div class="text-xs" style="color:var(--texto2)">Una línea = un paso. El KDS los mostrará uno a uno al cocinero.</div>
-      <textarea id="wr-pasos" class="field-input" rows="9"
-        placeholder="1. Limpiar y secar el tasajo&#10;2. Calentar el comal a fuego medio-alto&#10;3. Asar 4 min por lado&#10;4. Reposar 2 min antes de cortar"></textarea>
+      <div class="flex items-center justify-between">
+        <div class="font-semibold text-sm">Pasos de preparación</div>
+        <button onclick="agregarPaso()" class="btn-primary btn-sm">+ Siguiente paso</button>
+      </div>
+      <div class="text-xs" style="color:var(--texto2)">Agrega cada paso por separado. El KDS los mostrará uno a uno al cocinero. El tiempo es opcional.</div>
+      <div id="pasos-lista" class="space-y-2"></div>
       <div id="wr-resumen" class="hidden costo-acum">
         <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#183B2B">Resumen de la receta</div>
         <div id="wr-resumen-contenido"></div>
@@ -638,7 +725,8 @@ let API_URL   = localStorage.getItem('fas_url')   || '';
 let API_TOKEN = localStorage.getItem('fas_token') || '';
 let _ins=[], _prov=[], _proc=[], _rec=[], _men=[];
 let wiStep=1, wiGrupo='Carnes', wiEditMode=false, wiEditId=null;
-let wrStep=1, wrComps=[], wrTabComp='insumo';
+let wrStep=1, wrComps=[], wrTabComp='insumo', wrPasos=[];
+let _cpmGlobal=0;
 
 // ══ CONVERSIONES ══════════════════════════════════════════
 const CONV_G ={g:1,kg:1000,oz:28.3495,lb:453.592,mg:0.001};
@@ -669,6 +757,18 @@ async function api(action,payload,useToken){
   return d.data!==undefined?d.data:d;
 }
 
+// ══ SIDEBAR MÓVIL ═════════════════════════════════════════
+function toggleSidebar(){
+  const aside=document.querySelector('aside');
+  const ov=document.getElementById('sidebar-overlay');
+  const open=aside.classList.toggle('open');
+  ov.classList.toggle('show',open);
+}
+function closeSidebar(){
+  document.querySelector('aside').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
 // ══ NAVEGACIÓN ════════════════════════════════════════════
 function showSection(n){
   document.querySelectorAll('[id^="section-"]').forEach(s=>s.classList.add('hidden'));
@@ -679,6 +779,7 @@ function showSection(n){
   if(nav) nav.classList.add('active');
   const loaders={insumos:cargarInsumos,proveedores:cargarProveedores,procesos:cargarProcesos,recetas:cargarRecetas,menus:cargarMenus,inventario:cargarInventario,dashboard:cargarDashboard};
   if(loaders[n]) loaders[n]();
+  closeSidebar();
 }
 
 // ══ WIZARD INSUMO ═════════════════════════════════════════
@@ -698,6 +799,13 @@ function openWizardInsumo(editData){
     document.getElementById('wi-nota').value    = editData.nota    ||'';
     document.getElementById('wi-unidad').value  = editData.unidadComercial||'kg';
     document.getElementById('wi-precio').value  = editData.precioCompra||'';
+    // Reconstruir cantidad: cantidadComercial (en base) → a la unidad comercial
+    if(editData.cantidadComercial&&editData.unidadComercial){
+      const{val:bv}=convertirABase(1,editData.unidadComercial);
+      document.getElementById('wi-cantidad').value=(editData.cantidadComercial/bv).toFixed(3).replace(/\.?0+$/,'');
+    } else {
+      document.getElementById('wi-cantidad').value='1';
+    }
     if(editData.grupo){
       wiGrupo=editData.grupo;
       const chip=[...document.querySelectorAll('.grupo-chip')].find(c=>c.textContent.includes(editData.grupo));
@@ -756,12 +864,13 @@ function selGrupo(btn,g){
 }
 function calcCostoInsumo(){
   const precio=parseFloat(document.getElementById('wi-precio').value);
+  const cantidad=parseFloat(document.getElementById('wi-cantidad').value)||1;
   const unidad=document.getElementById('wi-unidad').value;
   const box=document.getElementById('wi-preview');
   if(!precio||precio<=0){box.classList.add('hidden');return;}
-  const{val:baseVal,base}=convertirABase(1,unidad);
+  const{val:baseVal,base}=convertirABase(cantidad,unidad);
   const costoBase=precio/baseVal;
-  document.getElementById('prev-compre').textContent='1 '+unidad;
+  document.getElementById('prev-compre').textContent=cantidad+' '+unidad;
   document.getElementById('prev-pague').textContent='$'+precio.toFixed(2)+' MXN';
   document.getElementById('prev-unidad-label').textContent=base;
   document.getElementById('prev-costo-unit').textContent='$'+costoBase.toFixed(4)+'/'+base;
@@ -773,7 +882,8 @@ async function guardarInsumo(){
   const nombre=document.getElementById('wi-nombre').value.trim();
   if(!nombre){toast('El nombre es requerido','error');return;}
   const unidad=document.getElementById('wi-unidad').value;
-  const{val:baseVal}=convertirABase(1,unidad);
+  const cantidad=parseFloat(document.getElementById('wi-cantidad').value)||1;
+  const{val:baseVal}=convertirABase(cantidad,unidad);
   const costoBase=precio/baseVal;
   const grupoCustom=document.getElementById('wi-grupo-custom').value.trim();
   const payload={
@@ -849,13 +959,42 @@ async function guardarProceso(){
 
 // ══ WIZARD RECETA ═════════════════════════════════════════
 function openWizardReceta(){
-  wrStep=1;wrComps=[];wrTabComp='insumo';
-  ['wr-nombre','wr-notas','wr-pasos'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  wrStep=1;wrComps=[];wrTabComp='insumo';wrPasos=[];
+  ['wr-nombre','wr-notas'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
   document.getElementById('wr-rinde').value='1';
   document.getElementById('wr-tipo').value='Plato';
+  document.getElementById('wr-unidad-rinde').value='porciones';
   document.getElementById('wr-resumen').classList.add('hidden');
   setTabComp('insumo');renderWrStep();renderCompLista();
+  renderPasos();agregarPaso();
   document.getElementById('wiz-receta').classList.remove('hidden');
+}
+// ── Pasos dinámicos ──────────────────────────────────────
+function agregarPaso(){
+  wrPasos.push({texto:'',tiempo:0});
+  renderPasos();
+  // Focus en el último input
+  setTimeout(()=>{
+    const inputs=document.querySelectorAll('.paso-txt');
+    if(inputs.length) inputs[inputs.length-1].focus();
+  },50);
+}
+function quitarPaso(i){wrPasos.splice(i,1);renderPasos();}
+function renderPasos(){
+  const cont=document.getElementById('pasos-lista');
+  if(!wrPasos.length){
+    cont.innerHTML='<div class="text-xs text-center py-4" style="color:var(--texto3)">Sin pasos aún — pulsa "Siguiente paso" para agregar</div>';
+    return;
+  }
+  cont.innerHTML=wrPasos.map((p,i)=>`
+    <div class="flex gap-2 items-start mb-2">
+      <div style="width:28px;height:28px;border-radius:50%;background:var(--verde-l);color:var(--verde);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:8px">${i+1}</div>
+      <input class="field-input flex-1 paso-txt" type="text" value="${p.texto.replace(/"/g,'&quot;')}" placeholder="Descripción del paso…" oninput="wrPasos[${i}].texto=this.value" style="padding:9px 12px;font-size:13px">
+      <div style="flex-shrink:0">
+        <input class="field-input" type="number" value="${p.tiempo||''}" placeholder="min" min="0" title="Tiempo estimado en minutos (opcional)" oninput="wrPasos[${i}].tiempo=parseInt(this.value)||0" style="width:62px;padding:9px 8px;font-size:12px;text-align:center">
+      </div>
+      <button onclick="quitarPaso(${i})" title="Eliminar paso" style="background:none;border:none;cursor:pointer;color:var(--texto3);font-size:20px;line-height:1;padding:4px;margin-top:4px">×</button>
+    </div>`).join('');
 }
 function closeWizardReceta(){document.getElementById('wiz-receta').classList.add('hidden');}
 
@@ -932,8 +1071,36 @@ function previewProceso(){
   if(!id||id==='_nuevo'||!mins){box.classList.add('hidden');return;}
   const proc=_proc.find(p=>p.procesoId===id);
   if(!proc){box.classList.add('hidden');return;}
-  document.getElementById('prev-pro-val').textContent='$'+(proc.costoPorMinuto*mins).toFixed(2)+' MXN';
+  const cpm=proc.costoPorMinuto||_cpmGlobal||0;
+  document.getElementById('prev-pro-val').textContent='$'+(cpm*mins).toFixed(2)+' MXN';
   box.classList.remove('hidden');
+}
+function onInsSelChange(){
+  const sel=document.getElementById('c-ins-sel');
+  const id=sel.value;
+  if(!id)return;
+  // Auto-set unidad desde el insumo seleccionado
+  const ins=_ins.find(i=>i.insumoId===id);
+  if(ins&&ins.unidadComercial){
+    const u=ins.unidadComercial;
+    const unidSel=document.getElementById('c-ins-unidad');
+    // Busca la opción más cercana a la unidad base del insumo
+    const base=u==='kg'||u==='lb'||u==='oz'?'g':u==='l'?'ml':u;
+    const opt=[...unidSel.options].find(o=>o.value===base);
+    if(opt) unidSel.value=base;
+  }
+  previewIngrediente();
+}
+function filtrarInsSel(q){
+  const sel=document.getElementById('c-ins-sel');
+  const q2=q.toLowerCase().trim();
+  Array.from(sel.options).forEach(opt=>{
+    if(!opt.value){opt.hidden=false;return;}
+    opt.hidden=q2?!opt.textContent.toLowerCase().includes(q2):false;
+  });
+  const vis=Array.from(sel.options).filter(o=>o.value&&!o.hidden);
+  if(vis.length===1){sel.value=vis[0].value;onInsSelChange();}
+  else if(!q2){sel.value='';}
 }
 function getCostoBaseUnitario(id){
   const ins=_ins.find(i=>i.insumoId===id);
@@ -957,6 +1124,9 @@ function agregarComp(tipo){
     const costo=calcCostoLinea(cbu,cant,unid,merm);
     const esSub=_rec.some(r=>r.recetaId===id);
     wrComps.push({tipo:esSub?'subreceta':'insumo',componenteId:id,nombre:nombre.trim(),cantidadUsada:cant,unidadMedida:unid,porcentajeMerma:merm,tiempoMinutos:0,orden,costoLinea:costo});
+    document.getElementById('c-ins-sel').value='';
+    document.getElementById('ins-buscar').value='';
+    Array.from(document.getElementById('c-ins-sel').options).forEach(o=>o.hidden=false);
     document.getElementById('c-ins-cant').value='';
     document.getElementById('c-ins-merma').value='0';
     document.getElementById('c-ins-orden').value=wrComps.length+1;
@@ -969,7 +1139,7 @@ function agregarComp(tipo){
     const mins=parseFloat(document.getElementById('c-pro-min').value);
     if(!mins||mins<=0){toast('Ingresa los minutos','error');return;}
     const proc=_proc.find(p=>p.procesoId===id);
-    const cpm=proc?proc.costoPorMinuto:0;
+    const cpm=proc?(proc.costoPorMinuto||_cpmGlobal||0):(_cpmGlobal||0);
     wrComps.push({tipo:'proceso',componenteId:id,nombre:nombre.trim(),cantidadUsada:mins,unidadMedida:'min',porcentajeMerma:0,tiempoMinutos:mins,orden:wrComps.length+1,costoLinea:cpm*mins});
     document.getElementById('c-pro-min').value='';
     document.getElementById('prev-pro').classList.add('hidden');
@@ -1044,13 +1214,12 @@ async function guardarReceta(){
   const btn=document.getElementById('wr-save');btn.disabled=true;
   document.getElementById('wr-save-txt').textContent='Guardando…';
   try{
-    const pasosRaw=document.getElementById('wr-pasos').value;
-    const pasos=pasosRaw.split('\n').map(p=>p.replace(/^\d+[\.\)]\s*/,'').trim()).filter(Boolean);
+    const pasos=wrPasos.map(p=>p.texto.trim()).filter(Boolean);
     const rinde=parseFloat(document.getElementById('wr-rinde').value)||1;
     const total=wrComps.reduce((a,c)=>a+(c.costoLinea||0),0);
     const res=await api('crearReceta',{
-      nombre,tipoServicio:document.getElementById('wr-tipo').value,
-      rendimiento:rinde,unidadRendimiento:'porciones',
+      nombre,tipoServicio:document.getElementById('wr-tipo').value||'Plato',
+      rendimiento:rinde,unidadRendimiento:document.getElementById('wr-unidad-rinde').value||'porciones',
       notasPreparacion:document.getElementById('wr-notas').value.trim(),
       pasoAPaso:pasos,costoTotal:total,costoPorPorcion:total/rinde,
     });
@@ -1083,11 +1252,16 @@ function openWizardMenu(){
 function closeWizardMenu(){document.getElementById('wiz-menu').classList.add('hidden');}
 function calcMenuMargen(){
   const recId=document.getElementById('m-receta').value;
-  const precio=parseFloat(document.getElementById('m-precio').value)||0;
   const obj=parseFloat(document.getElementById('m-obj').value)||65;
-  if(!recId||!precio){document.getElementById('m-preview').classList.add('hidden');return;}
-  const rec=_rec.find(r=>r.recetaId===recId);
-  const costo=rec?(rec.costoPorPorcion||0):0;
+  if(!recId){document.getElementById('m-preview').classList.add('hidden');return;}
+  const recObj=_rec.find(r=>r.recetaId===recId);
+  const costo=recObj?(recObj.costoPorPorcion||0):0;
+  // Auto-sugerir precio si el campo está vacío
+  if(costo>0&&!document.getElementById('m-precio').value){
+    document.getElementById('m-precio').value=(costo/(1-obj/100)).toFixed(0);
+  }
+  const precio=parseFloat(document.getElementById('m-precio').value)||0;
+  if(!precio){document.getElementById('m-preview').classList.add('hidden');return;}
   const margen=precio>0?((precio-costo)/precio*100):0;
   const precioSug=costo>0?(costo/(1-obj/100)):0;
   document.getElementById('m-costo').textContent='$'+costo.toFixed(2);
@@ -1158,6 +1332,7 @@ function guardarConfig(){
   localStorage.setItem('fas_nombre',n);
   aplicarNombre(n);
   document.getElementById('api-status').textContent=API_URL?'🟢 API conectada':'Sin URL de API';
+  const md=document.getElementById('mob-api-dot');if(md)md.textContent=API_URL?'🟢':'';
   toast('✅ Configuración guardada','success');
   closeTokenModal();
 }
@@ -1217,10 +1392,10 @@ function renderTablaInsumos(lista){
   if(!lista.length){tb.innerHTML='<tr><td colspan="6" class="text-center p-8 text-sm" style="color:var(--texto2)">Sin insumos en este grupo</td></tr>';return;}
   tb.innerHTML=lista.map(i=>`<tr>
     <td><div class="font-medium">${i.nombre||'—'}</div><div class="text-xs font-mono" style="color:var(--texto2)">${i.codigo||''}</div></td>
-    <td><span class="tag tag-gray">${i.grupo||'—'}</span></td>
+    <td class="mob-hide"><span class="tag tag-gray">${i.grupo||'—'}</span></td>
     <td class="font-mono text-sm">$${(i.precioCompra||0).toFixed(2)} / ${i.unidadComercial||'?'}</td>
     <td class="font-mono text-sm" style="color:var(--verde)">$${(i.costoBaseUnitario||0).toFixed(4)}</td>
-    <td><span class="tag ${i.activo?'tag-green':'tag-gray'}">${i.activo?'Activo':'Inactivo'}</span></td>
+    <td class="mob-hide"><span class="tag ${i.activo?'tag-green':'tag-gray'}">${i.activo?'Activo':'Inactivo'}</span></td>
     <td><button class="btn-icon-sm" onclick="editarInsumo('${i.insumoId}')">Editar</button></td>
   </tr>`).join('');
 }
@@ -1232,9 +1407,9 @@ async function cargarProveedores(){
     if(!_prov.length){tb.innerHTML='<tr><td colspan="4" class="text-center p-8 text-sm" style="color:var(--texto2)">Sin proveedores</td></tr>';return;}
     tb.innerHTML=_prov.map(p=>`<tr>
       <td class="font-medium">${p.nombre||'—'}</td>
-      <td style="color:var(--texto2)">${p.contacto||'—'}</td>
+      <td class="mob-hide" style="color:var(--texto2)">${p.contacto||'—'}</td>
       <td class="font-mono">${p.telefono||'—'}</td>
-      <td><span class="tag tag-gray">${p.diasEntrega||'Sin especificar'}</span></td>
+      <td class="mob-hide"><span class="tag tag-gray">${p.diasEntrega||'Sin especificar'}</span></td>
     </tr>`).join('');
     document.getElementById('kpi-prov').textContent=_prov.length;
   }catch(e){tb.innerHTML=`<tr><td colspan="4" class="text-center p-6 text-sm" style="color:var(--amber)">⚠️ ${e.message}</td></tr>`;}
@@ -1248,7 +1423,7 @@ async function cargarProcesos(){
     tb.innerHTML=_proc.map(p=>`<tr>
       <td class="font-medium">${p.nombre||'—'}</td>
       <td class="font-mono" style="color:var(--amber)">$${(p.costoPorMinuto||0).toFixed(4)}/min</td>
-      <td style="color:var(--texto2)">${p.descripcion||'—'}</td>
+      <td class="mob-hide" style="color:var(--texto2)">${p.descripcion||'—'}</td>
       <td><button class="btn-icon-sm" onclick='openModalProceso(${JSON.stringify(p)})'>Editar</button></td>
     </tr>`).join('');
   }catch(e){tb.innerHTML=`<tr><td colspan="4" class="text-center p-6 text-sm" style="color:var(--amber)">⚠️ ${e.message}</td></tr>`;}
@@ -1262,8 +1437,8 @@ async function cargarRecetas(){
     tb.innerHTML=_rec.map(r=>`<tr>
       <td class="font-medium">${r.nombre||'—'}</td>
       <td><span class="tag tag-green">${r.tipoServicio||'—'}</span></td>
-      <td>${r.rendimiento||1} porción(es)</td>
-      <td class="font-mono" style="color:var(--verde)">${r.costoTotal>0?'$'+r.costoTotal.toFixed(2):'—'}</td>
+      <td class="mob-hide">${r.rendimiento||1} porción(es)</td>
+      <td class="font-mono mob-hide" style="color:var(--verde)">${r.costoTotal>0?'$'+r.costoTotal.toFixed(2):'—'}</td>
       <td class="font-mono font-semibold" style="color:var(--verde)">${r.costoPorPorcion>0?'$'+r.costoPorPorcion.toFixed(2):'—'}</td>
       <td><button class="btn-icon-sm" style="color:var(--texto2)">Ver</button></td>
     </tr>`).join('');
@@ -1285,13 +1460,13 @@ async function cargarMenus(){
       const col=margen>=obj?'var(--verde)':margen>=obj*.8?'var(--amber)':'#DC2626';
       return `<tr>
         <td class="font-medium">${m.nombre||'—'}</td>
-        <td class="font-mono">$${(m.costoTotal||0).toFixed(2)}</td>
+        <td class="font-mono mob-hide">$${(m.costoTotal||0).toFixed(2)}</td>
         <td class="font-mono">$${(m.precioVenta||0).toFixed(2)}</td>
         <td><div class="flex items-center gap-2">
-          <div class="margin-bar" style="width:80px"><div class="margin-fill" style="width:${Math.min(margen,100)}%;background:${col}"></div></div>
+          <div class="margin-bar" style="width:60px"><div class="margin-fill" style="width:${Math.min(margen,100)}%;background:${col}"></div></div>
           <span class="font-mono font-semibold" style="color:${col}">${margen.toFixed(1)}%</span>
         </div></td>
-        <td><span class="tag ${margen>=obj?'tag-green':margen>=obj*.8?'tag-amber':'tag-red'}">${margen>=obj?'✓ OK':'↓ '+(margen-obj).toFixed(1)+'%'}</span></td>
+        <td class="mob-hide"><span class="tag ${margen>=obj?'tag-green':margen>=obj*.8?'tag-amber':'tag-red'}">${margen>=obj?'✓ OK':'↓ '+(margen-obj).toFixed(1)+'%'}</span></td>
       </tr>`;
     }).join('');
     if(_men.length) document.getElementById('kpi-margen').textContent=(sumM/_men.length).toFixed(1)+'%';
@@ -1320,7 +1495,7 @@ async function cargarInventario(){
           <td class="font-medium">${insMap[s.insumoId]||s.insumoId}</td>
           <td class="font-mono font-semibold" style="color:${stock<=0?'#DC2626':'var(--verde)'}">${stock.toFixed(2)}</td>
           <td><span class="tag tag-gray">${s.unidad||'—'}</span></td>
-          <td class="text-xs" style="color:var(--texto2)">${fecha}</td>
+          <td class="text-xs mob-hide" style="color:var(--texto2)">${fecha}</td>
         </tr>`;
       }).join('');
     }
@@ -1337,8 +1512,8 @@ async function cargarInventario(){
           <td class="font-medium">${insMap[m.insumoId]||m.insumoId}</td>
           <td><span class="tag ${tipoClase[m.tipo]||'tag-gray'}">${m.tipo}</span></td>
           <td class="font-mono">${m.cantidad} ${m.unidad}</td>
-          <td class="font-mono font-semibold">${m.stockResultante.toFixed(2)}</td>
-          <td class="text-sm" style="color:var(--texto2)">${m.nota||'—'}</td>
+          <td class="font-mono font-semibold mob-hide">${m.stockResultante.toFixed(2)}</td>
+          <td class="text-sm mob-hide" style="color:var(--texto2)">${m.nota||'—'}</td>
         </tr>`;
       }).join('');
     }
@@ -1409,7 +1584,7 @@ async function cargarRecEnSelector(selId){
 
 // ══ UTILS ═════════════════════════════════════════════════
 function aplicarNombre(n){
-  ['sidebar-nombre','dashboard-nombre'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=n;});
+  ['sidebar-nombre','dashboard-nombre','mob-nombre'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=n;});
   document.title=n+' · Panel Admin';
 }
 let _toastTm;
@@ -1419,11 +1594,21 @@ function toast(msg,type){
   clearTimeout(_toastTm);_toastTm=setTimeout(()=>e.classList.remove('show'),3200);
 }
 
+async function cargarConfig(){
+  if(!API_URL) return;
+  try{
+    const cfg=await api('getConfig',{},false); // sin token — acción pública
+    if(cfg&&cfg.cpmGlobal) _cpmGlobal=cfg.cpmGlobal;
+    if(cfg&&cfg.nombreNegocio) aplicarNombre(cfg.nombreNegocio);
+  }catch(_){}
+}
+
 // ══ INIT ══════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
   const n=localStorage.getItem('fas_nombre')||'Mi Negocio';
   aplicarNombre(n);
-  if(API_URL) document.getElementById('api-status').textContent='🟢 API conectada';
+  if(API_URL){document.getElementById('api-status').textContent='🟢 API conectada';const md=document.getElementById('mob-api-dot');if(md)md.textContent='🟢';}
+  cargarConfig();
   cargarDashboard();
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){
