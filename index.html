@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>
-tailwind.config={theme:{extend:{fontFamily:{display:['Playfair Display','serif'],body:['DM Sans','sans-serif'],mono:['DM Mono','monospace']},colors:{ink:{DEFAULT:'#0F0E0C',50:'#FAF9F7',100:'#F2F0EB',200:'#E0DDD5',300:'#C4BFB4',400:'#9A9288',500:'#716A60',600:'#504A42',700:'#363028',800:'#211D18',900:'#0F0E0C'},leaf:{DEFAULT:'#2D6A4F',50:'#EDF7F2',100:'#C8E8D9',200:'#94D1B5',500:'#2D6A4F',600:'#22523C',700:'#183B2B'},amber:{DEFAULT:'#C9882A',50:'#FEF6E9',100:'#FDEAC8',500:'#C9882A',600:'#9E6A1D'}}}}}
+tailwind.config={theme:{extend:{fontFamily:{display:['Playfair Display','serif'],body:['DM Sans','sans-serif'],mono:['DM Mono','monospace']},colors:{ink:{DEFAULT:'#0F0E0C',50:'#FAF9F7',100:'#F2F0EB',200:'#E0DDD5',300:'#C4BFB4',400:'#9A9288',500:'#716A60',600:'#504A42',900:'#0F0E0C'},leaf:{DEFAULT:'#2D6A4F',50:'#EDF7F2',100:'#C8E8D9',500:'#2D6A4F',600:'#22523C',700:'#183B2B'},amber:{DEFAULT:'#C9882A',50:'#FEF6E9',100:'#FDEAC8',500:'#C9882A',600:'#9E6A1D'}}}}}
 </script>
 <style>
 *{font-family:'DM Sans',sans-serif}
@@ -33,10 +33,10 @@ select.field-input{appearance:none;background-image:url("data:image/svg+xml,%3Cs
 .btn-primary:hover{background:#22523C;transform:translateY(-1px)}
 .btn-primary:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .btn-secondary{background:white;color:#504A42;border-radius:10px;padding:11px 24px;font-weight:500;font-size:14px;cursor:pointer;transition:all .15s;border:1.5px solid #E0DDD5}
-.btn-secondary:hover{border-color:#C4BFB4;background:#FAF9F7}
+.btn-secondary:hover{border-color:#C4BFB4}
 .btn-amber{background:#C9882A;color:white;border-radius:10px;padding:11px 24px;font-weight:600;font-size:14px;cursor:pointer;transition:all .15s;border:none}
 .btn-amber:hover{background:#9E6A1D}
-.btn-sm{padding:6px 14px;font-size:12px;border-radius:8px}
+.btn-sm{padding:7px 16px;font-size:13px;border-radius:8px}
 .data-table{width:100%;border-collapse:separate;border-spacing:0}
 .data-table th{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#9A9288;padding:10px 16px;border-bottom:1.5px solid #E0DDD5;text-align:left}
 .data-table td{padding:12px 16px;border-bottom:1px solid #F4F1EB;font-size:14px;vertical-align:middle}
@@ -47,1293 +47,1307 @@ select.field-input{appearance:none;background-image:url("data:image/svg+xml,%3Cs
 .tag-amber{background:#FDEAC8;color:#4A310A}
 .tag-gray{background:#F2F0EB;color:#504A42}
 .tag-blue{background:#DBEAFE;color:#1e40af}
-.margin-bar{height:4px;border-radius:2px;background:#E0DDD5;overflow:hidden}
-.margin-fill{height:100%;border-radius:2px;background:#2D6A4F;transition:width .5s}
-.toast{position:fixed;bottom:24px;right:24px;z-index:9999;padding:14px 20px;border-radius:12px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;box-shadow:0 4px 6px rgba(0,0,0,.05),0 20px 40px rgba(0,0,0,.12);transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1)}
+.tag-purple{background:#EDE9FE;color:#5b21b6}
+.margin-bar{height:6px;border-radius:3px;background:#E0DDD5;overflow:hidden}
+.margin-fill{height:100%;border-radius:3px;transition:width .4s}
+.toast{position:fixed;bottom:24px;right:24px;z-index:9999;padding:14px 20px;border-radius:12px;font-size:14px;font-weight:500;box-shadow:0 4px 6px rgba(0,0,0,.08),0 20px 40px rgba(0,0,0,.14);transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1)}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.success{background:#2D6A4F;color:white}
 .toast.error{background:#DC2626;color:white}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.anim-in{animation:fadeUp .3s ease forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.anim-in{animation:fadeUp .25s ease forwards}
 .modal-overlay{background:rgba(15,14,12,.55);backdrop-filter:blur(4px)}
-.input-with-unit{position:relative}
-.input-with-unit .unit-badge{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:600;color:#9A9288;background:#F4F1EB;padding:2px 8px;border-radius:6px;pointer-events:none}
-input[type="range"]{accent-color:#2D6A4F;cursor:pointer}
-
-/* Grupo chips */
-.grupo-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #E0DDD5;color:#504A42;background:white;transition:all .15s}
-.grupo-chip:hover{border-color:#2D6A4F;color:#2D6A4F;background:#EDF7F2}
+.input-addon{position:relative}
+.input-addon .addon{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:600;color:#9A9288;background:#F4F1EB;padding:2px 8px;border-radius:6px;pointer-events:none;white-space:nowrap}
+input[type="range"]{accent-color:#2D6A4F;cursor:pointer;width:100%}
+.grupo-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #E0DDD5;color:#504A42;background:white;transition:all .15s}
+.grupo-chip:hover{border-color:#2D6A4F;color:#2D6A4F}
 .grupo-chip.active{background:#2D6A4F;color:white;border-color:#2D6A4F}
-
-/* Receta wizard componentes */
-.comp-row{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FAF9F7;border-radius:10px;border:1px solid #E0DDD5;margin-bottom:6px}
-.comp-row .comp-name{flex:1;font-size:13px;font-weight:500;color:#0F0E0C}
-.comp-row .comp-qty{font-family:'DM Mono',monospace;font-size:12px;color:#504A42;background:#F2F0EB;padding:3px 8px;border-radius:6px}
-.comp-row .comp-remove{color:#9A9288;cursor:pointer;font-size:16px;line-height:1;padding:2px 6px;border-radius:6px;transition:all .15s}
-.comp-row .comp-remove:hover{background:#FEE2E2;color:#DC2626}
+.comp-row{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#FAF9F7;border-radius:10px;border:1px solid #E0DDD5;margin-bottom:6px}
+.comp-row .cn{flex:1;font-size:13px;font-weight:500}
+.comp-row .cq{font-family:'DM Mono',monospace;font-size:12px;color:#504A42;background:#F2F0EB;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.comp-row .cc{font-family:'DM Mono',monospace;font-size:12px;color:#2D6A4F;font-weight:600;white-space:nowrap}
+.comp-row .rm{color:#C4BFB4;cursor:pointer;font-size:18px;line-height:1;padding:2px 6px;border-radius:6px;transition:all .15s;background:none;border:none}
+.comp-row .rm:hover{background:#FEE2E2;color:#DC2626}
+/* Costo acumulado en receta */
+.costo-acum{background:#EDF7F2;border:1px solid #C8E8D9;border-radius:12px;padding:14px 16px;margin-top:8px}
+/* Tab selector insumo/proceso */
+.tab-sel{display:flex;background:#F2F0EB;border-radius:10px;padding:3px;gap:3px}
+.tab-sel button{flex:1;padding:8px 0;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .15s;color:#9A9288;background:none}
+.tab-sel button.active{background:white;color:#0F0E0C;box-shadow:0 1px 4px rgba(0,0,0,.12)}
 </style>
 </head>
 <body>
 
 <div class="flex h-screen overflow-hidden">
 
-  <!-- SIDEBAR -->
-  <aside class="w-60 flex-shrink-0 flex flex-col bg-white" style="border-right:1.5px solid #E0DDD5">
-    <div class="p-5 pb-4" style="border-bottom:1px solid #E0DDD5">
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="w-60 flex-shrink-0 flex flex-col bg-white" style="border-right:1.5px solid #E0DDD5">
+  <div class="p-5 pb-4" style="border-bottom:1px solid #E0DDD5">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style="background:#2D6A4F">🍽</div>
+      <div>
+        <div class="font-display text-sm font-bold leading-tight" id="sidebar-nombre">Mi Negocio</div>
+        <div class="text-xs font-mono" style="color:#9A9288">Panel Admin</div>
+      </div>
+    </div>
+  </div>
+  <nav class="flex-1 p-3 space-y-1">
+    <div onclick="showSection('dashboard')" class="sidebar-item active" id="nav-dashboard"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</div>
+    <div onclick="showSection('insumos')" class="sidebar-item" id="nav-insumos"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Insumos</div>
+    <div onclick="showSection('proveedores')" class="sidebar-item" id="nav-proveedores"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Proveedores</div>
+    <div onclick="showSection('recetas')" class="sidebar-item" id="nav-recetas"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Recetas</div>
+    <div onclick="showSection('menus')" class="sidebar-item" id="nav-menus"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Menús & Precios</div>
+  </nav>
+  <div class="p-3" style="border-top:1px solid #E0DDD5">
+    <div onclick="openTokenModal()" class="sidebar-item" style="color:#9A9288"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Configurar API</div>
+    <div class="text-xs font-mono mt-2 px-4 truncate" id="api-status" style="color:#C4BFB4">Sin URL de API</div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="flex-1 overflow-y-auto">
+
+  <!-- DASHBOARD -->
+  <section id="section-dashboard" class="p-8 anim-in">
+    <div class="mb-8"><h1 class="font-display text-3xl mb-1">Buenos días 👋</h1><p class="text-sm" style="color:#9A9288">Sistema de costeo · <span id="dashboard-nombre">Mi Negocio</span></p></div>
+    <div class="grid grid-cols-4 gap-5 mb-8">
+      <div class="card p-5"><div class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:#9A9288">Insumos</div><div class="font-display text-3xl" id="kpi-ins">—</div><div class="text-xs mt-1" style="color:#C4BFB4">registrados</div></div>
+      <div class="card p-5"><div class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:#9A9288">Proveedores</div><div class="font-display text-3xl" id="kpi-prov">—</div><div class="text-xs mt-1" style="color:#C4BFB4">activos</div></div>
+      <div class="card p-5"><div class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:#9A9288">Recetas</div><div class="font-display text-3xl" id="kpi-rec">—</div><div class="text-xs mt-1" style="color:#C4BFB4">en el sistema</div></div>
+      <div class="card p-5"><div class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:#9A9288">Margen prom.</div><div class="font-display text-3xl" id="kpi-margen" style="color:#2D6A4F">—</div><div class="text-xs mt-1" style="color:#C4BFB4">en menú</div></div>
+    </div>
+    <div class="card p-6"><div class="font-semibold text-sm uppercase tracking-wider mb-4" style="color:#9A9288">Acceso rápido</div>
+      <div class="grid grid-cols-3 gap-4">
+        <button onclick="showSection('insumos');setTimeout(()=>openWizardInsumo(),100)" class="flex items-center gap-3 p-4 rounded-xl text-left hover:border-leaf transition-all" style="border:1.5px solid #E0DDD5;border-radius:12px"><div class="text-2xl">📦</div><div><div class="font-semibold text-sm">Nuevo insumo</div><div class="text-xs" style="color:#9A9288">Registrar materia prima</div></div></button>
+        <button onclick="showSection('recetas');setTimeout(()=>openWizardReceta(),100)" class="flex items-center gap-3 p-4 rounded-xl text-left transition-all" style="border:1.5px solid #E0DDD5;border-radius:12px"><div class="text-2xl">📋</div><div><div class="font-semibold text-sm">Nueva receta</div><div class="text-xs" style="color:#9A9288">Con costo en tiempo real</div></div></button>
+        <button onclick="showSection('menus')" class="flex items-center gap-3 p-4 rounded-xl text-left transition-all" style="border:1.5px solid #E0DDD5;border-radius:12px"><div class="text-2xl">💰</div><div><div class="font-semibold text-sm">Ver márgenes</div><div class="text-xs" style="color:#9A9288">Menú activo</div></div></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSUMOS -->
+  <section id="section-insumos" class="p-8 hidden anim-in">
+    <div class="flex items-center justify-between mb-6">
+      <div><h1 class="font-display text-3xl">Insumos</h1><p class="text-sm mt-1" style="color:#9A9288">Materias primas y subrecetas declaradas como ingrediente</p></div>
       <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-leaf flex items-center justify-center" style="background:#2D6A4F">
-          <span class="text-white text-lg" id="sidebar-icon-emoji">🍽</span>
-        </div>
-        <div>
-          <div class="font-display text-sm font-bold text-ink-900 leading-tight" id="sidebar-nombre">Mi Negocio</div>
-          <div class="text-xs text-ink-400 font-mono">Panel Admin</div>
-        </div>
+        <div id="filtro-grupos" class="flex gap-2 flex-wrap"></div>
+        <button onclick="openWizardInsumo()" class="btn-primary flex items-center gap-2 btn-sm">+ Nuevo insumo</button>
       </div>
     </div>
-    <nav class="flex-1 p-3 space-y-1">
-      <div onclick="showSection('dashboard')" class="sidebar-item active" id="nav-dashboard">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        Dashboard
-      </div>
-      <div onclick="showSection('insumos')" class="sidebar-item" id="nav-insumos">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-        Insumos
-      </div>
-      <div onclick="showSection('proveedores')" class="sidebar-item" id="nav-proveedores">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Proveedores
-      </div>
-      <div onclick="showSection('recetas')" class="sidebar-item" id="nav-recetas">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        Recetas
-      </div>
-      <div onclick="showSection('menus')" class="sidebar-item" id="nav-menus">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        Menús & Precios
-      </div>
-    </nav>
-    <div class="p-3" style="border-top:1px solid #E0DDD5">
-      <div onclick="openTokenModal()" class="sidebar-item" style="color:#9A9288">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Configurar
-      </div>
-      <div class="mt-2 px-4 py-1">
-        <div class="text-xs font-mono truncate" id="api-url-preview" style="color:#C4BFB4">Sin URL de API</div>
-      </div>
+    <div class="card overflow-hidden">
+      <table class="data-table"><thead><tr><th>Nombre</th><th>Grupo</th><th>Compra</th><th>Costo/g o /ml o /pza</th><th>Estado</th><th></th></tr></thead>
+      <tbody id="tabla-insumos"><tr><td colspan="6" class="text-center py-12 text-sm" style="color:#9A9288"><div class="flex flex-col items-center gap-3"><div class="text-4xl opacity-20">📦</div><div>Sin insumos · Crea el primero</div></div></td></tr></tbody>
+      </table>
     </div>
-  </aside>
+  </section>
 
-  <!-- MAIN CONTENT -->
-  <main class="flex-1 overflow-y-auto">
+  <!-- PROVEEDORES -->
+  <section id="section-proveedores" class="p-8 hidden anim-in">
+    <div class="flex items-center justify-between mb-6">
+      <div><h1 class="font-display text-3xl">Proveedores</h1></div>
+      <button onclick="openModalProveedor()" class="btn-primary btn-sm">+ Nuevo proveedor</button>
+    </div>
+    <div class="card overflow-hidden">
+      <table class="data-table"><thead><tr><th>Nombre</th><th>Contacto</th><th>Teléfono</th><th>Días entrega</th></tr></thead>
+      <tbody id="tabla-proveedores"><tr><td colspan="4" class="text-center py-8 text-sm" style="color:#9A9288">Sin proveedores</td></tr></tbody>
+      </table>
+    </div>
+  </section>
 
-    <!-- DASHBOARD -->
-    <section id="section-dashboard" class="p-8 anim-in">
-      <div class="mb-8">
-        <h1 class="font-display text-3xl text-ink-900 mb-1">Buenos días 👋</h1>
-        <p class="text-ink-400 text-sm">Sistema de costeo gastronómico · <span id="dashboard-nombre">Mi Negocio</span></p>
-      </div>
-      <div class="grid grid-cols-4 gap-5 mb-8">
-        <div class="card p-5"><div class="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-3">Insumos</div><div class="font-display text-3xl text-ink-900" id="kpi-insumos">—</div><div class="text-xs text-ink-300 mt-1">en catálogo</div></div>
-        <div class="card p-5"><div class="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-3">Proveedores</div><div class="font-display text-3xl text-ink-900" id="kpi-proveedores">—</div><div class="text-xs text-ink-300 mt-1">registrados</div></div>
-        <div class="card p-5"><div class="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-3">Recetas</div><div class="font-display text-3xl text-ink-900" id="kpi-recetas">—</div><div class="text-xs text-ink-300 mt-1">en el sistema</div></div>
-        <div class="card p-5"><div class="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-3">Margen promedio</div><div class="font-display text-3xl text-leaf" id="kpi-margen">—</div><div class="text-xs text-ink-300 mt-1">en menú activo</div></div>
-      </div>
-      <div class="card p-6">
-        <h2 class="font-semibold text-ink-800 mb-4 text-sm uppercase tracking-wider">Acceso rápido</h2>
-        <div class="grid grid-cols-3 gap-4">
-          <button onclick="showSection('insumos');setTimeout(()=>openWizardInsumo(),150)" class="flex items-center gap-3 p-4 rounded-xl border text-left hover:border-leaf hover:bg-leaf-50 transition-all group" style="border:1.5px solid #E0DDD5;border-radius:12px">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:#EDF7F2;border-radius:10px">📦</div>
-            <div><div class="font-semibold text-sm text-ink-800 group-hover:text-leaf">Nuevo insumo</div><div class="text-xs text-ink-400">3 pasos guiados</div></div>
-          </button>
-          <button onclick="showSection('recetas');setTimeout(()=>openWizardReceta(),150)" class="flex items-center gap-3 p-4 rounded-xl border text-left hover:border-amber hover:bg-amber-50 transition-all group" style="border:1.5px solid #E0DDD5;border-radius:12px">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:#FEF6E9;border-radius:10px">📋</div>
-            <div><div class="font-semibold text-sm text-ink-800 group-hover:text-amber">Nueva receta</div><div class="text-xs text-ink-400">Con ingredientes y pasos</div></div>
-          </button>
-          <button onclick="showSection('menus')" class="flex items-center gap-3 p-4 rounded-xl border text-left hover:border-ink-300 hover:bg-ink-50 transition-all group" style="border:1.5px solid #E0DDD5;border-radius:12px">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:#F2F0EB;border-radius:10px">💰</div>
-            <div><div class="font-semibold text-sm text-ink-800">Ver márgenes</div><div class="text-xs text-ink-400">Menú activo</div></div>
-          </button>
-        </div>
-      </div>
-    </section>
+  <!-- RECETAS -->
+  <section id="section-recetas" class="p-8 hidden anim-in">
+    <div class="flex items-center justify-between mb-6">
+      <div><h1 class="font-display text-3xl">Recetas</h1><p class="text-sm mt-1" style="color:#9A9288">Costo calculado automáticamente al agregar ingredientes</p></div>
+      <button onclick="openWizardReceta()" class="btn-primary btn-sm">+ Nueva receta</button>
+    </div>
+    <div class="card overflow-hidden">
+      <table class="data-table"><thead><tr><th>Nombre</th><th>Tipo</th><th>Rinde</th><th>Costo total</th><th>Costo/porción</th><th></th></tr></thead>
+      <tbody id="tabla-recetas"><tr><td colspan="6" class="text-center py-12 text-sm" style="color:#9A9288"><div class="flex flex-col items-center gap-3"><div class="text-4xl opacity-20">📋</div><div>Sin recetas · Crea la primera</div></div></td></tr></tbody>
+      </table>
+    </div>
+  </section>
 
-    <!-- INSUMOS -->
-    <section id="section-insumos" class="p-8 hidden anim-in">
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h1 class="font-display text-3xl text-ink-900">Insumos</h1>
-          <p class="text-ink-400 text-sm mt-1">Catálogo de materias primas y materiales</p>
-        </div>
-        <div class="flex items-center gap-3">
-          <div id="grupos-filter" class="flex gap-2 flex-wrap"></div>
-          <button onclick="openWizardInsumo()" class="btn-primary flex items-center gap-2">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Nuevo insumo
-          </button>
-        </div>
-      </div>
-      <div class="card overflow-hidden">
-        <table class="data-table">
-          <thead><tr>
-            <th>Nombre</th><th>Grupo</th><th>Unidad</th>
-            <th>Precio compra</th><th>Costo/unidad</th><th>Proveedor</th><th>Estado</th><th></th>
-          </tr></thead>
-          <tbody id="tabla-insumos">
-            <tr><td colspan="8" class="text-center py-12 text-sm" style="color:#9A9288">
-              <div class="flex flex-col items-center gap-3"><div class="text-4xl opacity-30">📦</div><div>Conecta el API para ver insumos</div></div>
-            </td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+  <!-- MENÚS -->
+  <section id="section-menus" class="p-8 hidden anim-in">
+    <div class="flex items-center justify-between mb-6">
+      <div><h1 class="font-display text-3xl">Menús & Precios</h1><p class="text-sm mt-1" style="color:#9A9288">Rentabilidad por platillo</p></div>
+      <button onclick="openWizardMenu()" class="btn-primary btn-sm">+ Agregar al menú</button>
+    </div>
+    <div class="card overflow-hidden">
+      <table class="data-table"><thead><tr><th>Platillo</th><th>Costo/porción</th><th>Precio venta</th><th>Margen real</th><th>vs Objetivo</th></tr></thead>
+      <tbody id="tabla-menus"><tr><td colspan="5" class="text-center py-12 text-sm" style="color:#9A9288"><div class="flex flex-col items-center gap-3"><div class="text-4xl opacity-20">💰</div><div>Sin platillos en menú · Agrega recetas aquí</div></div></td></tr></tbody>
+      </table>
+    </div>
+  </section>
 
-    <!-- PROVEEDORES -->
-    <section id="section-proveedores" class="p-8 hidden anim-in">
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h1 class="font-display text-3xl text-ink-900">Proveedores</h1>
-          <p class="text-ink-400 text-sm mt-1">Directorio de abastecedores</p>
-        </div>
-        <button onclick="openModalProveedor()" class="btn-primary flex items-center gap-2">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Nuevo proveedor
-        </button>
-      </div>
-      <div class="card overflow-hidden">
-        <table class="data-table">
-          <thead><tr><th>Nombre</th><th>Contacto</th><th>Teléfono</th><th>Días entrega</th></tr></thead>
-          <tbody id="tabla-proveedores"><tr><td colspan="4" class="text-center py-8 text-sm" style="color:#9A9288">Sin datos</td></tr></tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- RECETAS -->
-    <section id="section-recetas" class="p-8 hidden anim-in">
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h1 class="font-display text-3xl text-ink-900">Recetas</h1>
-          <p class="text-ink-400 text-sm mt-1">Con costos, mermas y tiempos de proceso</p>
-        </div>
-        <button onclick="openWizardReceta()" class="btn-primary flex items-center gap-2">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Nueva receta
-        </button>
-      </div>
-      <div class="card overflow-hidden">
-        <table class="data-table">
-          <thead><tr><th>Nombre</th><th>Tipo</th><th>Rinde</th><th>Componentes</th><th>Costo/porción</th><th></th></tr></thead>
-          <tbody id="tabla-recetas"><tr><td colspan="6" class="text-center py-12 text-sm" style="color:#9A9288">
-            <div class="flex flex-col items-center gap-3"><div class="text-4xl opacity-30">📋</div><div>Crea tu primera receta con el botón de arriba</div></div>
-          </td></tr></tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- MENÚS & PRECIOS -->
-    <section id="section-menus" class="p-8 hidden anim-in">
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h1 class="font-display text-3xl text-ink-900">Menús & Precios</h1>
-          <p class="text-ink-400 text-sm mt-1">Análisis de rentabilidad por platillo</p>
-        </div>
-        <button onclick="openWizardMenu()" class="btn-primary flex items-center gap-2">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Nuevo platillo
-        </button>
-      </div>
-      <div class="card overflow-hidden">
-        <table class="data-table">
-          <thead><tr><th>Platillo</th><th>Costo/porción</th><th>Precio venta</th><th>Margen real</th><th>Objetivo</th><th></th></tr></thead>
-          <tbody id="tabla-menus"><tr><td colspan="6" class="text-center py-12 text-sm" style="color:#9A9288">
-            <div class="flex flex-col items-center gap-3"><div class="text-4xl opacity-30">💰</div><div>Crea recetas primero y luego ponles precio aquí</div></div>
-          </td></tr></tbody>
-        </table>
-      </div>
-    </section>
-
-  </main>
+</main>
 </div>
 
-<!-- ══ WIZARD INSUMO — 3 pasos rediseñados ══ -->
+<!-- ══════════════════════════════════════════════════
+  WIZARD INSUMO — 2 pasos
+  Paso 1: Nombre + Grupo + Código (opcional)
+  Paso 2: Proveedor + Unidad compra + Total comprado + Precio → costo automático
+══════════════════════════════════════════════════ -->
 <div id="wiz-insumo" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
-  <div class="card w-full anim-in" style="max-width:520px;box-shadow:0 4px 6px rgba(0,0,0,.05),0 20px 60px rgba(0,0,0,.22)">
-    <div class="p-6 pb-4" style="border-bottom:1px solid #E0DDD5">
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <h2 class="font-display text-xl text-ink-900">Nuevo insumo</h2>
-          <p class="text-ink-400 text-sm mt-0.5" id="wi-desc">Paso 1 de 3 · Identificación</p>
-        </div>
-        <button onclick="closeWizardInsumo()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-ink-100"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+<div class="card w-full anim-in" style="max-width:500px;box-shadow:0 4px 6px rgba(0,0,0,.05),0 20px 60px rgba(0,0,0,.22)">
+  <div class="p-6 pb-4" style="border-bottom:1px solid #E0DDD5">
+    <div class="flex items-center justify-between mb-4">
+      <div><h2 class="font-display text-xl">Nuevo insumo</h2><p class="text-sm mt-0.5" style="color:#9A9288" id="wi-desc">Paso 1 de 2 · Identificación</p></div>
+      <button onclick="closeWizardInsumo()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="step-indicator">
+      <div class="step-dot active" id="wid1">1</div><div class="step-line" id="wil1"></div>
+      <div class="step-dot" id="wid2">2</div>
+    </div>
+  </div>
+
+  <!-- Paso 1 -->
+  <div id="wi-p1" class="p-6 space-y-4">
+    <div class="field-group">
+      <label class="field-label">Nombre del insumo *</label>
+      <input id="wi-nombre" class="field-input" type="text" placeholder="Ej: Tasajo de res crudo, Frijol negro seco…">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Grupo / Categoría</label>
+      <div class="flex gap-2 flex-wrap" id="grupo-chips">
+        <button class="grupo-chip active" onclick="selGrupo(this,'Carnes')">🥩 Carnes</button>
+        <button class="grupo-chip" onclick="selGrupo(this,'Lácteos')">🥛 Lácteos</button>
+        <button class="grupo-chip" onclick="selGrupo(this,'Verduras')">🥬 Verduras</button>
+        <button class="grupo-chip" onclick="selGrupo(this,'Granos')">🌾 Granos</button>
+        <button class="grupo-chip" onclick="selGrupo(this,'Bebidas')">🥤 Bebidas</button>
+        <button class="grupo-chip" onclick="selGrupo(this,'Condimentos')">🧂 Condimentos</button>
+        <button class="grupo-chip" onclick="selGrupo(this,'Empaque')">📦 Empaque</button>
+        <button class="grupo-chip" onclick="selGrupo(this,'Otro')">＋ Otro</button>
       </div>
-      <div class="step-indicator">
-        <div class="step-dot active" id="wid1">1</div>
-        <div class="step-line" id="wil1"></div>
-        <div class="step-dot" id="wid2">2</div>
-        <div class="step-line" id="wil2"></div>
-        <div class="step-dot" id="wid3">3</div>
+      <input id="wi-grupo-custom" class="field-input mt-1" type="text" placeholder="O escribe un grupo personalizado…" oninput="if(this.value)document.querySelectorAll('.grupo-chip').forEach(c=>c.classList.remove('active'))">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Código de barras / SKU <span style="color:#C4BFB4;font-weight:400;text-transform:none">(opcional)</span></label>
+      <div class="input-addon">
+        <input id="wi-codigo" class="field-input" type="text" placeholder="7501234567890…" style="padding-right:50px">
+        <button onclick="simScan()" class="addon" style="cursor:pointer;background:#F4F1EB;color:#716A60" title="Simular escaneo">📷</button>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Notas <span style="color:#C4BFB4;font-weight:400;text-transform:none">(opcional)</span></label>
+      <input id="wi-nota" class="field-input" type="text" placeholder="Observaciones, temporada, sustituto…">
+    </div>
+  </div>
+
+  <!-- Paso 2: precio con lógica clara -->
+  <div id="wi-p2" class="p-6 space-y-4 hidden">
+
+    <!-- EXPLICACIÓN VISUAL de la lógica -->
+    <div class="rounded-xl p-4 text-sm" style="background:#FEF6E9;border:1px solid #FDEAC8">
+      <div class="font-semibold mb-1" style="color:#4A310A">¿Cómo funciona el costo?</div>
+      <div style="color:#716A60;font-size:13px;line-height:1.6">
+        Dime cuánto <strong>compraste</strong> y cuánto <strong>pagaste</strong>.<br>
+        Ejemplo: compré <strong>1 kg</strong> (= 1000 g) por <strong>$250</strong> → el sistema calcula $0.25/g automáticamente.<br>
+        Cuando uses 300 g en una receta → costo = $75.
       </div>
     </div>
 
-    <!-- Paso 1: Nombre + Grupo + Código -->
-    <div id="wi-step1" class="p-6 space-y-4">
-      <div class="field-group">
-        <label class="field-label">Nombre del insumo <span style="color:#DC2626">*</span></label>
-        <input id="wi-nombre" class="field-input" type="text" placeholder="Ej: Tasajo de res, Tortillas de maíz…">
-      </div>
-      <div class="field-group">
-        <label class="field-label">Grupo / Categoría</label>
-        <div class="flex gap-2 flex-wrap mb-2" id="grupo-chips">
-          <button class="grupo-chip active" onclick="selGrupo(this,'Carnes')">🥩 Carnes</button>
-          <button class="grupo-chip" onclick="selGrupo(this,'Lácteos')">🥛 Lácteos</button>
-          <button class="grupo-chip" onclick="selGrupo(this,'Verduras')">🥬 Verduras</button>
-          <button class="grupo-chip" onclick="selGrupo(this,'Granos')">🌾 Granos</button>
-          <button class="grupo-chip" onclick="selGrupo(this,'Bebidas')">🥤 Bebidas</button>
-          <button class="grupo-chip" onclick="selGrupo(this,'Condimentos')">🧂 Condimentos</button>
-          <button class="grupo-chip" onclick="selGrupo(this,'Empaque')">📦 Empaque</button>
-          <button class="grupo-chip" onclick="selGrupo(this,'Otro')">➕ Otro</button>
-        </div>
-        <input id="wi-grupo-custom" class="field-input" type="text" placeholder="O escribe un grupo personalizado…" oninput="this.value&&document.querySelectorAll('.grupo-chip').forEach(c=>c.classList.remove('active'))">
-      </div>
-      <div class="field-group">
-        <label class="field-label">Código de barras / SKU <span style="color:#9A9288;font-weight:400">(opcional)</span></label>
-        <div class="relative">
-          <input id="wi-codigo" class="field-input" type="text" placeholder="7501234567890…" style="padding-right:48px">
-          <button onclick="simularEscaneo()" class="absolute right-3 top-1/2 -translate-y-1/2" style="color:#C4BFB4" title="Simular escaneo">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9V6a2 2 0 0 1 2-2h2M21 9V6a2 2 0 0 1-2-2h-2M3 15v3a2 2 0 0 0 2 2h2M21 15v3a2 2 0 0 0-2 2h-2"/><line x1="7" y1="12" x2="7" y2="12"/><line x1="12" y1="12" x2="12" y2="12"/><line x1="17" y1="12" x2="17" y2="12"/></svg>
-          </button>
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Notas internas <span style="color:#9A9288;font-weight:400">(opcional)</span></label>
-        <input id="wi-nota" class="field-input" type="text" placeholder="Observaciones, temporada, sustituto…">
-      </div>
+    <div class="field-group">
+      <label class="field-label">Proveedor</label>
+      <select id="wi-proveedor" class="field-input"><option value="">— Sin proveedor —</option></select>
+      <button onclick="openModalProveedor()" class="text-xs font-semibold mt-1 hover:underline text-left" style="color:#2D6A4F">+ Agregar nuevo proveedor</button>
     </div>
 
-    <!-- Paso 2: Proveedor + Precio + Unidad + Cantidad -->
-    <div id="wi-step2" class="p-6 space-y-4 hidden">
+    <div class="grid grid-cols-2 gap-4">
       <div class="field-group">
-        <label class="field-label">Proveedor</label>
-        <select id="wi-proveedor" class="field-input">
-          <option value="">— Sin proveedor —</option>
+        <label class="field-label">Unidad de compra</label>
+        <select id="wi-unidad" class="field-input" onchange="actualizarExplicacion()">
+          <option value="kg">kg · kilogramo</option>
+          <option value="g">g · gramo</option>
+          <option value="l">l · litro</option>
+          <option value="ml">ml · mililitro</option>
+          <option value="pza">pza · pieza</option>
+          <option value="manojo">manojo</option>
+          <option value="oz">oz · onza</option>
+          <option value="lb">lb · libra</option>
         </select>
-        <button onclick="openModalProveedor()" class="text-xs font-semibold mt-1 hover:underline text-left" style="color:#2D6A4F">+ Agregar nuevo proveedor</button>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Precio que pagué *</label>
+        <div class="input-addon">
+          <input id="wi-precio" class="field-input" type="number" placeholder="250.00" step="0.01" min="0.01" oninput="calcCostoInsumo()" style="padding-right:58px">
+          <span class="addon">MXN</span>
+        </div>
+        <div class="text-xs mt-1" style="color:#C4BFB4">Por la presentación que compré</div>
+      </div>
+    </div>
+
+    <!-- Preview dinámico: muestra cómo se interpreta -->
+    <div id="wi-preview" class="hidden rounded-xl overflow-hidden" style="border:1px solid #E0DDD5">
+      <div class="px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="background:#F2F0EB;color:#716A60">Costo resultante</div>
+      <div class="p-4 space-y-2">
+        <div class="flex justify-between text-sm"><span style="color:#716A60">Compré:</span><span id="prev-compre" class="font-semibold">—</span></div>
+        <div class="flex justify-between text-sm"><span style="color:#716A60">Pagué:</span><span id="prev-pague" class="font-semibold">—</span></div>
+        <div class="flex justify-between text-sm pt-2" style="border-top:1px solid #E0DDD5">
+          <span style="color:#716A60">Costo por <span id="prev-unidad-label">unidad</span>:</span>
+          <span id="prev-costo-unit" class="font-mono font-bold text-base" style="color:#2D6A4F">—</span>
+        </div>
+        <div class="flex justify-between text-sm">
+          <span style="color:#716A60">Ejemplo — si uso 300 <span id="prev-ej-u">g</span>:</span>
+          <span id="prev-ej-costo" class="font-mono font-semibold" style="color:#2D6A4F">—</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="px-6 pb-6 flex items-center justify-between">
+    <button id="wi-back" class="btn-secondary btn-sm" onclick="wiBack()" style="display:none">← Atrás</button>
+    <div id="wi-ph"></div>
+    <div class="flex gap-3">
+      <button onclick="closeWizardInsumo()" class="btn-secondary btn-sm">Cancelar</button>
+      <button id="wi-next" class="btn-primary btn-sm" onclick="wiNext()">Siguiente →</button>
+      <button id="wi-save" class="btn-amber btn-sm hidden" onclick="guardarInsumo()"><span id="wi-save-txt">Guardar insumo</span></button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+  WIZARD RECETA — 3 pasos
+  Paso 1: Info básica
+  Paso 2: Ingredientes (insumos + subrecetas + procesos) con COSTO ACUMULADO EN TIEMPO REAL
+  Paso 3: Paso a paso
+══════════════════════════════════════════════════ -->
+<div id="wiz-receta" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
+<div class="card w-full anim-in" style="max-width:620px;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 4px 6px rgba(0,0,0,.05),0 20px 60px rgba(0,0,0,.22)">
+  <div class="p-6 pb-4 flex-shrink-0" style="border-bottom:1px solid #E0DDD5">
+    <div class="flex items-center justify-between mb-4">
+      <div><h2 class="font-display text-xl">Nueva receta</h2><p class="text-sm mt-0.5" style="color:#9A9288" id="wr-desc">Paso 1 de 3 · Información general</p></div>
+      <button onclick="closeWizardReceta()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="step-indicator">
+      <div class="step-dot active" id="wrd1">1</div><div class="step-line" id="wrl1"></div>
+      <div class="step-dot" id="wrd2">2</div><div class="step-line" id="wrl2"></div>
+      <div class="step-dot" id="wrd3">3</div>
+    </div>
+  </div>
+
+  <div style="overflow-y:auto;flex:1">
+
+    <!-- Paso 1 -->
+    <div id="wr-p1" class="p-6 space-y-4">
+      <div class="field-group"><label class="field-label">Nombre de la receta *</label>
+        <input id="wr-nombre" class="field-input" type="text" placeholder="Ej: Tasajo asado, Pasta de frijoles, Base de torta…">
       </div>
       <div class="grid grid-cols-2 gap-4">
-        <div class="field-group">
-          <label class="field-label">Unidad comercial</label>
-          <select id="wi-unidad" class="field-input" onchange="actualizarUnidadBase()">
-            <option value="kg">kg (kilogramo)</option>
-            <option value="g">g (gramo)</option>
-            <option value="l">l (litro)</option>
-            <option value="ml">ml (mililitro)</option>
-            <option value="pza">pza (pieza)</option>
-            <option value="manojo">manojo</option>
-            <option value="oz">oz (onza)</option>
-            <option value="lb">lb (libra)</option>
+        <div class="field-group"><label class="field-label">Tipo</label>
+          <select id="wr-tipo" class="field-input">
+            <option value="Plato">Plato principal</option>
+            <option value="Base">Base / Subreceta</option>
+            <option value="Bebida">Bebida</option>
+            <option value="Postre">Postre</option>
+            <option value="Entrada">Entrada / Guarnición</option>
           </select>
         </div>
-        <div class="field-group">
-          <label class="field-label">Cantidad en presentación <span style="color:#DC2626">*</span></label>
-          <div class="input-with-unit">
-            <input id="wi-cantidad" class="field-input" type="number" placeholder="1000" step="0.01" min="0.001" oninput="calcCosto()">
-            <span class="unit-badge" id="wi-ubase">g</span>
+        <div class="field-group"><label class="field-label">¿Cuántas porciones produce? *</label>
+          <div class="input-addon">
+            <input id="wr-rinde" class="field-input" type="number" placeholder="1" min="0.1" step="0.5" value="1" style="padding-right:72px">
+            <span class="addon">porciones</span>
           </div>
-          <div class="text-xs mt-1" style="color:#C4BFB4">Total en unidad base de la presentación</div>
         </div>
       </div>
-      <div class="field-group">
-        <label class="field-label">Precio de compra <span style="color:#DC2626">*</span></label>
-        <div class="input-with-unit">
-          <input id="wi-precio" class="field-input" type="number" placeholder="0.00" step="0.01" min="0" oninput="calcCosto()">
-          <span class="unit-badge">MXN</span>
-        </div>
+      <div class="field-group"><label class="field-label">Notas de preparación</label>
+        <textarea id="wr-notas" class="field-input" rows="2" placeholder="Temperatura, punto de cocción, presentación…" style="resize:vertical"></textarea>
       </div>
-      <!-- Preview costo — colapsado por defecto, aparece cuando hay datos -->
-      <div id="costo-preview-box" class="hidden rounded-xl p-4" style="background:#EDF7F2;border:1px solid #C8E8D9">
-        <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#183B2B">💡 Costo calculado</div>
-        <div class="flex justify-between text-sm"><span style="color:#22523C">Costo por unidad base:</span><span class="font-mono font-semibold" style="color:#2D6A4F" id="costo-unit-txt">—</span></div>
-        <div class="flex justify-between text-sm mt-1"><span style="color:#22523C">Costo por 100 unidades:</span><span class="font-mono" style="color:#2D6A4F" id="costo-100-txt">—</span></div>
+      <!-- Aviso de subreceta -->
+      <div class="rounded-xl p-3 text-sm" style="background:#EDE9FE;border:1px solid #DDD6FE;color:#5b21b6">
+        <strong>💡 Tip:</strong> Si esta receta produce un ingrediente base (ej: pasta de frijol, salsa, caldo), elige <strong>Base / Subreceta</strong>. Podrás usarla como ingrediente en otras recetas con su costo calculado.
       </div>
     </div>
 
-    <!-- Paso 3: Merma + Resumen -->
-    <div id="wi-step3" class="p-6 space-y-4 hidden">
-      <div class="field-group">
-        <label class="field-label">% Merma típica del insumo</label>
-        <div class="flex items-center gap-3">
-          <input type="range" id="wi-merma" min="0" max="60" value="0" step="1" class="flex-1" oninput="updateMerma(this.value)">
-          <span class="font-mono font-semibold w-12 text-right" id="wi-merma-txt" style="color:#C9882A">0%</span>
+    <!-- Paso 2: Ingredientes con costo en tiempo real -->
+    <div id="wr-p2" class="p-6 space-y-4 hidden">
+
+      <!-- Costo acumulado — siempre visible -->
+      <div class="costo-acum">
+        <div class="flex justify-between items-center">
+          <div>
+            <div class="text-xs font-semibold uppercase tracking-wider" style="color:#183B2B">Costo total de la receta</div>
+            <div class="text-xs mt-0.5" style="color:#52B388">Se actualiza con cada ingrediente que agregas</div>
+          </div>
+          <div class="text-right">
+            <div class="font-mono text-2xl font-bold" style="color:#2D6A4F" id="costo-total-live">$0.00</div>
+            <div class="text-xs" style="color:#52B388">Para <span id="costo-porciones-live">1</span> porción(es) → <span id="costo-porcion-live" class="font-semibold">$0.00</span> c/u</div>
+          </div>
         </div>
-        <div class="text-xs mt-1" style="color:#C4BFB4">Tasajo 20–30% · Verduras 15% · Carne limpia 10%</div>
       </div>
-      <!-- Resumen -->
-      <div class="rounded-xl p-4 space-y-2" style="background:#F2F0EB">
-        <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#9A9288">Resumen del insumo</div>
-        <div class="flex justify-between text-sm"><span style="color:#716A60">Nombre</span><span class="font-medium" id="rs-nombre">—</span></div>
-        <div class="flex justify-between text-sm"><span style="color:#716A60">Grupo</span><span id="rs-grupo">—</span></div>
-        <div class="flex justify-between text-sm"><span style="color:#716A60">Unidad</span><span id="rs-unidad">—</span></div>
-        <div class="flex justify-between text-sm"><span style="color:#716A60">Precio</span><span id="rs-precio">—</span></div>
-        <div class="flex justify-between text-sm"><span style="color:#716A60">Costo base</span><span class="font-semibold" style="color:#2D6A4F" id="rs-costo">—</span></div>
-        <div class="flex justify-between text-sm"><span style="color:#716A60">Merma</span><span style="color:#C9882A" id="rs-merma">0%</span></div>
-        <div class="flex justify-between text-sm pt-2" style="border-top:1px solid #E0DDD5"><span style="color:#716A60">Costo real (con merma)</span><span class="font-semibold" style="color:#C9882A" id="rs-costo-merma">—</span></div>
+
+      <!-- Tabs insumo / proceso -->
+      <div class="tab-sel">
+        <button onclick="setTabComp('insumo')" id="tab-ins" class="active">📦 Insumo / Subreceta</button>
+        <button onclick="setTabComp('proceso')" id="tab-pro">⏱ Proceso / Tiempo</button>
+      </div>
+
+      <!-- Form insumo -->
+      <div id="form-ins" class="rounded-xl p-4 space-y-3" style="background:#FAF9F7;border:1px solid #E0DDD5">
+        <div class="field-group"><label class="field-label">Insumo o subreceta</label>
+          <select id="c-ins-sel" class="field-input" onchange="previewIngrediente()">
+            <option value="">— Seleccionar —</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="field-group"><label class="field-label">Cantidad a usar *</label>
+            <input id="c-ins-cant" class="field-input" type="number" placeholder="300" min="0.001" step="0.01" oninput="previewIngrediente()">
+          </div>
+          <div class="field-group"><label class="field-label">Unidad</label>
+            <select id="c-ins-unidad" class="field-input" onchange="previewIngrediente()">
+              <option value="g">g · gramos</option><option value="kg">kg · kilogramos</option>
+              <option value="ml">ml · mililitros</option><option value="l">l · litros</option>
+              <option value="pza">pza · pieza</option><option value="manojo">manojo</option>
+            </select>
+          </div>
+          <div class="field-group"><label class="field-label">% Merma</label>
+            <input id="c-ins-merma" class="field-input" type="number" placeholder="0" min="0" max="99" value="0" oninput="previewIngrediente()">
+          </div>
+          <div class="field-group"><label class="field-label">Orden</label>
+            <input id="c-ins-orden" class="field-input" type="number" placeholder="1" min="1" value="1">
+          </div>
+        </div>
+        <!-- Preview costo de este ingrediente -->
+        <div id="prev-ing" class="hidden rounded-lg px-3 py-2 text-sm flex justify-between" style="background:#EDF7F2">
+          <span style="color:#22523C">Costo de este ingrediente:</span>
+          <span id="prev-ing-val" class="font-mono font-bold" style="color:#2D6A4F">—</span>
+        </div>
+        <button onclick="agregarComp('insumo')" class="btn-primary w-full btn-sm">+ Agregar ingrediente</button>
+      </div>
+
+      <!-- Form proceso -->
+      <div id="form-pro" class="rounded-xl p-4 space-y-3 hidden" style="background:#FAF9F7;border:1px solid #E0DDD5">
+        <div class="field-group"><label class="field-label">Proceso de cocina</label>
+          <select id="c-pro-sel" class="field-input" onchange="if(this.value==='_nuevo')crearProcesoInline()">
+            <option value="">— Seleccionar proceso —</option>
+            <option value="_nuevo">➕ Crear nuevo proceso…</option>
+          </select>
+        </div>
+        <!-- Form inline para crear proceso nuevo -->
+        <div id="form-pro-nuevo" class="hidden rounded-lg p-3 space-y-2" style="background:#FEF6E9;border:1px solid #FDEAC8">
+          <div class="text-xs font-semibold uppercase" style="color:#4A310A">Crear proceso nuevo</div>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="field-group"><label class="field-label" style="font-size:10px">Nombre del proceso</label>
+              <input id="np-nombre" class="field-input" type="text" placeholder="Ej: Rebanado, Cocción…" style="font-size:13px;padding:8px 10px">
+            </div>
+            <div class="field-group"><label class="field-label" style="font-size:10px">Costo/min (opcional)</label>
+              <input id="np-cpm" class="field-input" type="number" placeholder="Auto" step="0.01" min="0" style="font-size:13px;padding:8px 10px">
+            </div>
+          </div>
+          <button onclick="guardarProcesoInline()" class="btn-amber w-full" style="padding:8px;font-size:12px;border-radius:8px">Guardar y seleccionar</button>
+        </div>
+        <div class="field-group"><label class="field-label">Minutos de este proceso *</label>
+          <div class="input-addon">
+            <input id="c-pro-min" class="field-input" type="number" placeholder="15" min="1" oninput="previewProceso()" style="padding-right:40px">
+            <span class="addon">min</span>
+          </div>
+        </div>
+        <div id="prev-pro" class="hidden rounded-lg px-3 py-2 text-sm flex justify-between" style="background:#FEF6E9">
+          <span style="color:#4A310A">Costo mano de obra:</span>
+          <span id="prev-pro-val" class="font-mono font-bold" style="color:#C9882A">—</span>
+        </div>
+        <button onclick="agregarComp('proceso')" class="btn-primary w-full btn-sm">+ Agregar proceso</button>
+      </div>
+
+      <!-- Lista de componentes -->
+      <div id="wr-comp-lista">
+        <div class="text-xs text-center py-3" style="color:#C4BFB4">Agrega el primer ingrediente arriba ↑</div>
       </div>
     </div>
 
-    <div class="px-6 pb-6 flex items-center justify-between">
-      <button id="wi-btn-back" class="btn-secondary" onclick="wiBack()" style="display:none">← Atrás</button>
-      <div id="wi-ph"></div>
-      <div class="flex gap-3">
-        <button onclick="closeWizardInsumo()" class="btn-secondary">Cancelar</button>
-        <button id="wi-btn-next" class="btn-primary" onclick="wiNext()">Siguiente →</button>
-        <button id="wi-btn-save" class="btn-amber hidden" onclick="guardarInsumo()"><span id="wi-save-txt">Guardar insumo</span></button>
+    <!-- Paso 3: Paso a paso -->
+    <div id="wr-p3" class="p-6 space-y-3 hidden">
+      <div class="font-semibold text-sm">Pasos de preparación</div>
+      <div class="text-xs" style="color:#9A9288">Una línea = un paso. El KDS los mostrará uno a uno al cocinero.</div>
+      <textarea id="wr-pasos" class="field-input" rows="9"
+        placeholder="1. Limpiar y secar el tasajo con papel absorbente
+2. Calentar el comal a fuego medio-alto
+3. Asar 4 min por lado hasta dorado parejo
+4. Reposar 2 min antes de cortar
+5. Servir con tortillas y pasta de frijoles" style="resize:vertical;line-height:1.7"></textarea>
+      <!-- Resumen final -->
+      <div id="wr-resumen" class="hidden costo-acum">
+        <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#183B2B">Resumen de la receta</div>
+        <div id="wr-resumen-contenido"></div>
       </div>
+    </div>
+
+  </div><!-- /scroll -->
+
+  <div class="px-6 pb-5 pt-4 flex items-center justify-between flex-shrink-0" style="border-top:1px solid #F2F0EB">
+    <button id="wr-back" class="btn-secondary btn-sm" onclick="wrBack()" style="display:none">← Atrás</button>
+    <div id="wr-ph"></div>
+    <div class="flex gap-3">
+      <button onclick="closeWizardReceta()" class="btn-secondary btn-sm">Cancelar</button>
+      <button id="wr-next" class="btn-primary btn-sm" onclick="wrNext()">Siguiente →</button>
+      <button id="wr-save" class="btn-amber btn-sm hidden" onclick="guardarReceta()"><span id="wr-save-txt">Guardar receta</span></button>
     </div>
   </div>
 </div>
-
-<!-- ══ WIZARD RECETA ══ -->
-<div id="wiz-receta" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
-  <div class="card w-full anim-in" style="max-width:600px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 4px 6px rgba(0,0,0,.05),0 20px 60px rgba(0,0,0,.22)">
-    <div class="p-6 pb-4 flex-shrink-0" style="border-bottom:1px solid #E0DDD5">
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <h2 class="font-display text-xl text-ink-900">Nueva receta</h2>
-          <p class="text-ink-400 text-sm mt-0.5" id="wr-desc">Paso 1 de 3 · Información general</p>
-        </div>
-        <button onclick="closeWizardReceta()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-ink-100"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      </div>
-      <div class="step-indicator">
-        <div class="step-dot active" id="wrd1">1</div>
-        <div class="step-line" id="wrl1"></div>
-        <div class="step-dot" id="wrd2">2</div>
-        <div class="step-line" id="wrl2"></div>
-        <div class="step-dot" id="wrd3">3</div>
-      </div>
-    </div>
-
-    <div style="overflow-y:auto;flex:1">
-
-      <!-- Paso 1: Info general -->
-      <div id="wr-step1" class="p-6 space-y-4">
-        <div class="field-group">
-          <label class="field-label">Nombre de la receta <span style="color:#DC2626">*</span></label>
-          <input id="wr-nombre" class="field-input" type="text" placeholder="Ej: Tasajo asado con pasta de frijoles…">
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div class="field-group">
-            <label class="field-label">Tipo de servicio</label>
-            <select id="wr-tipo" class="field-input">
-              <option value="Plato">Plato principal</option>
-              <option value="Base">Base / Subreceta</option>
-              <option value="Bebida">Bebida</option>
-              <option value="Postre">Postre</option>
-              <option value="Entrada">Entrada</option>
-            </select>
-          </div>
-          <div class="field-group">
-            <label class="field-label">Rinde (porciones) <span style="color:#DC2626">*</span></label>
-            <div class="input-with-unit">
-              <input id="wr-rinde" class="field-input" type="number" placeholder="1" min="1" step="0.5" value="1">
-              <span class="unit-badge">pzas</span>
-            </div>
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Notas de preparación</label>
-          <textarea id="wr-notas" class="field-input" rows="2" placeholder="Temperatura, punto de cocción, presentación…" style="resize:vertical"></textarea>
-        </div>
-      </div>
-
-      <!-- Paso 2: Ingredientes -->
-      <div id="wr-step2" class="p-6 space-y-4 hidden">
-        <div class="flex items-center justify-between mb-1">
-          <div>
-            <div class="font-semibold text-ink-800 text-sm">Ingredientes y componentes</div>
-            <div class="text-xs mt-0.5" style="color:#9A9288">Agrega insumos, subrecetas o tiempos de proceso</div>
-          </div>
-        </div>
-
-        <!-- Tabs selector tipo -->
-        <div class="flex gap-2 p-1 rounded-xl" style="background:#F2F0EB">
-          <button onclick="setTipoComp('insumo')" id="tab-insumo" class="flex-1 py-2 rounded-lg text-xs font-semibold transition-all" style="background:white;color:#0F0E0C;box-shadow:0 1px 3px rgba(0,0,0,.1)">📦 Insumo</button>
-          <button onclick="setTipoComp('proceso')" id="tab-proceso" class="flex-1 py-2 rounded-lg text-xs font-semibold transition-all" style="color:#9A9288">⏱ Proceso/Tiempo</button>
-        </div>
-
-        <!-- Agregar insumo -->
-        <div id="add-insumo-form" class="rounded-xl p-4 space-y-3" style="background:#FAF9F7;border:1px solid #E0DDD5">
-          <div class="grid grid-cols-2 gap-3">
-            <div class="field-group col-span-2">
-              <label class="field-label">Insumo</label>
-              <select id="comp-insumo-sel" class="field-input">
-                <option value="">— Seleccionar insumo —</option>
-              </select>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Cantidad</label>
-              <input id="comp-cantidad" class="field-input" type="number" placeholder="100" min="0.001" step="0.01">
-            </div>
-            <div class="field-group">
-              <label class="field-label">Unidad</label>
-              <select id="comp-unidad" class="field-input">
-                <option value="g">g</option><option value="kg">kg</option>
-                <option value="ml">ml</option><option value="l">l</option>
-                <option value="pza">pza</option><option value="manojo">manojo</option>
-              </select>
-            </div>
-            <div class="field-group">
-              <label class="field-label">% Merma</label>
-              <input id="comp-merma" class="field-input" type="number" placeholder="0" min="0" max="99" value="0">
-            </div>
-            <div class="field-group">
-              <label class="field-label">Orden</label>
-              <input id="comp-orden" class="field-input" type="number" placeholder="1" min="1" value="1">
-            </div>
-          </div>
-          <button onclick="agregarComponente('insumo')" class="btn-primary w-full btn-sm">+ Agregar ingrediente</button>
-        </div>
-
-        <!-- Agregar proceso -->
-        <div id="add-proceso-form" class="rounded-xl p-4 space-y-3 hidden" style="background:#FAF9F7;border:1px solid #E0DDD5">
-          <div class="grid grid-cols-2 gap-3">
-            <div class="field-group col-span-2">
-              <label class="field-label">Proceso</label>
-              <select id="comp-proceso-sel" class="field-input">
-                <option value="">— Seleccionar proceso —</option>
-                <option value="_nuevo">+ Crear proceso nuevo…</option>
-              </select>
-            </div>
-            <div class="field-group col-span-2">
-              <label class="field-label">Minutos</label>
-              <input id="comp-minutos" class="field-input" type="number" placeholder="15" min="1">
-            </div>
-          </div>
-          <button onclick="agregarComponente('proceso')" class="btn-primary w-full btn-sm">+ Agregar proceso</button>
-        </div>
-
-        <!-- Lista de componentes agregados -->
-        <div id="comp-lista">
-          <div class="text-xs text-center py-4" style="color:#C4BFB4">Aún no hay ingredientes — agrega el primero arriba</div>
-        </div>
-        <div id="comp-costo-total" class="hidden text-right text-sm font-semibold" style="color:#2D6A4F"></div>
-      </div>
-
-      <!-- Paso 3: Paso a paso -->
-      <div id="wr-step3" class="p-6 space-y-4 hidden">
-        <div class="font-semibold text-ink-800 text-sm mb-1">Pasos de preparación</div>
-        <div class="text-xs mb-3" style="color:#9A9288">Escribe cada paso en una línea separada. Los cocineros los verán en el KDS uno por uno.</div>
-        <textarea id="wr-pasos" class="field-input" rows="8"
-          placeholder="1. Calentar el comal a fuego medio-alto
-2. Limpiar el tasajo con papel absorbente
-3. Asar 4 min por lado hasta dorado parejo
-4. Reposar 2 min antes de cortar
-5. Servir con tortillas y pasta de frijoles" style="resize:vertical;line-height:1.6"></textarea>
-        <div class="text-xs" style="color:#C4BFB4">Cada línea = un paso. El KDS los numerará automáticamente.</div>
-      </div>
-
-    </div><!-- /scroll area -->
-
-    <div class="px-6 pb-6 pt-4 flex items-center justify-between flex-shrink-0" style="border-top:1px solid #F2F0EB">
-      <button id="wr-btn-back" class="btn-secondary" onclick="wrBack()" style="display:none">← Atrás</button>
-      <div id="wr-ph"></div>
-      <div class="flex gap-3">
-        <button onclick="closeWizardReceta()" class="btn-secondary">Cancelar</button>
-        <button id="wr-btn-next" class="btn-primary" onclick="wrNext()">Siguiente →</button>
-        <button id="wr-btn-save" class="btn-amber hidden" onclick="guardarReceta()"><span id="wr-save-txt">Guardar receta</span></button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- ══ WIZARD MENÚ ══ -->
 <div id="wiz-menu" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
-  <div class="card w-full anim-in" style="max-width:480px;box-shadow:0 4px 6px rgba(0,0,0,.05),0 20px 60px rgba(0,0,0,.22)">
-    <div class="p-6 pb-4" style="border-bottom:1px solid #E0DDD5">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="font-display text-xl text-ink-900">Nuevo platillo en menú</h2>
-          <p class="text-ink-400 text-sm mt-0.5">Asigna precio y define el margen objetivo</p>
-        </div>
-        <button onclick="closeWizardMenu()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-ink-100"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      </div>
-    </div>
-    <div class="p-6 space-y-4">
-      <div class="field-group">
-        <label class="field-label">Receta <span style="color:#DC2626">*</span></label>
-        <select id="menu-receta-sel" class="field-input" onchange="calcMargen()">
-          <option value="">— Seleccionar receta —</option>
-        </select>
-      </div>
-      <div class="grid grid-cols-2 gap-4">
-        <div class="field-group">
-          <label class="field-label">Precio de venta <span style="color:#DC2626">*</span></label>
-          <div class="input-with-unit">
-            <input id="menu-precio" class="field-input" type="number" placeholder="0.00" step="1" min="0" oninput="calcMargen()">
-            <span class="unit-badge">MXN</span>
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Margen objetivo</label>
-          <div class="input-with-unit">
-            <input id="menu-margen-obj" class="field-input" type="number" placeholder="65" step="1" min="1" max="99" value="65">
-            <span class="unit-badge">%</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Preview margen en tiempo real -->
-      <div id="menu-preview" class="hidden rounded-xl p-4" style="background:#F2F0EB">
-        <div class="flex justify-between text-sm mb-2"><span style="color:#716A60">Costo/porción:</span><span class="font-mono font-semibold" id="mprev-costo">—</span></div>
-        <div class="flex justify-between text-sm mb-3"><span style="color:#716A60">Margen real:</span><span class="font-mono font-semibold" id="mprev-margen">—</span></div>
-        <div class="margin-bar"><div class="margin-fill" id="mprev-bar" style="width:0%"></div></div>
-        <div class="text-xs mt-2 text-center" id="mprev-sugerido" style="color:#9A9288"></div>
-      </div>
-
-      <div class="field-group">
-        <label class="field-label">Temporada</label>
-        <input id="menu-temporada" class="field-input" type="text" placeholder="Todo el año / Semana Santa / Temporada…" value="Todo el año">
-      </div>
-    </div>
-    <div class="px-6 pb-6 flex justify-end gap-3">
-      <button onclick="closeWizardMenu()" class="btn-secondary">Cancelar</button>
-      <button onclick="guardarMenu()" class="btn-amber"><span id="menu-save-txt">Guardar en menú</span></button>
+<div class="card w-full anim-in" style="max-width:460px;box-shadow:0 4px 6px rgba(0,0,0,.05),0 20px 60px rgba(0,0,0,.22)">
+  <div class="p-6 pb-4" style="border-bottom:1px solid #E0DDD5">
+    <div class="flex items-center justify-between">
+      <div><h2 class="font-display text-xl">Agregar al menú</h2><p class="text-sm mt-0.5" style="color:#9A9288">Pon precio y analiza el margen</p></div>
+      <button onclick="closeWizardMenu()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
   </div>
+  <div class="p-6 space-y-4">
+    <div class="field-group"><label class="field-label">Receta *</label>
+      <select id="m-receta" class="field-input" onchange="calcMenuMargen()"><option value="">— Seleccionar receta —</option></select>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="field-group"><label class="field-label">Precio de venta *</label>
+        <div class="input-addon">
+          <input id="m-precio" class="field-input" type="number" placeholder="120" step="1" min="1" oninput="calcMenuMargen()" style="padding-right:58px">
+          <span class="addon">MXN</span>
+        </div>
+      </div>
+      <div class="field-group"><label class="field-label">Margen objetivo</label>
+        <div class="input-addon">
+          <input id="m-obj" class="field-input" type="number" placeholder="65" step="1" min="1" max="99" value="65" oninput="calcMenuMargen()" style="padding-right:30px">
+          <span class="addon">%</span>
+        </div>
+      </div>
+    </div>
+    <!-- Preview margen -->
+    <div id="m-preview" class="hidden rounded-xl overflow-hidden" style="border:1px solid #E0DDD5">
+      <div class="px-4 py-2 text-xs font-semibold uppercase" style="background:#F2F0EB;color:#716A60">Análisis de rentabilidad</div>
+      <div class="p-4 space-y-3">
+        <div class="flex justify-between text-sm"><span style="color:#716A60">Costo/porción:</span><span id="m-costo" class="font-mono font-bold">—</span></div>
+        <div class="flex justify-between text-sm"><span style="color:#716A60">Utilidad:</span><span id="m-utilidad" class="font-mono font-bold">—</span></div>
+        <div class="flex justify-between text-sm"><span style="color:#716A60">Margen real:</span><span id="m-margen" class="font-mono font-bold text-base">—</span></div>
+        <div class="margin-bar"><div class="margin-fill" id="m-bar" style="width:0%"></div></div>
+        <div class="text-xs text-center" id="m-sug" style="color:#9A9288"></div>
+      </div>
+    </div>
+    <div class="field-group"><label class="field-label">Temporada</label>
+      <input id="m-temporada" class="field-input" type="text" placeholder="Todo el año / Semana Santa…" value="Todo el año">
+    </div>
+  </div>
+  <div class="px-6 pb-6 flex justify-end gap-3">
+    <button onclick="closeWizardMenu()" class="btn-secondary btn-sm">Cancelar</button>
+    <button onclick="guardarMenu()" class="btn-amber btn-sm"><span id="m-save-txt">Guardar en menú</span></button>
+  </div>
+</div>
 </div>
 
 <!-- ══ MODAL PROVEEDOR ══ -->
-<div id="modal-proveedor" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
-  <div class="card w-full anim-in" style="max-width:440px;box-shadow:0 4px 6px rgba(0,0,0,.05),0 20px 60px rgba(0,0,0,.22)">
-    <div class="p-6" style="border-bottom:1px solid #E0DDD5">
-      <div class="flex items-center justify-between">
-        <h2 class="font-display text-xl text-ink-900">Nuevo proveedor</h2>
-        <button onclick="closeModalProveedor()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-ink-100"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      </div>
-    </div>
-    <div class="p-6 space-y-4">
-      <div class="grid grid-cols-2 gap-4">
-        <div class="field-group" style="grid-column:span 2"><label class="field-label">Nombre <span style="color:#DC2626">*</span></label><input id="prov-nombre" class="field-input" type="text" placeholder="Nombre del proveedor"></div>
-        <div class="field-group"><label class="field-label">Contacto</label><input id="prov-contacto" class="field-input" type="text" placeholder="Nombre vendedor"></div>
-        <div class="field-group"><label class="field-label">Teléfono</label><input id="prov-tel" class="field-input" type="tel" placeholder="951 000 0000"></div>
-        <div class="field-group" style="grid-column:span 2"><label class="field-label">Días de entrega</label><input id="prov-dias" class="field-input" type="text" placeholder="Lunes, Miércoles, Viernes…"></div>
-      </div>
-    </div>
-    <div class="px-6 pb-6 flex justify-end gap-3">
-      <button onclick="closeModalProveedor()" class="btn-secondary">Cancelar</button>
-      <button onclick="guardarProveedor()" class="btn-primary">Guardar proveedor</button>
+<div id="modal-prov" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
+<div class="card w-full anim-in" style="max-width:420px;box-shadow:0 4px 6px rgba(0,0,0,.05),0 20px 60px rgba(0,0,0,.22)">
+  <div class="p-6 pb-4" style="border-bottom:1px solid #E0DDD5">
+    <div class="flex items-center justify-between">
+      <h2 class="font-display text-xl">Nuevo proveedor</h2>
+      <button onclick="closeModalProveedor()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
   </div>
+  <div class="p-6 space-y-3">
+    <div class="field-group"><label class="field-label">Nombre *</label><input id="pv-nombre" class="field-input" type="text" placeholder="Nombre del proveedor"></div>
+    <div class="grid grid-cols-2 gap-3">
+      <div class="field-group"><label class="field-label">Contacto</label><input id="pv-contacto" class="field-input" type="text" placeholder="Nombre del vendedor"></div>
+      <div class="field-group"><label class="field-label">Teléfono</label><input id="pv-tel" class="field-input" type="tel" placeholder="951 000 0000"></div>
+    </div>
+    <div class="field-group"><label class="field-label">Días de entrega</label><input id="pv-dias" class="field-input" type="text" placeholder="Lunes, Miércoles, Viernes…"></div>
+  </div>
+  <div class="px-6 pb-6 flex justify-end gap-3">
+    <button onclick="closeModalProveedor()" class="btn-secondary btn-sm">Cancelar</button>
+    <button onclick="guardarProveedor()" class="btn-primary btn-sm">Guardar proveedor</button>
+  </div>
+</div>
 </div>
 
 <!-- ══ MODAL CONFIG ══ -->
-<div id="modal-token" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
-  <div class="card w-full anim-in" style="max-width:440px;box-shadow:0 4px 6px rgba(0,0,0,.05),0 20px 60px rgba(0,0,0,.22)">
-    <div class="p-6" style="border-bottom:1px solid #E0DDD5">
-      <h2 class="font-display text-xl text-ink-900">Configurar conexión</h2>
-      <p class="text-ink-400 text-sm mt-1">URL del Web App de Google Apps Script</p>
-    </div>
-    <div class="p-6 space-y-4">
-      <div class="field-group"><label class="field-label">Nombre del negocio</label><input id="conf-nombre" class="field-input" type="text" placeholder="Mi Cocina / Nombre del restaurante…"></div>
-      <div class="field-group"><label class="field-label">URL del Web App</label><input id="conf-url" class="field-input" type="url" placeholder="https://script.google.com/macros/s/.../exec" style="font-family:'DM Mono',monospace;font-size:11px"></div>
-      <div class="field-group"><label class="field-label">Token Admin</label><input id="conf-token" class="field-input" type="password" placeholder="Tu ADMIN_TOKEN secreto" style="font-family:'DM Mono',monospace"></div>
-      <div class="rounded-xl p-3 text-xs flex gap-2" style="background:#FEF6E9;color:#4A310A;border-radius:10px"><span>⚠️</span><span>El token se guarda solo en este dispositivo (localStorage). Nunca lo compartas.</span></div>
-    </div>
-    <div class="px-6 pb-6 flex justify-between">
-      <button onclick="testConexion()" class="btn-secondary flex items-center gap-2"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>Probar</button>
-      <div class="flex gap-3">
-        <button onclick="closeTokenModal()" class="btn-secondary">Cancelar</button>
-        <button onclick="guardarConfig()" class="btn-primary">Guardar</button>
-      </div>
+<div id="modal-cfg" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
+<div class="card w-full anim-in" style="max-width:440px;box-shadow:0 4px 6px rgba(0,0,0,.05),0 20px 60px rgba(0,0,0,.22)">
+  <div class="p-6 pb-4" style="border-bottom:1px solid #E0DDD5">
+    <h2 class="font-display text-xl">Configurar API</h2>
+    <p class="text-sm mt-1" style="color:#9A9288">Apps Script Web App URL + token de seguridad</p>
+  </div>
+  <div class="p-6 space-y-4">
+    <div class="field-group"><label class="field-label">Nombre del negocio</label><input id="cfg-nombre" class="field-input" type="text" placeholder="Mi Cocina, Lonchería…"></div>
+    <div class="field-group"><label class="field-label">URL del Web App</label><input id="cfg-url" class="field-input" type="url" placeholder="https://script.google.com/macros/s/.../exec" style="font-size:11px;font-family:'DM Mono',monospace"></div>
+    <div class="field-group"><label class="field-label">Token Admin</label><input id="cfg-token" class="field-input" type="password" placeholder="Tu ADMIN_TOKEN secreto" style="font-family:'DM Mono',monospace"></div>
+    <div class="rounded-xl p-3 text-xs" style="background:#FEF6E9;color:#4A310A">⚠️ El token se guarda solo en este dispositivo. Nunca lo compartas.</div>
+  </div>
+  <div class="px-6 pb-6 flex justify-between">
+    <button onclick="testApi()" class="btn-secondary btn-sm">Probar conexión</button>
+    <div class="flex gap-3">
+      <button onclick="closeTokenModal()" class="btn-secondary btn-sm">Cancelar</button>
+      <button onclick="guardarConfig()" class="btn-primary btn-sm">Guardar</button>
     </div>
   </div>
+</div>
 </div>
 
 <div id="toast" class="toast"></div>
 
 <script>
-// ─── Estado global ───────────────────────────────────────
-let API_URL   = localStorage.getItem('fas_api_url')   || '';
-let API_TOKEN = localStorage.getItem('fas_api_token') || '';
+// ══ ESTADO GLOBAL ══════════════════════════════════════════
+let API_URL   = localStorage.getItem('fas_url')   || '';
+let API_TOKEN = localStorage.getItem('fas_token') || '';
 
-// Cache de datos cargados
-let _insumos    = [];
-let _proveedores= [];
-let _recetas    = [];
-let _menus      = [];
+let _ins  = []; // cache insumos
+let _prov = []; // cache proveedores
+let _proc = []; // cache procesos
+let _rec  = []; // cache recetas
+let _men  = []; // cache menus
 
-// Estado wizard insumo
-let wiStep = 1;
-let wiGrupoActivo = 'Carnes';
+// Wizard insumo
+let wiStep     = 1;
+let wiGrupo    = 'Carnes';
 
-// Estado wizard receta
-let wrStep = 1;
-let wrComps = []; // [{tipo,componenteId,nombre,cantidadUsada,unidadMedida,porcentajeMerma,tiempoMinutos,orden}]
-let wrTipoComp = 'insumo';
+// Wizard receta
+let wrStep     = 1;
+let wrComps    = []; // componentes agregados
+let wrTabComp  = 'insumo';
 
-// ─── API CALL ─────────────────────────────────────────────
-async function apiCall(action, payload, requireToken) {
-  if (requireToken === undefined) requireToken = true;
-  if (!API_URL) { toast('Configura la URL del API primero', 'error'); throw new Error('No API URL'); }
-  const params = new URLSearchParams({ action });
-  if (requireToken && API_TOKEN) params.set('t', API_TOKEN);
-  if (payload && Object.keys(payload).length > 0)
-    params.set('p', encodeURIComponent(JSON.stringify(payload)));
-  const resp = await fetch(API_URL + '?' + params.toString());
-  if (!resp.ok) throw new Error('HTTP ' + resp.status);
-  const data = await resp.json();
-  if (!data.ok) throw new Error(data.error || 'Error del servidor');
-  return data.data !== undefined ? data.data : data;
-}
-async function apiPost(action, payload) { return apiCall(action, payload||{}, true); }
-async function apiGet(action, payload)  { return apiCall(action, payload||{}, false); }
+// ══ CONVERSIONES A UNIDAD BASE (g o ml o pza) ═════════════
+const CONV_G = { g:1, kg:1000, oz:28.3495, lb:453.592, mg:0.001 };
+const CONV_ML= { ml:1, l:1000 };
+const UNIDAD_BASE = { g:'g', kg:'g', oz:'g', lb:'g', mg:'g', ml:'ml', l:'ml', pza:'pza', manojo:'manojo' };
 
-// ─── NAVEGACIÓN ──────────────────────────────────────────
-function showSection(name) {
-  document.querySelectorAll('[id^="section-"]').forEach(s => s.classList.add('hidden'));
-  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
-  const sec = document.getElementById('section-' + name);
-  if (sec) { sec.classList.remove('hidden'); sec.classList.add('anim-in'); }
-  const nav = document.getElementById('nav-' + name);
-  if (nav) nav.classList.add('active');
-  if (name === 'insumos')     cargarInsumos();
-  if (name === 'proveedores') cargarProveedores();
-  if (name === 'recetas')     cargarRecetas();
-  if (name === 'menus')       cargarMenus();
-  if (name === 'dashboard')   cargarDashboard();
+function getUnidadBase(u) { return UNIDAD_BASE[u] || u; }
+
+function convertirABase(cantidad, unidad) {
+  if (CONV_G[unidad])  return { val: cantidad * CONV_G[unidad],  base:'g' };
+  if (CONV_ML[unidad]) return { val: cantidad * CONV_ML[unidad], base:'ml' };
+  return { val: cantidad, base: unidad }; // pza, manojo, etc.
 }
 
-// ─── WIZARD INSUMO ───────────────────────────────────────
+/**
+ * LÓGICA CENTRAL DE COSTO
+ * Un insumo tiene CostoBaseUnitario en MXN/unidad-base (MXN/g, MXN/ml, MXN/pza)
+ * Al agregar a una receta:
+ *   1. Convertir cantidadUsada a unidad base
+ *   2. cantidadBruta = cantidadBase / (1 - merma/100)
+ *   3. costoLinea = cantidadBruta * CostoBaseUnitario
+ */
+function calcCostoLinea(costoBaseUnitario, cantidadUsada, unidad, merma) {
+  const { val: cantBase } = convertirABase(cantidadUsada, unidad);
+  const pctMerma = Math.min(parseFloat(merma)||0, 99);
+  const cantBruta = pctMerma > 0 ? cantBase / (1 - pctMerma/100) : cantBase;
+  return cantBruta * (costoBaseUnitario || 0);
+}
+
+// ══ API ════════════════════════════════════════════════════
+async function api(action, payload, token) {
+  if (!API_URL) { toast('Configura la URL del API primero', 'error'); throw new Error('No API'); }
+  const p = new URLSearchParams({ action });
+  if (token !== false && API_TOKEN) p.set('t', API_TOKEN);
+  if (payload && Object.keys(payload).length) p.set('p', encodeURIComponent(JSON.stringify(payload)));
+  const r = await fetch(API_URL + '?' + p);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const d = await r.json();
+  if (!d.ok) throw new Error(d.error || 'Error servidor');
+  return d.data !== undefined ? d.data : d;
+}
+
+// ══ NAVEGACIÓN ═════════════════════════════════════════════
+function showSection(n) {
+  document.querySelectorAll('[id^="section-"]').forEach(s=>s.classList.add('hidden'));
+  document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));
+  const s=document.getElementById('section-'+n);
+  if(s){s.classList.remove('hidden');s.classList.add('anim-in')}
+  const nav=document.getElementById('nav-'+n);
+  if(nav)nav.classList.add('active');
+  if(n==='insumos')    cargarInsumos();
+  if(n==='proveedores')cargarProveedores();
+  if(n==='recetas')    cargarRecetas();
+  if(n==='menus')      cargarMenus();
+  if(n==='dashboard')  cargarDashboard();
+}
+
+// ══ WIZARD INSUMO ══════════════════════════════════════════
 function openWizardInsumo() {
-  wiStep = 1; wiGrupoActivo = 'Carnes';
-  ['wi-nombre','wi-codigo','wi-nota','wi-precio','wi-cantidad','wi-grupo-custom'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.value = '';
-  });
-  document.getElementById('wi-merma').value = '0';
-  document.getElementById('wi-merma-txt').textContent = '0%';
-  document.getElementById('wi-unidad').value = 'kg';
-  document.querySelectorAll('.grupo-chip').forEach(c => c.classList.remove('active'));
+  wiStep=1; wiGrupo='Carnes';
+  ['wi-nombre','wi-codigo','wi-nota','wi-precio'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('wi-unidad').value='kg';
+  document.querySelectorAll('.grupo-chip').forEach(c=>c.classList.remove('active'));
   document.querySelector('.grupo-chip').classList.add('active');
-  actualizarUnidadBase();
+  document.getElementById('wi-grupo-custom').value='';
+  document.getElementById('wi-preview').classList.add('hidden');
   renderWiStep();
-  cargarProveedoresEnSelector('wi-proveedor');
+  cargarProvSelector('wi-proveedor');
   document.getElementById('wiz-insumo').classList.remove('hidden');
 }
-function closeWizardInsumo() { document.getElementById('wiz-insumo').classList.add('hidden'); }
+function closeWizardInsumo(){ document.getElementById('wiz-insumo').classList.add('hidden'); }
 
 function renderWiStep() {
-  for (let i = 1; i <= 3; i++) {
-    document.getElementById('wi-step' + i).classList.toggle('hidden', i !== wiStep);
-    const dot = document.getElementById('wid' + i);
-    dot.className = 'step-dot';
-    if (i < wiStep) { dot.classList.add('done'); dot.innerHTML = '✓'; }
-    else if (i === wiStep) { dot.classList.add('active'); dot.textContent = i; }
-    else dot.textContent = i;
-  }
-  for (let i = 1; i <= 2; i++)
-    document.getElementById('wil' + i).classList.toggle('done', i < wiStep);
-
-  const descs = ['Paso 1 de 3 · Identificación', 'Paso 2 de 3 · Precio y proveedor', 'Paso 3 de 3 · Merma y confirmación'];
-  document.getElementById('wi-desc').textContent = descs[wiStep - 1];
-  document.getElementById('wi-btn-back').style.display = wiStep > 1 ? 'block' : 'none';
-  document.getElementById('wi-ph').style.display = wiStep > 1 ? 'none' : 'block';
-  document.getElementById('wi-btn-next').classList.toggle('hidden', wiStep === 3);
-  document.getElementById('wi-btn-save').classList.toggle('hidden', wiStep !== 3);
-  if (wiStep === 3) llenarResumenInsumo();
+  document.getElementById('wi-p1').classList.toggle('hidden', wiStep!==1);
+  document.getElementById('wi-p2').classList.toggle('hidden', wiStep!==2);
+  [1,2].forEach(i=>{
+    const d=document.getElementById('wid'+i);
+    d.className='step-dot';
+    if(i<wiStep){d.classList.add('done');d.innerHTML='✓';}
+    else if(i===wiStep){d.classList.add('active');d.textContent=i;}
+    else d.textContent=i;
+  });
+  if(wiStep>1)document.getElementById('wil1').classList.add('done');
+  else document.getElementById('wil1').classList.remove('done');
+  document.getElementById('wi-desc').textContent = wiStep===1
+    ? 'Paso 1 de 2 · Identificación'
+    : 'Paso 2 de 2 · Precio y proveedor';
+  document.getElementById('wi-back').style.display = wiStep>1 ? 'inline-flex':'none';
+  document.getElementById('wi-ph').style.display   = wiStep>1 ? 'none':'block';
+  document.getElementById('wi-next').classList.toggle('hidden', wiStep===2);
+  document.getElementById('wi-save').classList.toggle('hidden', wiStep!==2);
+  if(wiStep===2) actualizarExplicacion();
 }
 
 function wiNext() {
-  if (wiStep === 1 && !document.getElementById('wi-nombre').value.trim()) {
-    toast('El nombre del insumo es requerido', 'error'); return;
+  if(wiStep===1 && !document.getElementById('wi-nombre').value.trim()){
+    toast('El nombre del insumo es requerido','error'); return;
   }
-  if (wiStep === 2) {
-    const precio = parseFloat(document.getElementById('wi-precio').value);
-    const cant   = parseFloat(document.getElementById('wi-cantidad').value);
-    if (!precio || precio <= 0) { toast('Ingresa el precio de compra', 'error'); return; }
-    if (!cant   || cant   <= 0) { toast('Ingresa la cantidad de la presentación', 'error'); return; }
-  }
-  if (wiStep < 3) { wiStep++; renderWiStep(); }
+  if(wiStep<2){ wiStep++; renderWiStep(); }
 }
-function wiBack() { if (wiStep > 1) { wiStep--; renderWiStep(); } }
+function wiBack(){ if(wiStep>1){ wiStep--; renderWiStep(); } }
 
 function selGrupo(btn, g) {
-  document.querySelectorAll('.grupo-chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  wiGrupoActivo = g;
-  document.getElementById('wi-grupo-custom').value = '';
+  document.querySelectorAll('.grupo-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active'); wiGrupo=g;
+  document.getElementById('wi-grupo-custom').value='';
 }
 
-function actualizarUnidadBase() {
+function actualizarExplicacion() {
   const u = document.getElementById('wi-unidad').value;
-  const base = ['kg','g','lb','oz'].includes(u) ? 'g' : ['l','ml'].includes(u) ? 'ml' : u;
-  document.getElementById('wi-ubase').textContent = base;
-  calcCosto();
+  const base = getUnidadBase(u);
+  document.getElementById('prev-unidad-label').textContent = base;
+  document.getElementById('prev-ej-u').textContent = base;
+  calcCostoInsumo();
 }
 
-function calcCosto() {
+function calcCostoInsumo() {
   const precio = parseFloat(document.getElementById('wi-precio').value);
-  const cant   = parseFloat(document.getElementById('wi-cantidad').value);
-  const box    = document.getElementById('costo-preview-box');
-  if (precio > 0 && cant > 0) {
-    const c = precio / cant;
-    document.getElementById('costo-unit-txt').textContent = '$' + c.toFixed(4);
-    document.getElementById('costo-100-txt').textContent  = '$' + (c * 100).toFixed(2);
-    box.classList.remove('hidden');
-  } else {
-    box.classList.add('hidden');
-  }
-}
-
-function updateMerma(v) {
-  document.getElementById('wi-merma-txt').textContent = v + '%';
-}
-
-function llenarResumenInsumo() {
-  const nombre = document.getElementById('wi-nombre').value;
-  const grupoCustom = document.getElementById('wi-grupo-custom').value.trim();
-  const grupo  = grupoCustom || wiGrupoActivo;
   const unidad = document.getElementById('wi-unidad').value;
-  const precio = parseFloat(document.getElementById('wi-precio').value) || 0;
-  const cant   = parseFloat(document.getElementById('wi-cantidad').value) || 1;
-  const merma  = parseInt(document.getElementById('wi-merma').value) || 0;
-  const costoBase  = precio / cant;
-  const costoMerma = merma < 100 ? costoBase / (1 - merma / 100) : costoBase;
+  const box    = document.getElementById('wi-preview');
 
-  document.getElementById('rs-nombre').textContent = nombre;
-  document.getElementById('rs-grupo').textContent  = grupo;
-  document.getElementById('rs-unidad').textContent = unidad;
-  document.getElementById('rs-precio').textContent = '$' + precio.toFixed(2) + ' MXN';
-  document.getElementById('rs-costo').textContent  = '$' + costoBase.toFixed(4) + '/unidad base';
-  document.getElementById('rs-merma').textContent  = merma + '%';
-  document.getElementById('rs-costo-merma').textContent = '$' + costoMerma.toFixed(4) + '/unidad neta';
-  document.getElementById('wi-merma-txt').textContent   = merma + '%';
+  if (!precio || precio <= 0) { box.classList.add('hidden'); return; }
+
+  // El precio es por UNA unidad de compra (1kg, 1L, etc.)
+  const { val: baseVal, base } = convertirABase(1, unidad);
+  const costoBase = precio / baseVal; // MXN/unidad-base
+
+  // Ejemplo: ¿cuánto costaría usar 300 unidades-base?
+  const ejCant = base==='g'||base==='ml' ? 300 : 5;
+  const ejCosto = costoBase * ejCant;
+
+  document.getElementById('prev-compre').textContent  = '1 ' + unidad;
+  document.getElementById('prev-pague').textContent   = '$' + precio.toFixed(2) + ' MXN';
+  document.getElementById('prev-costo-unit').textContent = '$' + costoBase.toFixed(4) + '/' + base;
+  document.getElementById('prev-ej-u').textContent    = base;
+  document.getElementById('prev-ej-costo').textContent= '$' + ejCosto.toFixed(2);
+  document.getElementById('prev-unidad-label').textContent = base;
+  box.classList.remove('hidden');
 }
 
 async function guardarInsumo() {
-  const btn = document.getElementById('wi-btn-save');
-  const txt = document.getElementById('wi-save-txt');
-  btn.disabled = true; txt.textContent = 'Guardando…';
+  const precio = parseFloat(document.getElementById('wi-precio').value);
+  if (!precio || precio <= 0) { toast('Ingresa el precio de compra', 'error'); return; }
+  const nombre = document.getElementById('wi-nombre').value.trim();
+  if (!nombre) { toast('El nombre es requerido','error'); return; }
+
+  const unidad = document.getElementById('wi-unidad').value;
+  const { val: baseVal } = convertirABase(1, unidad);
+  const costoBase = precio / baseVal;
+
+  document.getElementById('wi-save').disabled = true;
+  document.getElementById('wi-save-txt').textContent = 'Guardando…';
   try {
     const grupoCustom = document.getElementById('wi-grupo-custom').value.trim();
-    const grupo = grupoCustom || wiGrupoActivo;
-    await apiPost('crearInsumo', {
-      nombre:            document.getElementById('wi-nombre').value.trim(),
+    await api('crearInsumo', {
+      nombre,
       codigo:            document.getElementById('wi-codigo').value.trim(),
-      grupo,
+      grupo:             grupoCustom || wiGrupo,
       nota:              document.getElementById('wi-nota').value.trim(),
       proveedorId:       document.getElementById('wi-proveedor').value,
-      unidadComercial:   document.getElementById('wi-unidad').value,
-      precioCompra:      parseFloat(document.getElementById('wi-precio').value),
-      cantidadComercial: parseFloat(document.getElementById('wi-cantidad').value),
-      porcentajeMerma:   parseInt(document.getElementById('wi-merma').value) || 0,
+      unidadComercial:   unidad,
+      precioCompra:      precio,
+      cantidadComercial: baseVal,   // cuántas unidades-base hay en 1 unidad-comercial
+      // costoBaseUnitario se calcula en el backend igual, pero lo enviamos explícito
+      costoBaseUnitario: costoBase,
     });
-    toast('✅ Insumo guardado', 'success');
+    toast('✅ Insumo guardado','success');
     closeWizardInsumo();
-    _insumos = [];
-    cargarInsumos();
-  } catch (err) {
-    toast('Error: ' + err.message, 'error');
-  } finally {
-    btn.disabled = false; txt.textContent = 'Guardar insumo';
-  }
+    _ins=[]; cargarInsumos();
+  } catch(e){ toast('Error: '+e.message,'error'); }
+  finally{ document.getElementById('wi-save').disabled=false; document.getElementById('wi-save-txt').textContent='Guardar insumo'; }
 }
 
-function simularEscaneo() {
-  const codigos = ['7501234567890','7509546028013','7501031300018'];
-  document.getElementById('wi-codigo').value = codigos[Math.floor(Math.random()*codigos.length)];
-  toast('📷 Código escaneado', 'success');
+function simScan() {
+  document.getElementById('wi-codigo').value = '750'+Math.floor(Math.random()*9000000000+1000000000);
+  toast('📷 Código escaneado (simulado)','success');
 }
 
-// ─── WIZARD RECETA ────────────────────────────────────────
+// ══ WIZARD RECETA ══════════════════════════════════════════
 function openWizardReceta() {
-  wrStep = 1; wrComps = []; wrTipoComp = 'insumo';
-  ['wr-nombre','wr-notas','wr-pasos'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.value = '';
-  });
-  document.getElementById('wr-rinde').value = '1';
-  document.getElementById('wr-tipo').value  = 'Plato';
+  wrStep=1; wrComps=[]; wrTabComp='insumo';
+  ['wr-nombre','wr-notas','wr-pasos'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('wr-rinde').value='1';
+  document.getElementById('wr-tipo').value='Plato';
+  document.getElementById('wr-resumen').classList.add('hidden');
+  setTabComp('insumo');
   renderWrStep();
   renderCompLista();
-  cargarInsumosEnSelector();
-  cargarProcesosEnSelector();
+  // Cargar insumos + subrecetas + procesos
+  Promise.all([cargarInsEnSelector(), cargarProcEnSelector()]);
   document.getElementById('wiz-receta').classList.remove('hidden');
 }
-function closeWizardReceta() { document.getElementById('wiz-receta').classList.add('hidden'); }
+function closeWizardReceta(){ document.getElementById('wiz-receta').classList.add('hidden'); }
 
 function renderWrStep() {
-  for (let i = 1; i <= 3; i++) {
-    document.getElementById('wr-step' + i).classList.toggle('hidden', i !== wrStep);
-    const dot = document.getElementById('wrd' + i);
-    dot.className = 'step-dot';
-    if (i < wrStep) { dot.classList.add('done'); dot.innerHTML = '✓'; }
-    else if (i === wrStep) { dot.classList.add('active'); dot.textContent = i; }
-    else dot.textContent = i;
+  [1,2,3].forEach(i=>{
+    document.getElementById('wr-p'+i).classList.toggle('hidden',i!==wrStep);
+    const d=document.getElementById('wrd'+i);
+    d.className='step-dot';
+    if(i<wrStep){d.classList.add('done');d.innerHTML='✓';}
+    else if(i===wrStep){d.classList.add('active');d.textContent=i;}
+    else d.textContent=i;
+  });
+  ['wrl1','wrl2'].forEach((id,i)=>{
+    document.getElementById(id).classList.toggle('done', i+1 < wrStep);
+  });
+  const descs=['Paso 1 de 3 · Información general','Paso 2 de 3 · Ingredientes y costo','Paso 3 de 3 · Paso a paso'];
+  document.getElementById('wr-desc').textContent = descs[wrStep-1];
+  document.getElementById('wr-back').style.display = wrStep>1 ? 'inline-flex':'none';
+  document.getElementById('wr-ph').style.display   = wrStep>1 ? 'none':'block';
+  document.getElementById('wr-next').classList.toggle('hidden', wrStep===3);
+  document.getElementById('wr-save').classList.toggle('hidden', wrStep!==3);
+  if(wrStep===3) mostrarResumenReceta();
+  if(wrStep===2) actualizarCostoTotal();
+}
+
+function wrNext(){
+  if(wrStep===1 && !document.getElementById('wr-nombre').value.trim()){
+    toast('El nombre de la receta es requerido','error'); return;
   }
-  for (let i = 1; i <= 2; i++)
-    document.getElementById('wrl' + i).classList.toggle('done', i < wrStep);
-  const descs = ['Paso 1 de 3 · Información general', 'Paso 2 de 3 · Ingredientes y procesos', 'Paso 3 de 3 · Paso a paso'];
-  document.getElementById('wr-desc').textContent = descs[wrStep - 1];
-  document.getElementById('wr-btn-back').style.display = wrStep > 1 ? 'block' : 'none';
-  document.getElementById('wr-ph').style.display = wrStep > 1 ? 'none' : 'block';
-  document.getElementById('wr-btn-next').classList.toggle('hidden', wrStep === 3);
-  document.getElementById('wr-btn-save').classList.toggle('hidden', wrStep !== 3);
+  if(wrStep<3){ wrStep++; renderWrStep(); }
+}
+function wrBack(){ if(wrStep>1){ wrStep--; renderWrStep(); } }
+
+function setTabComp(t) {
+  wrTabComp = t;
+  document.getElementById('form-ins').classList.toggle('hidden', t!=='insumo');
+  document.getElementById('form-pro').classList.toggle('hidden', t!=='proceso');
+  document.getElementById('tab-ins').classList.toggle('active', t==='insumo');
+  document.getElementById('tab-pro').classList.toggle('active', t==='proceso');
 }
 
-function wrNext() {
-  if (wrStep === 1 && !document.getElementById('wr-nombre').value.trim()) {
-    toast('El nombre de la receta es requerido', 'error'); return;
-  }
-  if (wrStep < 3) { wrStep++; renderWrStep(); }
-}
-function wrBack() { if (wrStep > 1) { wrStep--; renderWrStep(); } }
+// Calcula el costo de la línea actual en el preview
+function previewIngrediente() {
+  const sel  = document.getElementById('c-ins-sel');
+  const id   = sel.value;
+  const cant = parseFloat(document.getElementById('c-ins-cant').value)||0;
+  const unid = document.getElementById('c-ins-unidad').value;
+  const merm = parseFloat(document.getElementById('c-ins-merma').value)||0;
+  const box  = document.getElementById('prev-ing');
 
-function setTipoComp(tipo) {
-  wrTipoComp = tipo;
-  document.getElementById('add-insumo-form').classList.toggle('hidden', tipo !== 'insumo');
-  document.getElementById('add-proceso-form').classList.toggle('hidden', tipo !== 'proceso');
-  document.getElementById('tab-insumo').style.cssText  = tipo === 'insumo'  ? 'background:white;color:#0F0E0C;box-shadow:0 1px 3px rgba(0,0,0,.1)' : 'color:#9A9288';
-  document.getElementById('tab-proceso').style.cssText = tipo === 'proceso' ? 'background:white;color:#0F0E0C;box-shadow:0 1px 3px rgba(0,0,0,.1)' : 'color:#9A9288';
+  if (!id || !cant) { box.classList.add('hidden'); return; }
+
+  // Buscar el costo base del insumo/subreceta
+  const cbu = getCostoBaseUnitario(id);
+  if (cbu === null) { box.classList.add('hidden'); return; }
+
+  const costo = calcCostoLinea(cbu, cant, unid, merm);
+  document.getElementById('prev-ing-val').textContent = '$' + costo.toFixed(2) + ' MXN';
+  box.classList.remove('hidden');
 }
 
-function agregarComponente(tipo) {
-  if (tipo === 'insumo') {
-    const sel   = document.getElementById('comp-insumo-sel');
+function previewProceso() {
+  const sel  = document.getElementById('c-pro-sel');
+  const id   = sel.value;
+  const mins = parseFloat(document.getElementById('c-pro-min').value)||0;
+  const box  = document.getElementById('prev-pro');
+  if (!id || id==='_nuevo' || !mins) { box.classList.add('hidden'); return; }
+  const proc = _proc.find(p=>String(p['ProcesoID'])===String(id));
+  if (!proc) { box.classList.add('hidden'); return; }
+  const cpm  = parseFloat(proc['CostoPorMinuto'])||0;
+  document.getElementById('prev-pro-val').textContent = '$' + (cpm*mins).toFixed(2) + ' MXN';
+  box.classList.remove('hidden');
+}
+
+function getCostoBaseUnitario(id) {
+  // Buscar en insumos
+  const ins = _ins.find(i=>String(i['InsumoID'])===String(id));
+  if (ins) return parseFloat(ins['CostoBaseUnitario'])||0;
+  // Buscar en subrecetas (recetas declaradas)
+  const sub = _rec.find(r=>(String(r.recetaId||r['RecetaID']))===String(id));
+  if (sub) return parseFloat(sub['CostoPorPorcion']||sub.costoPorPorcion||0);
+  return null;
+}
+
+function agregarComp(tipo) {
+  if (tipo==='insumo') {
+    const sel   = document.getElementById('c-ins-sel');
     const id    = sel.value;
-    const nombre= sel.options[sel.selectedIndex]?.text || '';
-    const cant  = parseFloat(document.getElementById('comp-cantidad').value);
-    const unidad= document.getElementById('comp-unidad').value;
-    const merma = parseFloat(document.getElementById('comp-merma').value) || 0;
-    const orden = parseInt(document.getElementById('comp-orden').value) || wrComps.length + 1;
-    if (!id) { toast('Selecciona un insumo', 'error'); return; }
-    if (!cant || cant <= 0) { toast('Ingresa la cantidad', 'error'); return; }
-    wrComps.push({ tipo:'insumo', componenteId:id, nombre, cantidadUsada:cant, unidadMedida:unidad, porcentajeMerma:merma, tiempoMinutos:0, orden });
-    document.getElementById('comp-cantidad').value = '';
-    document.getElementById('comp-merma').value = '0';
-    document.getElementById('comp-orden').value = wrComps.length + 1;
+    const nombre= sel.options[sel.selectedIndex]?.text?.replace(/\s*\[.*\]$/,'')||'';
+    const cant  = parseFloat(document.getElementById('c-ins-cant').value);
+    const unid  = document.getElementById('c-ins-unidad').value;
+    const merm  = parseFloat(document.getElementById('c-ins-merma').value)||0;
+    const orden = parseInt(document.getElementById('c-ins-orden').value)||wrComps.length+1;
+    if (!id)         { toast('Selecciona un insumo','error'); return; }
+    if (!cant||cant<=0){ toast('Ingresa la cantidad a usar','error'); return; }
+    const cbu   = getCostoBaseUnitario(id);
+    const costo = calcCostoLinea(cbu, cant, unid, merm);
+    // Detectar si es subreceta
+    const esSub = _rec.some(r=>String(r.recetaId||r['RecetaID'])===String(id));
+    wrComps.push({ tipo: esSub?'subreceta':'insumo', componenteId:id, nombre, cantidadUsada:cant, unidadMedida:unid, porcentajeMerma:merm, tiempoMinutos:0, orden, costoLinea:costo });
+    // Reset campos
+    document.getElementById('c-ins-cant').value='';
+    document.getElementById('c-ins-merma').value='0';
+    document.getElementById('c-ins-orden').value=wrComps.length+1;
+    document.getElementById('prev-ing').classList.add('hidden');
   } else {
-    const sel   = document.getElementById('comp-proceso-sel');
+    const sel   = document.getElementById('c-pro-sel');
     const id    = sel.value;
-    const nombre= sel.options[sel.selectedIndex]?.text || '';
-    const mins  = parseFloat(document.getElementById('comp-minutos').value);
-    if (!id || id === '_nuevo') { toast('Selecciona un proceso', 'error'); return; }
-    if (!mins || mins <= 0)    { toast('Ingresa los minutos', 'error'); return; }
-    wrComps.push({ tipo:'proceso', componenteId:id, nombre, cantidadUsada:mins, unidadMedida:'min', porcentajeMerma:0, tiempoMinutos:mins, orden:wrComps.length+1 });
-    document.getElementById('comp-minutos').value = '';
+    if (!id||id==='_nuevo'){ toast('Selecciona un proceso','error'); return; }
+    const nombre= sel.options[sel.selectedIndex]?.text?.replace(/\s*\(.*\)$/,'')||'';
+    const mins  = parseFloat(document.getElementById('c-pro-min').value);
+    if (!mins||mins<=0){ toast('Ingresa los minutos','error'); return; }
+    const proc  = _proc.find(p=>String(p['ProcesoID'])===String(id));
+    const cpm   = proc ? parseFloat(proc['CostoPorMinuto'])||0 : 0;
+    const costo = cpm * mins;
+    wrComps.push({ tipo:'proceso', componenteId:id, nombre, cantidadUsada:mins, unidadMedida:'min', porcentajeMerma:0, tiempoMinutos:mins, orden:wrComps.length+1, costoLinea:costo });
+    document.getElementById('c-pro-min').value='';
+    document.getElementById('prev-pro').classList.add('hidden');
   }
   renderCompLista();
+  actualizarCostoTotal();
 }
 
-function quitarComp(idx) {
-  wrComps.splice(idx, 1);
-  wrComps.forEach((c, i) => c.orden = i + 1);
+function quitarComp(i) {
+  wrComps.splice(i,1);
+  wrComps.forEach((c,j)=>c.orden=j+1);
   renderCompLista();
+  actualizarCostoTotal();
 }
 
 function renderCompLista() {
-  const cont = document.getElementById('comp-lista');
+  const cont = document.getElementById('wr-comp-lista');
   if (!wrComps.length) {
-    cont.innerHTML = '<div class="text-xs text-center py-4" style="color:#C4BFB4">Aún no hay ingredientes — agrega el primero arriba</div>';
-    document.getElementById('comp-costo-total').classList.add('hidden');
+    cont.innerHTML='<div class="text-xs text-center py-3" style="color:#C4BFB4">Agrega el primer ingrediente arriba ↑</div>';
     return;
   }
-  cont.innerHTML = wrComps.map((c, i) => `
+  const iconos = { insumo:'📦', subreceta:'🔗', proceso:'⏱' };
+  cont.innerHTML = wrComps.map((c,i)=>`
     <div class="comp-row">
-      <span class="tag ${c.tipo==='insumo'?'tag-green':c.tipo==='proceso'?'tag-amber':'tag-blue'}" style="flex-shrink:0">${c.tipo==='insumo'?'📦':c.tipo==='proceso'?'⏱':'🔗'}</span>
-      <span class="comp-name">${c.nombre}</span>
-      <span class="comp-qty">${c.cantidadUsada} ${c.unidadMedida}</span>
-      ${c.porcentajeMerma>0?`<span class="tag tag-amber">−${c.porcentajeMerma}%</span>`:''}
-      <span class="comp-remove" onclick="quitarComp(${i})">×</span>
+      <span class="tag ${c.tipo==='insumo'?'tag-green':c.tipo==='proceso'?'tag-amber':'tag-purple'}" style="flex-shrink:0">${iconos[c.tipo]}</span>
+      <span class="cn">${c.nombre}</span>
+      <span class="cq">${c.cantidadUsada}${c.unidadMedida}</span>
+      ${c.porcentajeMerma>0?`<span class="tag tag-amber" style="font-size:10px">−${c.porcentajeMerma}%</span>`:''}
+      <span class="cc">$${(c.costoLinea||0).toFixed(2)}</span>
+      <button class="rm" onclick="quitarComp(${i})">×</button>
+    </div>`).join('');
+}
+
+function actualizarCostoTotal() {
+  const total   = wrComps.reduce((a,c)=>a+(c.costoLinea||0),0);
+  const rinde   = parseFloat(document.getElementById('wr-rinde').value)||1;
+  const porcion = total/rinde;
+  document.getElementById('costo-total-live').textContent   = '$'+total.toFixed(2);
+  document.getElementById('costo-porciones-live').textContent= rinde;
+  document.getElementById('costo-porcion-live').textContent  = '$'+porcion.toFixed(2);
+}
+
+function mostrarResumenReceta() {
+  const nombre = document.getElementById('wr-nombre').value;
+  const rinde  = parseFloat(document.getElementById('wr-rinde').value)||1;
+  const total  = wrComps.reduce((a,c)=>a+(c.costoLinea||0),0);
+  const porcion= total/rinde;
+  const el     = document.getElementById('wr-resumen');
+  document.getElementById('wr-resumen-contenido').innerHTML=`
+    <div class="flex justify-between text-sm"><span style="color:#22523C">Receta</span><span class="font-semibold">${nombre}</span></div>
+    <div class="flex justify-between text-sm mt-1"><span style="color:#22523C">Ingredientes</span><span>${wrComps.length} componentes</span></div>
+    <div class="flex justify-between text-sm mt-1"><span style="color:#22523C">Rinde</span><span>${rinde} porción(es)</span></div>
+    <div class="flex justify-between text-sm mt-1 pt-2" style="border-top:1px solid #C8E8D9">
+      <span style="color:#183B2B;font-weight:600">Costo total</span>
+      <span class="font-mono font-bold text-base" style="color:#2D6A4F">$${total.toFixed(2)} MXN</span>
     </div>
-  `).join('');
-  document.getElementById('comp-costo-total').classList.remove('hidden');
-  document.getElementById('comp-costo-total').textContent = wrComps.length + ' componente(s) agregado(s)';
+    <div class="flex justify-between text-sm mt-1">
+      <span style="color:#183B2B;font-weight:600">Costo por porción</span>
+      <span class="font-mono font-bold" style="color:#2D6A4F">$${porcion.toFixed(2)} MXN</span>
+    </div>`;
+  el.classList.remove('hidden');
+}
+
+// Crear proceso nuevo inline sin salir del wizard
+function crearProcesoInline() {
+  document.getElementById('form-pro-nuevo').classList.remove('hidden');
+  document.getElementById('c-pro-sel').value='';
+}
+
+async function guardarProcesoInline() {
+  const nombre = document.getElementById('np-nombre').value.trim();
+  if (!nombre) { toast('El nombre del proceso es requerido','error'); return; }
+  const cpm = parseFloat(document.getElementById('np-cpm').value)||null;
+  try {
+    const res = await api('crearProceso', { nombre, costoPorMinuto: cpm });
+    toast('✅ Proceso creado','success');
+    document.getElementById('form-pro-nuevo').classList.add('hidden');
+    document.getElementById('np-nombre').value='';
+    document.getElementById('np-cpm').value='';
+    _proc=[];
+    await cargarProcEnSelector();
+    // Seleccionar el recién creado
+    const sel = document.getElementById('c-pro-sel');
+    const nuevoId = res.ProcesoID || res.proId || '';
+    if (nuevoId) sel.value=nuevoId;
+  } catch(e){ toast('Error: '+e.message,'error'); }
 }
 
 async function guardarReceta() {
-  const btn = document.getElementById('wr-btn-save');
-  const txt = document.getElementById('wr-save-txt');
-  btn.disabled = true; txt.textContent = 'Guardando…';
+  const nombre = document.getElementById('wr-nombre').value.trim();
+  if (!nombre) { toast('El nombre es requerido','error'); return; }
+  const btn=document.getElementById('wr-save'); btn.disabled=true;
+  document.getElementById('wr-save-txt').textContent='Guardando…';
   try {
     const pasosRaw = document.getElementById('wr-pasos').value;
-    const pasos = pasosRaw.split('\n').map(p => p.replace(/^\d+[\.\)]\s*/, '').trim()).filter(Boolean);
-    const rec = await apiPost('crearReceta', {
-      nombre:            document.getElementById('wr-nombre').value.trim(),
+    const pasos = pasosRaw.split('\n').map(p=>p.replace(/^\d+[\.\)]\s*/,'').trim()).filter(Boolean);
+    const rinde = parseFloat(document.getElementById('wr-rinde').value)||1;
+    const total = wrComps.reduce((a,c)=>a+(c.costoLinea||0),0);
+
+    const res = await api('crearReceta',{
+      nombre,
       tipoServicio:      document.getElementById('wr-tipo').value,
-      rendimiento:       parseFloat(document.getElementById('wr-rinde').value) || 1,
+      rendimiento:       rinde,
       unidadRendimiento: 'porciones',
       notasPreparacion:  document.getElementById('wr-notas').value.trim(),
       pasoAPaso:         pasos,
+      costoTotal:        total,
+      costoPorPorcion:   total/rinde,
     });
-    const recetaId = rec.RecetaID || rec.recetaId || (rec.InsumoID ? rec.InsumoID : null);
 
-    // Guardar componentes si se tiene el ID
-    if (recetaId && wrComps.length) {
-      for (let i = 0; i < wrComps.length; i++) {
-        const c = wrComps[i];
-        await apiPost('agregarComponenteReceta', {
-          recetaId, tipoComponente: c.tipo, componenteId: c.componenteId,
-          cantidadUsada: c.cantidadUsada, unidadMedida: c.unidadMedida,
-          porcentajeMerma: c.porcentajeMerma, tiempoMinutos: c.tiempoMinutos, orden: c.orden,
+    const recId = res.RecetaID || res.recetaId || null;
+    if (recId && wrComps.length) {
+      for (const c of wrComps) {
+        await api('agregarComponenteReceta',{
+          recetaId:       recId,
+          tipoComponente: c.tipo,
+          componenteId:   c.componenteId,
+          cantidadUsada:  c.cantidadUsada,
+          unidadMedida:   c.unidadMedida,
+          porcentajeMerma:c.porcentajeMerma,
+          tiempoMinutos:  c.tiempoMinutos,
+          orden:          c.orden,
         });
       }
     }
-    toast('✅ Receta guardada', 'success');
+    toast('✅ Receta guardada','success');
     closeWizardReceta();
-    _recetas = [];
-    cargarRecetas();
-  } catch (err) {
-    toast('Error: ' + err.message, 'error');
-  } finally {
-    btn.disabled = false; txt.textContent = 'Guardar receta';
-  }
+    _rec=[]; cargarRecetas();
+  } catch(e){ toast('Error: '+e.message,'error'); }
+  finally{ btn.disabled=false; document.getElementById('wr-save-txt').textContent='Guardar receta'; }
 }
 
-// ─── WIZARD MENÚ ─────────────────────────────────────────
+// ══ WIZARD MENÚ ════════════════════════════════════════════
 function openWizardMenu() {
-  document.getElementById('menu-precio').value = '';
-  document.getElementById('menu-margen-obj').value = '65';
-  document.getElementById('menu-temporada').value = 'Todo el año';
-  document.getElementById('menu-preview').classList.add('hidden');
-  cargarRecetasEnSelector('menu-receta-sel');
+  document.getElementById('m-precio').value='';
+  document.getElementById('m-obj').value='65';
+  document.getElementById('m-temporada').value='Todo el año';
+  document.getElementById('m-preview').classList.add('hidden');
+  cargarRecEnSelector('m-receta');
   document.getElementById('wiz-menu').classList.remove('hidden');
 }
-function closeWizardMenu() { document.getElementById('wiz-menu').classList.add('hidden'); }
+function closeWizardMenu(){ document.getElementById('wiz-menu').classList.add('hidden'); }
 
-function calcMargen() {
-  const recSel  = document.getElementById('menu-receta-sel');
-  const precio  = parseFloat(document.getElementById('menu-precio').value);
-  const recetaId = recSel.value;
-  if (!recetaId || !precio) { document.getElementById('menu-preview').classList.add('hidden'); return; }
+function calcMenuMargen() {
+  const recId = document.getElementById('m-receta').value;
+  const precio= parseFloat(document.getElementById('m-precio').value)||0;
+  const obj   = parseFloat(document.getElementById('m-obj').value)||65;
+  if (!recId||!precio) { document.getElementById('m-preview').classList.add('hidden'); return; }
 
-  // Buscar costo en cache de recetas
-  const rec = _recetas.find(r => r.recetaId === recetaId || r.RecetaID === recetaId);
-  const costo = rec ? (parseFloat(rec.CostoTotal || rec.costoTotal || 0)) : 0;
-  const margenReal = precio > 0 ? ((precio - costo) / precio * 100) : 0;
-  const margenObj  = parseInt(document.getElementById('menu-margen-obj').value) || 65;
-  const precioSug  = costo > 0 ? (costo / (1 - margenObj/100)).toFixed(2) : '—';
+  const rec   = _rec.find(r=>(r.recetaId||r['RecetaID'])===recId);
+  const costo = rec ? parseFloat(rec['CostoPorPorcion']||rec.costoPorPorcion||rec['CostoTotal']||0) : 0;
+  const margen= precio>0 ? ((precio-costo)/precio*100) : 0;
+  const utilidad = precio - costo;
+  const precioSug = costo>0 ? (costo/(1-obj/100)) : 0;
 
-  document.getElementById('mprev-costo').textContent  = '$' + costo.toFixed(2);
-  document.getElementById('mprev-margen').textContent = margenReal.toFixed(1) + '%';
-  document.getElementById('mprev-bar').style.width    = Math.min(Math.max(margenReal,0),100) + '%';
-  document.getElementById('mprev-bar').style.background = margenReal >= margenObj ? '#2D6A4F' : margenReal >= margenObj*0.8 ? '#C9882A' : '#DC2626';
-  document.getElementById('mprev-sugerido').textContent = costo > 0 ? 'Precio sugerido para ' + margenObj + '% de margen: $' + precioSug : '';
-  document.getElementById('menu-preview').classList.remove('hidden');
+  document.getElementById('m-costo').textContent   = '$'+costo.toFixed(2);
+  document.getElementById('m-utilidad').textContent= '$'+utilidad.toFixed(2);
+  document.getElementById('m-margen').textContent  = margen.toFixed(1)+'%';
+  document.getElementById('m-margen').style.color  = margen>=obj?'#2D6A4F':margen>=obj*0.8?'#C9882A':'#DC2626';
+  document.getElementById('m-bar').style.width     = Math.min(Math.max(margen,0),100)+'%';
+  document.getElementById('m-bar').style.background= margen>=obj?'#2D6A4F':margen>=obj*0.8?'#C9882A':'#DC2626';
+  document.getElementById('m-sug').textContent     = costo>0 ? 'Para '+obj+'% de margen → precio sugerido: $'+precioSug.toFixed(2):'' ;
+  document.getElementById('m-preview').classList.remove('hidden');
 }
 
 async function guardarMenu() {
-  const btn = document.getElementById('menu-save-txt');
-  const recetaId = document.getElementById('menu-receta-sel').value;
-  const precio   = parseFloat(document.getElementById('menu-precio').value);
-  if (!recetaId) { toast('Selecciona una receta', 'error'); return; }
-  if (!precio || precio <= 0) { toast('Ingresa el precio de venta', 'error'); return; }
-  btn.textContent = 'Guardando…';
+  const recId = document.getElementById('m-receta').value;
+  const precio= parseFloat(document.getElementById('m-precio').value);
+  if (!recId)  { toast('Selecciona una receta','error'); return; }
+  if (!precio||precio<=0){ toast('Ingresa el precio de venta','error'); return; }
+  document.getElementById('m-save-txt').textContent='Guardando…';
   try {
-    await apiPost('crearMenu', {
-      recetaId, precioVenta: precio,
-      margenDeseado: parseInt(document.getElementById('menu-margen-obj').value) || 65,
-      temporada:     document.getElementById('menu-temporada').value.trim(),
+    await api('crearMenu',{
+      recetaId: recId, precioVenta: precio,
+      margenDeseado: parseFloat(document.getElementById('m-obj').value)||65,
+      temporada:     document.getElementById('m-temporada').value.trim(),
     });
-    toast('✅ Platillo agregado al menú', 'success');
-    closeWizardMenu();
-    _menus = [];
-    cargarMenus();
-  } catch (err) {
-    toast('Error: ' + err.message, 'error');
-  } finally {
-    btn.textContent = 'Guardar en menú';
-  }
+    toast('✅ Platillo agregado al menú','success');
+    closeWizardMenu(); _men=[]; cargarMenus();
+  } catch(e){ toast('Error: '+e.message,'error'); }
+  finally{ document.getElementById('m-save-txt').textContent='Guardar en menú'; }
 }
 
-// ─── MODAL PROVEEDOR ─────────────────────────────────────
-function openModalProveedor() { document.getElementById('modal-proveedor').classList.remove('hidden'); }
-function closeModalProveedor() { document.getElementById('modal-proveedor').classList.add('hidden'); }
-
+// ══ MODAL PROVEEDOR ════════════════════════════════════════
+function openModalProveedor(){ document.getElementById('modal-prov').classList.remove('hidden'); }
+function closeModalProveedor(){ document.getElementById('modal-prov').classList.add('hidden'); }
 async function guardarProveedor() {
-  const nombre = document.getElementById('prov-nombre').value.trim();
-  if (!nombre) { toast('El nombre es requerido', 'error'); return; }
-  try {
-    await apiPost('crearProveedor', {
-      nombre,
-      contacto:    document.getElementById('prov-contacto').value.trim(),
-      telefono:    document.getElementById('prov-tel').value.trim(),
-      diasEntrega: document.getElementById('prov-dias').value.trim(),
-    });
-    toast('✅ Proveedor guardado', 'success');
-    closeModalProveedor();
-    _proveedores = [];
-    cargarProveedoresEnSelector('wi-proveedor');
-  } catch (err) {
-    toast('Error: ' + err.message, 'error');
-  }
+  const nombre=document.getElementById('pv-nombre').value.trim();
+  if(!nombre){toast('Nombre requerido','error');return;}
+  try{
+    await api('crearProveedor',{nombre,contacto:document.getElementById('pv-contacto').value.trim(),telefono:document.getElementById('pv-tel').value.trim(),diasEntrega:document.getElementById('pv-dias').value.trim()});
+    toast('✅ Proveedor guardado','success');
+    closeModalProveedor(); _prov=[]; cargarProvSelector('wi-proveedor');
+  }catch(e){toast('Error: '+e.message,'error');}
 }
 
-// ─── CARGAR DATOS ─────────────────────────────────────────
+// ══ CONFIG ════════════════════════════════════════════════
+function openTokenModal(){
+  document.getElementById('cfg-url').value   = API_URL;
+  document.getElementById('cfg-token').value = API_TOKEN;
+  document.getElementById('cfg-nombre').value= localStorage.getItem('fas_nombre')||'';
+  document.getElementById('modal-cfg').classList.remove('hidden');
+}
+function closeTokenModal(){ document.getElementById('modal-cfg').classList.add('hidden'); }
+function guardarConfig(){
+  API_URL  =document.getElementById('cfg-url').value.trim();
+  API_TOKEN=document.getElementById('cfg-token').value.trim();
+  const n  =document.getElementById('cfg-nombre').value.trim()||'Mi Negocio';
+  localStorage.setItem('fas_url',  API_URL);
+  localStorage.setItem('fas_token',API_TOKEN);
+  localStorage.setItem('fas_nombre',n);
+  aplicarNombre(n);
+  document.getElementById('api-status').textContent = API_URL ? '🟢 API conectada' : 'Sin URL de API';
+  toast('✅ Configuración guardada','success');
+  closeTokenModal();
+}
+async function testApi(){
+  const url=document.getElementById('cfg-url').value.trim();
+  if(!url){toast('Ingresa la URL','error');return;}
+  try{
+    const r=await fetch(url+'?action=ping');
+    const d=await r.json();
+    if(d.ok)toast('✅ Conexión exitosa','success');
+    else toast('⚠️ Servidor respondió con error','error');
+  }catch(_){toast('❌ No se pudo conectar','error');}
+}
+
+// ══ CARGAR DATOS ══════════════════════════════════════════
 async function cargarInsumos() {
-  const tbody = document.getElementById('tabla-insumos');
-  try {
-    if (!_insumos.length) _insumos = await apiPost('listarInsumos') || [];
-    const grupos = [...new Set(_insumos.map(i => i['Grupo'] || i['grupo'] || '').filter(Boolean))];
-    renderGruposFiltro(grupos);
-    if (!_insumos.length) { tbody.innerHTML = '<tr><td colspan="8" class="text-center py-10 text-sm" style="color:#9A9288">Sin insumos. Crea el primero con "+ Nuevo insumo"</td></tr>'; return; }
-    tbody.innerHTML = _insumos.map(ins => `
-      <tr>
-        <td><div class="font-medium">${ins['Nombre']||'—'}</div><div class="text-xs font-mono" style="color:#9A9288">${ins['Codigo']||''}</div></td>
-        <td><span class="tag tag-gray">${ins['Grupo']||ins['grupo']||'—'}</span></td>
-        <td><span class="tag tag-blue">${ins['UnidadComercial']||'—'}</span></td>
-        <td class="font-mono text-sm">$${parseFloat(ins['PrecioCompra']||0).toFixed(2)}</td>
-        <td class="font-mono text-xs" style="color:#716A60">$${parseFloat(ins['CostoBaseUnitario']||0).toFixed(4)}</td>
-        <td class="text-sm" style="color:#9A9288">${ins['ProveedorID']||'—'}</td>
-        <td><span class="tag ${_esActivo(ins['Activo'])?'tag-green':'tag-gray'}">${_esActivo(ins['Activo'])?'Activo':'Inactivo'}</span></td>
-        <td><button class="text-xs hover:underline" style="color:#9A9288" onclick="editarInsumo('${ins['InsumoID']}')">Editar</button></td>
-      </tr>`).join('');
-    document.getElementById('kpi-insumos').textContent = _insumos.length;
-  } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-sm" style="color:#C9882A">⚠️ ${err.message}</td></tr>`;
-  }
+  const tb=document.getElementById('tabla-insumos');
+  try{
+    if(!_ins.length) _ins = await api('listarInsumos')||[];
+    const grupos=[...new Set(_ins.map(i=>i['Grupo']||'').filter(Boolean))];
+    renderFiltroGrupos(grupos);
+    renderTablaInsumos(_ins);
+    document.getElementById('kpi-ins').textContent=_ins.length;
+  }catch(e){ tb.innerHTML=`<tr><td colspan="6" class="text-center py-8 text-sm" style="color:#C9882A">⚠️ ${e.message}</td></tr>`; }
 }
 
-function renderGruposFiltro(grupos) {
-  const cont = document.getElementById('grupos-filter');
-  if (!grupos.length) { cont.innerHTML = ''; return; }
-  cont.innerHTML = `<button class="grupo-chip active" onclick="filtrarPorGrupo(this,'')">Todos</button>` +
-    grupos.map(g => `<button class="grupo-chip" onclick="filtrarPorGrupo(this,'${g}')">${g}</button>`).join('');
+function renderFiltroGrupos(grupos){
+  const c=document.getElementById('filtro-grupos');
+  if(!grupos.length){c.innerHTML='';return;}
+  c.innerHTML=`<button class="grupo-chip active" onclick="filtroGrupo(this,'')">Todos</button>`+
+    grupos.map(g=>`<button class="grupo-chip" onclick="filtroGrupo(this,'${g}')">${g}</button>`).join('');
 }
-
-function filtrarPorGrupo(btn, g) {
-  document.querySelectorAll('#grupos-filter .grupo-chip').forEach(c => c.classList.remove('active'));
+function filtroGrupo(btn,g){
+  document.querySelectorAll('#filtro-grupos .grupo-chip').forEach(c=>c.classList.remove('active'));
   btn.classList.add('active');
-  const tbody = document.getElementById('tabla-insumos');
-  const filtrados = g ? _insumos.filter(i => (i['Grupo']||i['grupo']||'') === g) : _insumos;
-  // re-render con filtro
-  tbody.innerHTML = filtrados.map(ins => `
-    <tr>
-      <td><div class="font-medium">${ins['Nombre']||'—'}</div><div class="text-xs font-mono" style="color:#9A9288">${ins['Codigo']||''}</div></td>
-      <td><span class="tag tag-gray">${ins['Grupo']||ins['grupo']||'—'}</span></td>
-      <td><span class="tag tag-blue">${ins['UnidadComercial']||'—'}</span></td>
-      <td class="font-mono text-sm">$${parseFloat(ins['PrecioCompra']||0).toFixed(2)}</td>
-      <td class="font-mono text-xs" style="color:#716A60">$${parseFloat(ins['CostoBaseUnitario']||0).toFixed(4)}</td>
-      <td class="text-sm" style="color:#9A9288">${ins['ProveedorID']||'—'}</td>
-      <td><span class="tag ${_esActivo(ins['Activo'])?'tag-green':'tag-gray'}">${_esActivo(ins['Activo'])?'Activo':'Inactivo'}</span></td>
-      <td><button class="text-xs hover:underline" style="color:#9A9288">Editar</button></td>
+  renderTablaInsumos(g?_ins.filter(i=>(i['Grupo']||'')===g):_ins);
+}
+function renderTablaInsumos(lista){
+  const tb=document.getElementById('tabla-insumos');
+  if(!lista.length){tb.innerHTML='<tr><td colspan="6" class="text-center py-10 text-sm" style="color:#9A9288">Sin insumos en este grupo</td></tr>';return;}
+  tb.innerHTML=lista.map(i=>`<tr>
+    <td><div class="font-medium">${i['Nombre']||'—'}</div><div class="text-xs font-mono" style="color:#9A9288">${i['Codigo']||''}</div></td>
+    <td><span class="tag tag-gray">${i['Grupo']||'—'}</span></td>
+    <td class="font-mono text-sm">$${parseFloat(i['PrecioCompra']||0).toFixed(2)} / ${i['UnidadComercial']||'?'}</td>
+    <td class="font-mono text-sm" style="color:#2D6A4F">$${parseFloat(i['CostoBaseUnitario']||0).toFixed(4)}</td>
+    <td><span class="tag ${esActivo(i['Activo'])?'tag-green':'tag-gray'}">${esActivo(i['Activo'])?'Activo':'Inactivo'}</span></td>
+    <td><button class="text-xs hover:underline" style="color:#9A9288">Editar</button></td>
+  </tr>`).join('');
+}
+
+async function cargarProveedores(){
+  const tb=document.getElementById('tabla-proveedores');
+  try{
+    _prov=await api('listarProveedores')||[];
+    if(!_prov.length){tb.innerHTML='<tr><td colspan="4" class="text-center py-8 text-sm" style="color:#9A9288">Sin proveedores</td></tr>';return;}
+    tb.innerHTML=_prov.map(p=>`<tr>
+      <td class="font-medium">${p['Nombre']||'—'}</td>
+      <td style="color:#9A9288">${p['Contacto']||'—'}</td>
+      <td class="font-mono">${p['Telefono']||'—'}</td>
+      <td><span class="tag tag-gray">${p['DiasEntrega']||'Sin especificar'}</span></td>
     </tr>`).join('');
+    document.getElementById('kpi-prov').textContent=_prov.length;
+  }catch(e){tb.innerHTML=`<tr><td colspan="4" class="text-center py-8 text-sm" style="color:#C9882A">⚠️ ${e.message}</td></tr>`;}
 }
 
-async function cargarProveedores() {
-  const tbody = document.getElementById('tabla-proveedores');
-  try {
-    _proveedores = await apiPost('listarProveedores') || [];
-    if (!_proveedores.length) { tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-sm" style="color:#9A9288">Sin proveedores. Agrega el primero con el botón de arriba.</td></tr>'; return; }
-    tbody.innerHTML = _proveedores.map(p => `
-      <tr>
-        <td class="font-medium">${p['Nombre']||'—'}</td>
-        <td class="text-sm" style="color:#9A9288">${p['Contacto']||'—'}</td>
-        <td class="font-mono text-sm">${p['Telefono']||'—'}</td>
-        <td><span class="tag tag-gray text-xs">${p['DiasEntrega']||'Sin especificar'}</span></td>
-      </tr>`).join('');
-    document.getElementById('kpi-proveedores').textContent = _proveedores.length;
-  } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-sm" style="color:#C9882A">⚠️ ${err.message}</td></tr>`;
-  }
-}
-
-async function cargarRecetas() {
-  const tbody = document.getElementById('tabla-recetas');
-  try {
-    _recetas = await apiPost('listarRecetas') || [];
-    if (!_recetas.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center py-12 text-sm" style="color:#9A9288"><div class="flex flex-col items-center gap-3"><div class="text-4xl opacity-30">📋</div><div>Crea tu primera receta con el botón de arriba</div></div></td></tr>'; return; }
-    tbody.innerHTML = _recetas.map(r => `
-      <tr>
+async function cargarRecetas(){
+  const tb=document.getElementById('tabla-recetas');
+  try{
+    _rec=await api('listarRecetas')||[];
+    if(!_rec.length){tb.innerHTML='<tr><td colspan="6" class="text-center py-12 text-sm" style="color:#9A9288"><div class="flex flex-col items-center gap-3"><div class="text-4xl opacity-20">📋</div><div>Sin recetas</div></div></td></tr>';return;}
+    tb.innerHTML=_rec.map(r=>{
+      const cT=parseFloat(r['CostoTotal']||r.costoTotal||0);
+      const rinde=parseFloat(r['Rendimiento']||1);
+      const cP=cT/rinde;
+      return `<tr>
         <td class="font-medium">${r.nombre||r['Nombre']||'—'}</td>
         <td><span class="tag tag-green">${r.tipoServicio||r['TipoServicio']||'—'}</span></td>
-        <td class="text-sm">${r['Rendimiento']||'—'} porciones</td>
-        <td class="text-xs" style="color:#9A9288">—</td>
-        <td class="font-mono text-sm">${r['CostoTotal']?'$'+parseFloat(r['CostoTotal']).toFixed(2):'—'}</td>
-        <td><button class="text-xs hover:underline" style="color:#9A9288">Ver</button></td>
-      </tr>`).join('');
-    document.getElementById('kpi-recetas').textContent = _recetas.length;
-  } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-sm" style="color:#C9882A">⚠️ ${err.message}</td></tr>`;
-  }
-}
-
-async function cargarMenus() {
-  const tbody = document.getElementById('tabla-menus');
-  try {
-    _menus = await apiPost('listarMenus') || [];
-    if (!_menus.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center py-12 text-sm" style="color:#9A9288"><div class="flex flex-col items-center gap-3"><div class="text-4xl opacity-30">💰</div><div>Agrega platillos al menú con "+ Nuevo platillo"</div></div></td></tr>'; return; }
-    let totalM = 0;
-    tbody.innerHTML = _menus.map(m => {
-      const margen = parseFloat(m['MargenReal']||0);
-      const obj    = parseFloat(m['MargenDeseado']||65);
-      const costo  = parseFloat(m['CostoTotal']||0);
-      totalM += margen;
-      const col = margen >= obj ? '#2D6A4F' : margen >= obj*0.8 ? '#C9882A' : '#DC2626';
-      return `<tr>
-        <td class="font-medium">${m['Nombre']||'—'}</td>
-        <td class="font-mono text-sm">$${costo.toFixed(2)}</td>
-        <td class="font-mono text-sm">$${parseFloat(m['PrecioVenta']||0).toFixed(2)}</td>
-        <td>
-          <div class="flex items-center gap-2">
-            <div class="margin-bar w-20"><div class="margin-fill" style="width:${Math.min(margen,100)}%;background:${col}"></div></div>
-            <span class="font-mono text-sm font-semibold" style="color:${col}">${margen.toFixed(1)}%</span>
-          </div>
-        </td>
-        <td><span class="tag ${margen>=obj?'tag-green':'tag-amber'}">${margen>=obj?'✓ Objetivo':'Por debajo'}</span></td>
+        <td>${rinde} porción(es)</td>
+        <td class="font-mono" style="color:#2D6A4F">${cT>0?'$'+cT.toFixed(2):'—'}</td>
+        <td class="font-mono font-semibold" style="color:#2D6A4F">${cP>0?'$'+cP.toFixed(2):'—'}</td>
         <td><button class="text-xs hover:underline" style="color:#9A9288">Ver</button></td>
       </tr>`;
     }).join('');
-    if (_menus.length > 0)
-      document.getElementById('kpi-margen').textContent = (totalM / _menus.length).toFixed(1) + '%';
-  } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-sm" style="color:#C9882A">⚠️ ${err.message}</td></tr>`;
-  }
+    document.getElementById('kpi-rec').textContent=_rec.length;
+  }catch(e){tb.innerHTML=`<tr><td colspan="6" class="text-center py-8 text-sm" style="color:#C9882A">⚠️ ${e.message}</td></tr>`;}
 }
 
-async function cargarDashboard() {
-  try {
-    if (!_insumos.length)    _insumos     = await apiPost('listarInsumos')     || [];
-    if (!_proveedores.length)_proveedores  = await apiPost('listarProveedores')  || [];
-    if (!_recetas.length)    _recetas      = await apiPost('listarRecetas')     || [];
-    document.getElementById('kpi-insumos').textContent     = _insumos.length;
-    document.getElementById('kpi-proveedores').textContent  = _proveedores.length;
-    document.getElementById('kpi-recetas').textContent      = _recetas.length;
-  } catch (_) {}
+async function cargarMenus(){
+  const tb=document.getElementById('tabla-menus');
+  try{
+    _men=await api('listarMenus')||[];
+    if(!_men.length){tb.innerHTML='<tr><td colspan="5" class="text-center py-12 text-sm" style="color:#9A9288"><div class="flex flex-col items-center gap-3"><div class="text-4xl opacity-20">💰</div><div>Sin platillos en menú</div></div></td></tr>';return;}
+    let sumM=0;
+    tb.innerHTML=_men.map(m=>{
+      const margen=parseFloat(m['MargenReal']||0);
+      const obj=parseFloat(m['MargenDeseado']||65);
+      sumM+=margen;
+      const col=margen>=obj?'#2D6A4F':margen>=obj*0.8?'#C9882A':'#DC2626';
+      return `<tr>
+        <td class="font-medium">${m['Nombre']||'—'}</td>
+        <td class="font-mono">$${parseFloat(m['CostoTotal']||0).toFixed(2)}</td>
+        <td class="font-mono">$${parseFloat(m['PrecioVenta']||0).toFixed(2)}</td>
+        <td><div class="flex items-center gap-2"><div class="margin-bar w-20"><div class="margin-fill" style="width:${Math.min(margen,100)}%;background:${col}"></div></div><span class="font-mono font-semibold" style="color:${col}">${margen.toFixed(1)}%</span></div></td>
+        <td><span class="tag ${margen>=obj?'tag-green':'tag-amber'}">${margen>=obj?'✓ OK':'↓ '+((margen-obj).toFixed(1))+'%'}</span></td>
+      </tr>`;
+    }).join('');
+    if(_men.length) document.getElementById('kpi-margen').textContent=(sumM/_men.length).toFixed(1)+'%';
+  }catch(e){tb.innerHTML=`<tr><td colspan="5" class="text-center py-8 text-sm" style="color:#C9882A">⚠️ ${e.message}</td></tr>`;}
 }
 
-// ─── SELECTORES ──────────────────────────────────────────
-async function cargarProveedoresEnSelector(selId) {
-  const sel = document.getElementById(selId);
-  if (!sel) return;
-  try {
-    if (!_proveedores.length) _proveedores = await apiPost('listarProveedores') || [];
-    sel.innerHTML = '<option value="">— Sin proveedor —</option>';
-    _proveedores.forEach(p => {
-      const opt = document.createElement('option');
-      opt.value = p['ProveedorID']; opt.textContent = p['Nombre'];
-      sel.appendChild(opt);
-    });
-  } catch (_) {}
+async function cargarDashboard(){
+  try{
+    if(!_ins.length)  _ins  = await api('listarInsumos') ||[];
+    if(!_prov.length) _prov = await api('listarProveedores')||[];
+    if(!_rec.length)  _rec  = await api('listarRecetas') ||[];
+    document.getElementById('kpi-ins').textContent  = _ins.length;
+    document.getElementById('kpi-prov').textContent = _prov.length;
+    document.getElementById('kpi-rec').textContent  = _rec.length;
+  }catch(_){}
 }
 
-async function cargarInsumosEnSelector() {
-  const sel = document.getElementById('comp-insumo-sel');
-  if (!sel) return;
-  try {
-    if (!_insumos.length) _insumos = await apiPost('listarInsumos') || [];
-    sel.innerHTML = '<option value="">— Seleccionar insumo —</option>';
-    // Agrupar por grupo
-    const grupos = [...new Set(_insumos.map(i => i['Grupo']||i['grupo']||'Sin grupo'))];
-    grupos.forEach(g => {
-      const og = document.createElement('optgroup');
-      og.label = g;
-      _insumos.filter(i => (i['Grupo']||i['grupo']||'Sin grupo') === g).forEach(i => {
-        const opt = document.createElement('option');
-        opt.value = i['InsumoID'];
-        opt.textContent = i['Nombre'] + ' (' + i['UnidadComercial'] + ')';
-        og.appendChild(opt);
+// ══ SELECTORES ════════════════════════════════════════════
+async function cargarProvSelector(selId){
+  const sel=document.getElementById(selId); if(!sel)return;
+  try{
+    if(!_prov.length) _prov=await api('listarProveedores')||[];
+    sel.innerHTML='<option value="">— Sin proveedor —</option>';
+    _prov.forEach(p=>{const o=new Option(p['Nombre'],p['ProveedorID']);sel.appendChild(o);});
+  }catch(_){}
+}
+
+async function cargarInsEnSelector(){
+  const sel=document.getElementById('c-ins-sel'); if(!sel)return;
+  try{
+    if(!_ins.length)  _ins  = await api('listarInsumos')||[];
+    if(!_rec.length)  _rec  = await api('listarRecetas')||[];
+    sel.innerHTML='<option value="">— Seleccionar —</option>';
+
+    // Insumos agrupados por grupo
+    const grupos=[...new Set(_ins.map(i=>i['Grupo']||'Sin grupo'))];
+    grupos.forEach(g=>{
+      const og=document.createElement('optgroup');
+      og.label='📦 '+g;
+      _ins.filter(i=>(i['Grupo']||'Sin grupo')===g).forEach(i=>{
+        const cbu=parseFloat(i['CostoBaseUnitario']||0);
+        const o=new Option(`${i['Nombre']} · $${cbu.toFixed(3)}/${getUnidadBase(i['UnidadComercial']||'g')}`,i['InsumoID']);
+        og.appendChild(o);
       });
       sel.appendChild(og);
     });
-  } catch (_) {}
+
+    // Subrecetas (recetas tipo Base)
+    const bases=_rec.filter(r=>(r.tipoServicio||r['TipoServicio'])==='Base');
+    if(bases.length){
+      const og=document.createElement('optgroup');
+      og.label='🔗 Subrecetas / Bases';
+      bases.forEach(r=>{
+        const cP=parseFloat(r['CostoPorPorcion']||r.costoPorPorcion||0);
+        const id=r.recetaId||r['RecetaID'];
+        const nombre=r.nombre||r['Nombre'];
+        const o=new Option(`${nombre} · $${cP.toFixed(3)}/porción`,id);
+        og.appendChild(o);
+      });
+      sel.appendChild(og);
+    }
+  }catch(_){}
 }
 
-async function cargarProcesosEnSelector() {
-  const sel = document.getElementById('comp-proceso-sel');
-  if (!sel) return;
-  try {
-    const procs = await apiPost('listarProcesos') || [];
-    sel.innerHTML = '<option value="">— Seleccionar proceso —</option>';
-    procs.forEach(p => {
-      const opt = document.createElement('option');
-      opt.value = p['ProcesoID'];
-      opt.textContent = p['Nombre'] + ' ($' + parseFloat(p['CostoPorMinuto']||0).toFixed(3) + '/min)';
-      sel.appendChild(opt);
+async function cargarProcEnSelector(){
+  const sel=document.getElementById('c-pro-sel'); if(!sel)return;
+  try{
+    if(!_proc.length) _proc=await api('listarProcesos')||[];
+    sel.innerHTML='<option value="">— Seleccionar proceso —</option>';
+    _proc.forEach(p=>{
+      const cpm=parseFloat(p['CostoPorMinuto']||0);
+      const o=new Option(`${p['Nombre']} ($${cpm.toFixed(3)}/min)`,p['ProcesoID']);
+      sel.appendChild(o);
     });
-    sel.innerHTML += '<option value="_nuevo">+ Crear proceso nuevo…</option>';
-  } catch (_) {}
+    sel.innerHTML+='<option value="_nuevo">➕ Crear nuevo proceso…</option>';
+  }catch(_){}
 }
 
-async function cargarRecetasEnSelector(selId) {
-  const sel = document.getElementById(selId);
-  if (!sel) return;
-  try {
-    if (!_recetas.length) _recetas = await apiPost('listarRecetas') || [];
-    sel.innerHTML = '<option value="">— Seleccionar receta —</option>';
-    _recetas.forEach(r => {
-      const opt = document.createElement('option');
-      opt.value = r.recetaId || r['RecetaID'];
-      opt.textContent = r.nombre || r['Nombre'];
-      sel.appendChild(opt);
+async function cargarRecEnSelector(selId){
+  const sel=document.getElementById(selId); if(!sel)return;
+  try{
+    if(!_rec.length) _rec=await api('listarRecetas')||[];
+    sel.innerHTML='<option value="">— Seleccionar receta —</option>';
+    _rec.forEach(r=>{
+      const id=r.recetaId||r['RecetaID'];
+      const nombre=r.nombre||r['Nombre'];
+      const o=new Option(nombre,id);
+      sel.appendChild(o);
     });
-  } catch (_) {}
+  }catch(_){}
 }
 
-function editarInsumo(id) { toast('Edición próximamente · ID: ' + id, 'success'); }
-
-// ─── CONFIG ──────────────────────────────────────────────
-function openTokenModal() {
-  document.getElementById('conf-url').value    = API_URL;
-  document.getElementById('conf-token').value  = API_TOKEN;
-  document.getElementById('conf-nombre').value = localStorage.getItem('fas_nombre') || '';
-  document.getElementById('modal-token').classList.remove('hidden');
-}
-function closeTokenModal() { document.getElementById('modal-token').classList.add('hidden'); }
-
-function guardarConfig() {
-  API_URL   = document.getElementById('conf-url').value.trim();
-  API_TOKEN = document.getElementById('conf-token').value.trim();
-  const nombre = document.getElementById('conf-nombre').value.trim() || 'Mi Negocio';
-  localStorage.setItem('fas_api_url',   API_URL);
-  localStorage.setItem('fas_api_token', API_TOKEN);
-  localStorage.setItem('fas_nombre',    nombre);
-  _aplicarNombre(nombre);
-  document.getElementById('api-url-preview').textContent = API_URL ? '🟢 API conectada' : 'Sin URL de API';
-  toast('✅ Configuración guardada', 'success');
-  closeTokenModal();
-}
-
-async function testConexion() {
-  const url = document.getElementById('conf-url').value.trim();
-  if (!url) { toast('Ingresa una URL primero', 'error'); return; }
-  try {
-    const resp = await fetch(url + '?action=ping');
-    const data = await resp.json();
-    if (data.ok) toast('✅ Conexión exitosa', 'success');
-    else toast('⚠️ El servidor respondió con error', 'error');
-  } catch (_) { toast('❌ No se pudo conectar', 'error'); }
-}
-
-// ─── UTILS ───────────────────────────────────────────────
-function _esActivo(v) {
-  if (typeof v === 'boolean') return v;
-  if (typeof v === 'string')  return v.toUpperCase() === 'TRUE';
+// ══ UTILS ════════════════════════════════════════════════
+function esActivo(v){
+  if(typeof v==='boolean')return v;
+  if(typeof v==='string')return v.toUpperCase()==='TRUE';
   return Boolean(v);
 }
-
-function _aplicarNombre(n) {
-  const el1 = document.getElementById('sidebar-nombre');
-  const el2 = document.getElementById('dashboard-nombre');
-  if (el1) el1.textContent = n;
-  if (el2) el2.textContent = n;
-  document.title = n + ' · Panel Admin';
+function aplicarNombre(n){
+  ['sidebar-nombre','dashboard-nombre'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=n;});
+  document.title=n+' · Panel Admin';
+}
+let _toastTm;
+function toast(msg,type){
+  const e=document.getElementById('toast');
+  e.textContent=msg; e.className='toast show '+(type||'success');
+  clearTimeout(_toastTm);
+  _toastTm=setTimeout(()=>e.classList.remove('show'),3200);
 }
 
-let toastTimer;
-function toast(msg, type) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast show ' + (type || 'success');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
-}
-
-// ─── INIT ─────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  const nombre = localStorage.getItem('fas_nombre') || 'Mi Negocio';
-  _aplicarNombre(nombre);
-  if (API_URL) document.getElementById('api-url-preview').textContent = '🟢 API conectada';
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      closeWizardInsumo(); closeWizardReceta(); closeWizardMenu();
-      closeModalProveedor(); closeTokenModal();
+// ══ INIT ═════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  const n=localStorage.getItem('fas_nombre')||'Mi Negocio';
+  aplicarNombre(n);
+  if(API_URL) document.getElementById('api-status').textContent='🟢 API conectada';
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){
+      closeWizardInsumo();closeWizardReceta();closeWizardMenu();
+      closeModalProveedor();closeTokenModal();
     }
   });
 });
