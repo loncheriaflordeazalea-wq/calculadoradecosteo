@@ -58,6 +58,8 @@ textarea.field-input{resize:vertical;line-height:1.7}
 .btn-sm{padding:7px 16px;font-size:13px;border-radius:8px}
 .btn-icon-sm{background:none;border:1.5px solid var(--borde);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--texto2);transition:all .15s;font-family:'DM Sans',sans-serif}
 .btn-icon-sm:hover{border-color:var(--texto3);color:var(--texto)}
+.btn-danger{background:#DC2626;color:white;border:none;border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;font-weight:500}
+.btn-danger:hover{background:#B91C1C}
 .data-table{width:100%;border-collapse:separate;border-spacing:0}
 .data-table th{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--texto2);padding:10px 16px;border-bottom:1.5px solid var(--borde);text-align:left}
 .data-table td{padding:12px 16px;border-bottom:1px solid #F4F1EB;font-size:14px;vertical-align:middle}
@@ -235,12 +237,15 @@ details .details-body{padding:16px}
 
 <!-- INSUMOS -->
 <section id="section-insumos" class="p-8 hidden anim-in">
-  <div class="flex items-center justify-between mb-6">
+  <div class="flex items-center justify-between mb-4">
     <div><h1 class="font-display text-3xl">Insumos</h1><p class="text-sm mt-1" style="color:var(--texto2)">Materias primas y costo base por unidad</p></div>
     <div class="flex items-center gap-3">
       <div id="filtro-grupos" class="flex gap-2 flex-wrap"></div>
       <button onclick="openWizardInsumo()" class="btn-primary btn-sm">+ Nuevo insumo</button>
     </div>
+  </div>
+  <div class="mb-3">
+    <input id="ins-txt-search" class="field-input" type="text" placeholder="🔍 Buscar por nombre o código…" oninput="filtrarInsTexto(this.value)" style="max-width:340px">
   </div>
   <div class="card overflow-hidden">
     <div class="tbl-wrap">
@@ -259,8 +264,8 @@ details .details-body{padding:16px}
   </div>
   <div class="card overflow-hidden">
     <div class="tbl-wrap">
-    <table class="data-table"><thead><tr><th>Nombre</th><th class="mob-hide">Contacto</th><th>Teléfono</th><th class="mob-hide">Días entrega</th></tr></thead>
-    <tbody id="tabla-proveedores"><tr><td colspan="4" class="text-center p-8 text-sm" style="color:var(--texto2)">Sin proveedores</td></tr></tbody>
+    <table class="data-table"><thead><tr><th>Nombre</th><th class="mob-hide">Contacto</th><th>Teléfono</th><th class="mob-hide">Días entrega</th><th></th></tr></thead>
+    <tbody id="tabla-proveedores"><tr><td colspan="5" class="text-center p-8 text-sm" style="color:var(--texto2)">Sin proveedores</td></tr></tbody>
     </table>
     </div>
   </div>
@@ -449,20 +454,22 @@ details .details-body{padding:16px}
 <div id="modal-prov" class="modal-overlay hidden">
 <div class="card w-full anim-in" style="max-width:420px">
   <div class="p-6 pb-4 flex items-center justify-between" style="border-bottom:1px solid var(--borde)">
-    <h2 class="font-display text-xl">Nuevo proveedor</h2>
+    <h2 class="font-display text-xl" id="pv-modal-title">Nuevo proveedor</h2>
     <button onclick="closeModalProveedor()" style="background:#F2F0EB;border:none;cursor:pointer;border-radius:50%;width:32px;height:32px;font-size:16px">×</button>
   </div>
   <div class="p-6 space-y-3">
+    <input type="hidden" id="pv-edit-id">
     <div class="field-group"><label class="field-label">Nombre *</label><input id="pv-nombre" class="field-input" type="text" placeholder="Nombre del proveedor"></div>
     <div class="grid grid-cols-2 gap-3">
       <div class="field-group"><label class="field-label">Contacto</label><input id="pv-contacto" class="field-input" type="text" placeholder="Nombre del vendedor"></div>
       <div class="field-group"><label class="field-label">Teléfono</label><input id="pv-tel" class="field-input" type="tel" placeholder="951 000 0000"></div>
     </div>
     <div class="field-group"><label class="field-label">Días de entrega</label><input id="pv-dias" class="field-input" type="text" placeholder="Lunes, Miércoles…"></div>
+    <div class="field-group"><label class="field-label">Nota</label><textarea id="pv-nota" class="field-input" rows="2" placeholder="Productos, modalidad, dirección…"></textarea></div>
   </div>
   <div class="px-6 pb-6 flex justify-end gap-3">
     <button onclick="closeModalProveedor()" class="btn-secondary btn-sm">Cancelar</button>
-    <button onclick="guardarProveedor()" class="btn-primary btn-sm">Guardar proveedor</button>
+    <button onclick="guardarProveedor()" class="btn-primary btn-sm" id="pv-save-btn">Guardar proveedor</button>
   </div>
 </div>
 </div>
@@ -988,17 +995,67 @@ async function guardarInsumo(){
 }
 
 // ══ MODAL PROVEEDOR ═══════════════════════════════════════
-function openModalProveedor(){document.getElementById('modal-prov').classList.remove('hidden');}
+function openModalProveedor(editData){
+  const isEdit=!!editData;
+  document.getElementById('pv-modal-title').textContent=isEdit?'Editar proveedor':'Nuevo proveedor';
+  document.getElementById('pv-save-btn').textContent=isEdit?'Actualizar proveedor':'Guardar proveedor';
+  document.getElementById('pv-edit-id').value=isEdit?(editData.proveedorId||''):'';
+  document.getElementById('pv-nombre').value=isEdit?(editData.nombre||''):'';
+  document.getElementById('pv-contacto').value=isEdit?(editData.contacto||''):'';
+  document.getElementById('pv-tel').value=isEdit?(editData.telefono||''):'';
+  document.getElementById('pv-dias').value=isEdit?(editData.diasEntrega||''):'';
+  document.getElementById('pv-nota').value=isEdit?(editData.nota||''):'';
+  document.getElementById('modal-prov').classList.remove('hidden');
+}
+function editarProveedor(p){openModalProveedor(p);}
 function closeModalProveedor(){document.getElementById('modal-prov').classList.add('hidden');}
 async function guardarProveedor(){
   const nombre=document.getElementById('pv-nombre').value.trim();
   if(!nombre){toast('Nombre requerido','error');return;}
+  const editId=document.getElementById('pv-edit-id').value;
+  const payload={nombre,contacto:document.getElementById('pv-contacto').value.trim(),telefono:document.getElementById('pv-tel').value.trim(),diasEntrega:document.getElementById('pv-dias').value.trim(),nota:document.getElementById('pv-nota').value.trim()};
   try{
-    await api('crearProveedor',{nombre,contacto:document.getElementById('pv-contacto').value.trim(),telefono:document.getElementById('pv-tel').value.trim(),diasEntrega:document.getElementById('pv-dias').value.trim()});
-    toast('✅ Proveedor guardado','success');
+    if(editId){
+      await api('actualizarProveedor',{...payload,proveedorId:editId});
+      toast('✅ Proveedor actualizado','success');
+    } else {
+      await api('crearProveedor',payload);
+      toast('✅ Proveedor guardado','success');
+    }
     closeModalProveedor();
-    ['pv-nombre','pv-contacto','pv-tel','pv-dias'].forEach(id=>document.getElementById(id).value='');
     _prov=[];cargarProveedores();cargarProvSelector('wi-proveedor');
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+async function confirmarEliminarInsumo(id,nombre){
+  if(!confirm(`¿Eliminar insumo "${nombre}"?\n\nSe marcará como inactivo. Las recetas que lo usan mostrarán costo $0 al recalcular.`))return;
+  try{
+    await api('eliminarInsumo',{insumoId:id});
+    toast('Insumo eliminado','success');
+    _ins=[];cargarInsumos();
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+async function confirmarEliminarProveedor(id,nombre){
+  if(!confirm(`¿Eliminar proveedor "${nombre}"?`))return;
+  try{
+    await api('eliminarProveedor',{proveedorId:id});
+    toast('Proveedor eliminado','success');
+    _prov=[];cargarProveedores();
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+async function confirmarEliminarProceso(id,nombre){
+  if(!confirm(`¿Eliminar proceso "${nombre}"?`))return;
+  try{
+    await api('eliminarProceso',{procesoId:id});
+    toast('Proceso eliminado','success');
+    _proc=[];cargarProcesos();
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+async function confirmarEliminarReceta(id,nombre){
+  if(!confirm(`¿Eliminar receta "${nombre}" y todos sus ingredientes?\n\nEsta acción no se puede deshacer.`))return;
+  try{
+    await api('eliminarReceta',{recetaId:id});
+    toast('Receta eliminada','success');
+    _rec=[];cargarRecetas();
   }catch(e){toast('Error: '+e.message,'error');}
 }
 
@@ -1522,10 +1579,22 @@ function renderFiltroGrupos(grupos){
   c.innerHTML=`<button class="grupo-chip active" onclick="filtroGrupo(this,'')">Todos</button>`+
     grupos.map(g=>`<button class="grupo-chip" onclick="filtroGrupo(this,'${g.replace(/'/g,'')}')">${g}</button>`).join('');
 }
+let _insGrupoFiltro='', _insTextoFiltro='';
+function filtrarInsTexto(v){
+  _insTextoFiltro=v.toLowerCase().trim();
+  _aplicarFiltrosIns();
+}
 function filtroGrupo(btn,g){
   document.querySelectorAll('#filtro-grupos .grupo-chip').forEach(c=>c.classList.remove('active'));
   btn.classList.add('active');
-  renderTablaInsumos(g?_ins.filter(i=>i.grupo===g):_ins);
+  _insGrupoFiltro=g;
+  _aplicarFiltrosIns();
+}
+function _aplicarFiltrosIns(){
+  let lista=_ins;
+  if(_insGrupoFiltro) lista=lista.filter(i=>i.grupo===_insGrupoFiltro);
+  if(_insTextoFiltro) lista=lista.filter(i=>(i.nombre||'').toLowerCase().includes(_insTextoFiltro)||(i.codigo||'').toLowerCase().includes(_insTextoFiltro));
+  renderTablaInsumos(lista);
 }
 function renderTablaInsumos(lista){
   const tb=document.getElementById('tabla-insumos');
@@ -1536,7 +1605,7 @@ function renderTablaInsumos(lista){
     <td class="font-mono text-sm">$${(i.precioCompra||0).toFixed(2)} / ${i.unidadComercial||'?'}</td>
     <td class="font-mono text-sm" style="color:var(--verde)">$${(i.costoBaseUnitario||0).toFixed(4)}</td>
     <td class="mob-hide"><span class="tag ${i.activo?'tag-green':'tag-gray'}">${i.activo?'Activo':'Inactivo'}</span></td>
-    <td><button class="btn-icon-sm" onclick="editarInsumo('${i.insumoId}')">Editar</button></td>
+    <td class="flex gap-1" style="flex-wrap:nowrap"><button class="btn-icon-sm" onclick="editarInsumo('${i.insumoId}')">Editar</button><button class="btn-danger" onclick="confirmarEliminarInsumo('${i.insumoId}','${(i.nombre||'').replace(/'/g,'&apos;')}')">Eliminar</button></td>
   </tr>`).join('');
 }
 
@@ -1544,15 +1613,16 @@ async function cargarProveedores(){
   const tb=document.getElementById('tabla-proveedores');
   try{
     _prov=await api('listarProveedores')||[];
-    if(!_prov.length){tb.innerHTML='<tr><td colspan="4" class="text-center p-8 text-sm" style="color:var(--texto2)">Sin proveedores</td></tr>';return;}
+    if(!_prov.length){tb.innerHTML='<tr><td colspan="5" class="text-center p-8 text-sm" style="color:var(--texto2)">Sin proveedores</td></tr>';return;}
     tb.innerHTML=_prov.map(p=>`<tr>
       <td class="font-medium">${p.nombre||'—'}</td>
       <td class="mob-hide" style="color:var(--texto2)">${p.contacto||'—'}</td>
       <td class="font-mono">${p.telefono||'—'}</td>
       <td class="mob-hide"><span class="tag tag-gray">${p.diasEntrega||'Sin especificar'}</span></td>
+      <td class="flex gap-1" style="flex-wrap:nowrap"><button class="btn-icon-sm" onclick='editarProveedor(${JSON.stringify(p)})'>Editar</button><button class="btn-danger" onclick="confirmarEliminarProveedor('${p.proveedorId}','${(p.nombre||'').replace(/'/g,'&apos;')}')">Eliminar</button></td>
     </tr>`).join('');
     document.getElementById('kpi-prov').textContent=_prov.length;
-  }catch(e){tb.innerHTML=`<tr><td colspan="4" class="text-center p-6 text-sm" style="color:var(--amber)">⚠️ ${e.message}</td></tr>`;}
+  }catch(e){tb.innerHTML=`<tr><td colspan="5" class="text-center p-6 text-sm" style="color:var(--amber)">⚠️ ${e.message}</td></tr>`;}
 }
 
 async function cargarProcesos(){
@@ -1564,7 +1634,7 @@ async function cargarProcesos(){
       <td class="font-medium">${p.nombre||'—'}</td>
       <td class="font-mono" style="color:var(--amber)">$${(p.costoPorMinuto||0).toFixed(4)}/min</td>
       <td class="mob-hide" style="color:var(--texto2)">${p.descripcion||'—'}</td>
-      <td><button class="btn-icon-sm" onclick='openModalProceso(${JSON.stringify(p)})'>Editar</button></td>
+      <td class="flex gap-1" style="flex-wrap:nowrap"><button class="btn-icon-sm" onclick='openModalProceso(${JSON.stringify(p)})'>Editar</button><button class="btn-danger" onclick="confirmarEliminarProceso('${p.procesoId}','${(p.nombre||'').replace(/'/g,'&apos;')}')">Eliminar</button></td>
     </tr>`).join('');
   }catch(e){tb.innerHTML=`<tr><td colspan="4" class="text-center p-6 text-sm" style="color:var(--amber)">⚠️ ${e.message}</td></tr>`;}
 }
@@ -1580,7 +1650,7 @@ async function cargarRecetas(){
       <td class="mob-hide">${r.rendimiento||1} porción(es)</td>
       <td class="font-mono mob-hide" style="color:var(--verde)">${r.costoTotal>0?'$'+r.costoTotal.toFixed(2):'—'}</td>
       <td class="font-mono font-semibold" style="color:var(--verde)">${r.costoPorPorcion>0?'$'+r.costoPorPorcion.toFixed(2):'—'}</td>
-      <td><button class="btn-icon-sm" onclick="verReceta('${r.recetaId}')">Ver</button></td>
+      <td class="flex gap-1" style="flex-wrap:nowrap"><button class="btn-icon-sm" onclick="verReceta('${r.recetaId}')">Ver</button><button class="btn-danger" onclick="confirmarEliminarReceta('${r.recetaId}','${(r.nombre||'').replace(/'/g,'&apos;')}')">Eliminar</button></td>
     </tr>`).join('');
     document.getElementById('kpi-rec').textContent=_rec.length;
   }catch(e){tb.innerHTML=`<tr><td colspan="6" class="text-center p-6 text-sm" style="color:var(--amber)">⚠️ ${e.message}</td></tr>`;}
