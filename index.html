@@ -160,6 +160,10 @@ details .details-body{padding:16px}
   .grid-cols-4{grid-template-columns:1fr 1fr}
   #section-dashboard .grid-cols-3{grid-template-columns:1fr}
   section.p-8{padding:12px!important}
+  /* Ver-receta modal footer: stack buttons vertically on very small screens */
+  #modal-ver-receta .flex.gap-2.flex-wrap>button{min-width:100%!important}
+  /* Section header buttons: full width below title */
+  [id^="section-"]>.flex.items-center.justify-between>button{width:100%;margin-top:4px}
 }
 </style>
 </head>
@@ -762,7 +766,11 @@ details .details-body{padding:16px}
   </div>
   <div id="vr-contenido" style="overflow-y:auto;flex:1;padding:20px 24px" class="space-y-4"></div>
   <div class="px-6 pb-6 pt-4 flex-shrink-0" style="border-top:1px solid #F2F0EB">
-    <button onclick="closeModalVerReceta()" class="btn-secondary btn-sm w-full">Cerrar</button>
+    <div class="flex gap-2 flex-wrap">
+      <button onclick="closeModalVerReceta()" class="btn-secondary btn-sm" style="flex:1;min-width:72px">Cerrar</button>
+      <button onclick="descargarPDFReceta()" class="btn-secondary btn-sm" style="flex:1;min-width:72px">↓ PDF</button>
+      <button onclick="editarRecetaDesdeVer()" class="btn-amber btn-sm" style="flex:1;min-width:72px">Editar</button>
+    </div>
   </div>
 </div>
 </div>
@@ -776,6 +784,7 @@ let API_TOKEN = localStorage.getItem('fas_token') || '';
 let _ins=[], _prov=[], _proc=[], _rec=[], _men=[];
 let wiStep=1, wiGrupo='Carnes', wiEditMode=false, wiEditId=null;
 let wrStep=1, wrComps=[], wrTabComp='insumo', wrPasos=[];
+let wrEditMode=false, wrEditId=null, _vrCurrentData=null;
 let _cpmGlobal=0;
 
 // ══ CONVERSIONES ══════════════════════════════════════════
@@ -1055,7 +1064,13 @@ function renderPasos(){
       <button onclick="quitarPaso(${i})" title="Eliminar paso" style="background:none;border:none;cursor:pointer;color:var(--texto3);font-size:20px;line-height:1;padding:4px;margin-top:4px">×</button>
     </div>`).join('');
 }
-function closeWizardReceta(){document.getElementById('wiz-receta').classList.add('hidden');}
+function closeWizardReceta(){
+  document.getElementById('wiz-receta').classList.add('hidden');
+  wrEditMode=false; wrEditId=null;
+  const titleEl=document.querySelector('#wiz-receta h2');
+  if(titleEl) titleEl.textContent='Nueva receta';
+  document.getElementById('wr-save-txt').textContent='Guardar receta';
+}
 
 function renderWrStep(){
   [1,2,3].forEach(i=>{
@@ -1311,7 +1326,6 @@ async function guardarProcesoInline(){
   }catch(e){toast('Error: '+e.message,'error');}
 }
 
-// [BUG FIX #3] RecetaID: usar res.recetaId (camelCase normalizado)
 async function guardarReceta(){
   const nombre=document.getElementById('wr-nombre').value.trim();
   if(!nombre){toast('El nombre es requerido','error');return;}
@@ -1321,15 +1335,19 @@ async function guardarReceta(){
     const pasos=wrPasos.map(p=>p.texto.trim()).filter(Boolean);
     const rinde=parseFloat(document.getElementById('wr-rinde').value)||1;
     const total=wrComps.reduce((a,c)=>a+(c.costoLinea||0),0);
-    const res=await api('crearReceta',{
+    const basePayload={
       nombre,tipoServicio:document.getElementById('wr-tipo').value||'Plato',
       rendimiento:rinde,unidadRendimiento:document.getElementById('wr-unidad-rinde').value||'porciones',
       notasPreparacion:document.getElementById('wr-notas').value.trim(),
       pasoAPaso:pasos,costoTotal:total,costoPorPorcion:total/rinde,
-    });
-    // [BUG FIX #3] backend v2 retorna res.recetaId
-    const recId=res.recetaId||res.RecetaID||null;
-    if(recId&&wrComps.length){
+    };
+    let recId;
+    if(wrEditMode&&wrEditId){
+      // Update recipe header
+      await api('actualizarReceta',{...basePayload,id:wrEditId});
+      recId=wrEditId;
+      // Replace all components: delete existing then add new
+      await api('eliminarDetallesReceta',{recetaId:recId});
       for(const c of wrComps){
         await api('agregarComponenteReceta',{
           recetaId:recId,tipoComponente:c.tipo,componenteId:c.componenteId,
@@ -1337,11 +1355,24 @@ async function guardarReceta(){
           porcentajeMerma:c.porcentajeMerma,tiempoMinutos:c.tiempoMinutos,orden:c.orden,
         });
       }
+      toast('✅ Receta actualizada','success');
+    } else {
+      const res=await api('crearReceta',basePayload);
+      recId=res.recetaId||res.RecetaID||null;
+      if(recId&&wrComps.length){
+        for(const c of wrComps){
+          await api('agregarComponenteReceta',{
+            recetaId:recId,tipoComponente:c.tipo,componenteId:c.componenteId,
+            cantidadUsada:c.cantidadUsada,unidadMedida:c.unidadMedida,
+            porcentajeMerma:c.porcentajeMerma,tiempoMinutos:c.tiempoMinutos,orden:c.orden,
+          });
+        }
+      }
+      toast('✅ Receta guardada','success');
     }
-    toast('✅ Receta guardada','success');
     closeWizardReceta();_rec=[];cargarRecetas();
   }catch(e){toast('Error: '+e.message,'error');}
-  finally{btn.disabled=false;document.getElementById('wr-save-txt').textContent='Guardar receta';}
+  finally{btn.disabled=false;document.getElementById('wr-save-txt').textContent=wrEditMode?'Guardar cambios':'Guardar receta';}
 }
 
 // ══ WIZARD MENÚ ═══════════════════════════════════════════
@@ -1690,6 +1721,114 @@ function closeModalVerReceta(){
   document.getElementById('modal-ver-receta').classList.add('hidden');
 }
 
+function editarRecetaDesdeVer(){
+  if(!_vrCurrentData){toast('No hay receta cargada','error');return;}
+  closeModalVerReceta();
+  openWizardRecetaEdit(_vrCurrentData);
+}
+
+function openWizardRecetaEdit(data){
+  wrEditMode=true; wrEditId=data.recetaId||data.RecetaID||null;
+  wrStep=1; wrComps=[]; wrTabComp='insumo'; wrPasos=[];
+  ['wr-nombre','wr-notas'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('wr-nombre').value = data.nombre||'';
+  document.getElementById('wr-notas').value  = data.notasPreparacion||'';
+  document.getElementById('wr-rinde').value  = data.rendimiento||1;
+  document.getElementById('wr-tipo').value   = data.tipoServicio||'Plato';
+  const urEl=document.getElementById('wr-unidad-rinde');
+  if(urEl) urEl.value=data.unidadRendimiento||'porciones';
+  // Pre-load components
+  if(Array.isArray(data.componentes)){
+    data.componentes.forEach(c=>{
+      let costoLinea=c.costoCalculado!=null?Number(c.costoCalculado):0;
+      if(!costoLinea&&c.tipoComponente==='insumo'){
+        const ins=_ins.find(i=>i.insumoId===c.componenteId);
+        if(ins) costoLinea=calcCostoLinea(ins.costoBaseUnitario,c.cantidadUsada,c.unidadMedida,c.porcentajeMerma);
+      }
+      wrComps.push({
+        tipo:c.tipoComponente||'insumo',componenteId:c.componenteId,
+        nombre:c.nombre||c.componenteId,cantidadUsada:c.cantidadUsada||0,
+        unidadMedida:c.unidadMedida||'g',porcentajeMerma:c.porcentajeMerma||0,
+        tiempoMinutos:c.tiempoMinutos||0,orden:c.orden||wrComps.length+1,costoLinea,
+      });
+    });
+  }
+  // Pre-load pasos
+  if(data.pasoAPaso){
+    const pasos=String(data.pasoAPaso).split('||').map(p=>p.trim()).filter(Boolean);
+    wrPasos=pasos.map(t=>({texto:t,tiempo:0}));
+  }
+  const titleEl=document.querySelector('#wiz-receta h2');
+  if(titleEl) titleEl.textContent='Editar receta';
+  document.getElementById('wr-resumen').classList.add('hidden');
+  setTabComp('insumo');renderWrStep();renderCompLista();
+  if(wrPasos.length===0) agregarPaso(); else renderPasos();
+  if(!_ins.length||!_rec.length) Promise.all([cargarInsEnSelector(),cargarProcEnSelector()]);
+  document.getElementById('wiz-receta').classList.remove('hidden');
+}
+
+function descargarPDFReceta(){
+  const data=_vrCurrentData;
+  if(!data){toast('No hay receta cargada','error');return;}
+  const comps=Array.isArray(data.componentes)?data.componentes:[];
+  const pasos=data.pasoAPaso?String(data.pasoAPaso).split('||').map(p=>p.trim()).filter(Boolean):[];
+  const costoTotal=Number(data.costoTotal||0);
+  const porciones=Number(data.rendimiento||1);
+  const compRows=comps.map(c=>{
+    const ins=_ins.find(i=>i.insumoId===c.componenteId);
+    let cVal=c.costoCalculado!=null?Number(c.costoCalculado):null;
+    if(cVal==null&&ins) cVal=calcCostoLinea(ins.costoBaseUnitario,c.cantidadUsada,c.unidadMedida,c.porcentajeMerma);
+    const icon=c.tipoComponente==='subreceta'?'🔗':c.tipoComponente==='proceso'?'⏱':'📦';
+    return `<tr><td>${icon} ${c.nombre||c.componenteId||'—'}</td>
+      <td>${c.cantidadUsada||0} ${c.unidadMedida||''}</td>
+      <td style="text-align:center">${c.porcentajeMerma>0?c.porcentajeMerma+'%':'—'}</td>
+      <td style="text-align:right;font-family:monospace">${cVal!=null?'$'+cVal.toFixed(2):'—'}</td></tr>`;
+  }).join('');
+  const pasosHTML=pasos.map((p,i)=>`<div class="paso"><span class="num">${i+1}</span><p>${p}</p></div>`).join('');
+  const win=window.open('','_blank');
+  if(!win){toast('Activa las ventanas emergentes para descargar el PDF','error');return;}
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+<title>Receta — ${data.nombre||'Receta'}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#0F0E0C;max-width:760px;margin:40px auto;padding:0 32px;font-size:14px}
+  h1{font-size:24px;font-weight:700;margin-bottom:6px}
+  .badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+  .badge{background:#EDF7F2;color:#183B2B;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:600}
+  .badge.amber{background:#FEF6E9;color:#4A310A}
+  .section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#9A9288;margin-top:28px;margin-bottom:10px;border-bottom:1.5px solid #E0DDD5;padding-bottom:4px}
+  table{width:100%;border-collapse:collapse}
+  th{font-size:10px;text-transform:uppercase;color:#9A9288;padding:7px 8px;border-bottom:2px solid #E0DDD5;text-align:left;letter-spacing:.04em}
+  td{padding:9px 8px;border-bottom:1px solid #F4F1EB;font-size:13px;vertical-align:middle}
+  .total td{font-weight:700;border-top:2px solid #2D6A4F;font-size:14px;color:#2D6A4F}
+  .nota{background:#FEF6E9;border:1px solid #FDEAC8;border-radius:8px;padding:14px;font-size:13px;line-height:1.6}
+  .paso{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start}
+  .num{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#2D6A4F;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .paso p{font-size:13px;line-height:1.6}
+  footer{margin-top:48px;font-size:10px;color:#C4BFB4;border-top:1px solid #E0DDD5;padding-top:12px}
+  @media print{body{margin:20px;padding:0}}
+</style></head><body>
+<h1>${data.nombre||'Receta'}</h1>
+<div class="badges">
+  ${data.tipoServicio?`<span class="badge">${data.tipoServicio}</span>`:''}
+  <span class="badge">Rinde: ${porciones} ${data.unidadRendimiento||'porción(es)'}</span>
+  <span class="badge">Costo total: $${costoTotal.toFixed(2)} MXN</span>
+  <span class="badge amber">Por porción: $${(costoTotal/porciones).toFixed(2)} MXN</span>
+</div>
+${comps.length?`<div class="section">Ingredientes y Procesos</div>
+<table><thead><tr><th>Ingrediente</th><th>Cantidad</th><th style="text-align:center">Merma</th><th style="text-align:right">Costo</th></tr></thead>
+<tbody>${compRows}</tbody>
+<tfoot><tr class="total"><td colspan="3">Costo total receta</td><td style="text-align:right;font-family:monospace">$${costoTotal.toFixed(2)}</td></tr>
+<tr class="total"><td colspan="3">Costo por porción</td><td style="text-align:right;font-family:monospace">$${(costoTotal/porciones).toFixed(2)}</td></tr></tfoot>
+</table>`:''}
+${data.notasPreparacion?`<div class="section">Notas de Preparación</div><div class="nota">${data.notasPreparacion}</div>`:''}
+${pasos.length?`<div class="section">Paso a Paso</div>${pasosHTML}`:''}
+<footer>Sistema de Costeo Gastronómico · Generado el ${new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</footer>
+<script>window.onload=function(){window.print()}<\/script>
+</body></html>`);
+  win.document.close();
+}
+
 async function verReceta(id){
   const modal=document.getElementById('modal-ver-receta');
   const cont=document.getElementById('vr-contenido');
@@ -1701,13 +1840,14 @@ async function verReceta(id){
   titulo.textContent='Receta';
   try{
     const r=await api('obtenerRecetaAdmin',{recetaId:id});
+    _vrCurrentData=r;
     titulo.textContent=r.nombre||'Receta';
     // badges
     const badgeItems=[];
     if(r.tipoServicio) badgeItems.push(`<span class="tag tag-purple">${r.tipoServicio}</span>`);
     if(r.rendimiento)  badgeItems.push(`<span class="tag tag-blue">Rinde: ${r.rendimiento} ${r.unidadRendimiento||''}</span>`);
-    if(r.costoTotal)   badgeItems.push(`<span class="tag tag-green">Costo total: $${Number(r.costoTotal).toFixed(2)}</span>`);
-    if(r.costoPorPorcion) badgeItems.push(`<span class="tag tag-amber">Por porción: $${Number(r.costoPorPorcion).toFixed(2)}</span>`);
+    if(r.costoTotal)   badgeItems.push(`<span class="tag tag-green">$${Number(r.costoTotal).toFixed(2)} total</span>`);
+    if(r.costoPorPorcion) badgeItems.push(`<span class="tag tag-amber">$${Number(r.costoPorPorcion).toFixed(2)}/porción</span>`);
     badges.innerHTML=badgeItems.join('');
 
     const secciones=[];
@@ -1718,13 +1858,31 @@ async function verReceta(id){
       const filas=comps.map(c=>{
         const nombre=c.nombre||c.componenteId||'—';
         const cant=`${c.cantidadUsada||0} ${c.unidadMedida||''}`;
-        const merma=c.porcentajeMerma>0?` <span style="color:var(--texto3);font-size:11px">(merma ${c.porcentajeMerma}%)</span>`:'';
-        const costo=c.costoCalculado!=null?`<span class="font-mono font-semibold" style="color:var(--verde)">$${Number(c.costoCalculado).toFixed(3)}</span>`:'';
-        const tipo=c.tipoComponente==='subreceta'?'🔗 ':c.tipoComponente==='proceso'?'⏱ ':'📦 ';
-        return `<div class="comp-row flex items-center gap-2" style="padding:6px 0;border-bottom:1px solid #F5F4F1">
-          <span style="flex:1;font-size:13px">${tipo}<strong>${nombre}</strong>${merma}</span>
-          <span style="font-size:12px;color:var(--texto2);white-space:nowrap">${cant}</span>
-          ${costo}
+        const merma=c.porcentajeMerma>0?`<span style="color:var(--texto3);font-size:10px"> −${c.porcentajeMerma}%mrm</span>`:'';
+        // Compute cost: prefer API costoCalculado, fallback to client-side
+        let costoVal=c.costoCalculado!=null?Number(c.costoCalculado):null;
+        if(costoVal==null&&c.tipoComponente==='insumo'){
+          const ins=_ins.find(i=>i.insumoId===c.componenteId);
+          if(ins) costoVal=calcCostoLinea(ins.costoBaseUnitario,c.cantidadUsada,c.unidadMedida,c.porcentajeMerma);
+        }
+        let costoHTML='';
+        if(costoVal!=null){
+          const ins=c.tipoComponente==='insumo'?_ins.find(i=>i.insumoId===c.componenteId):null;
+          const rateStr=ins?`$${(ins.costoBaseUnitario||0).toFixed(4)}/${ins.unidadComercial==='pza'?'pza':'unid'}`:'';
+          costoHTML=`<div style="text-align:right;flex-shrink:0">
+            <div class="font-mono font-semibold" style="color:var(--verde);font-size:13px">$${costoVal.toFixed(2)}</div>
+            ${rateStr?`<div style="font-size:10px;color:var(--texto3)">${rateStr}</div>`:''}
+          </div>`;
+        }
+        const tipoTag=c.tipoComponente==='subreceta'?'tag-purple':c.tipoComponente==='proceso'?'tag-amber':'tag-green';
+        const tipoIcon=c.tipoComponente==='subreceta'?'🔗':c.tipoComponente==='proceso'?'⏱':'📦';
+        return `<div class="comp-row" style="border-radius:8px;margin-bottom:4px">
+          <span class="tag ${tipoTag}" style="flex-shrink:0;font-size:10px;padding:2px 7px">${tipoIcon}</span>
+          <div style="flex:1;min-width:0">
+            <div class="font-medium" style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${nombre}${merma}</div>
+            <div style="font-size:11px;color:var(--texto2);font-family:'DM Mono',monospace">${cant}</div>
+          </div>
+          ${costoHTML}
         </div>`;
       }).join('');
       secciones.push(`<div>
@@ -1740,7 +1898,7 @@ async function verReceta(id){
       if(c.tipoComponente!=='insumo') return;
       const ins=_ins.find(i=>i.insumoId===c.componenteId);
       if(!ins||!ins.calorias) return;
-      const baseG=convertirABase(c.cantidadUsada||0,c.unidadMedida||'g');
+      const {val:baseG}=convertirABase(c.cantidadUsada||0,c.unidadMedida||'g');
       const factor=baseG/100;
       totalKcal+=(ins.calorias||0)*factor;
       totalProt+=(ins.proteinas||0)*factor;
