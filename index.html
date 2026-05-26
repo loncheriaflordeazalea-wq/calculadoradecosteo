@@ -79,6 +79,11 @@ textarea.field-input{resize:vertical;line-height:1.7}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .anim-in{animation:fadeUp .25s ease forwards}
 .modal-overlay{background:rgba(15,14,12,.55);backdrop-filter:blur(4px);position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px}
+/* ── MODAL UNIVERSAL: card como columna con scroll interno ─ */
+.modal-overlay>.card{display:flex;flex-direction:column;max-height:86vh;overflow:hidden}
+.modal-overlay>.card>*:first-child{flex-shrink:0}
+.modal-overlay>.card>*:not(:first-child):not(:last-child){overflow-y:auto;flex:1;min-height:0}
+.modal-overlay>.card>*:last-child{flex-shrink:0;padding-bottom:max(24px,env(safe-area-inset-bottom,24px))!important}
 .input-addon{position:relative}
 .input-addon .addon{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:600;color:var(--texto2);background:#F4F1EB;padding:2px 8px;border-radius:6px;pointer-events:none;white-space:nowrap}
 .grupo-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--borde);color:#504A42;background:white;transition:all .15s;font-family:'DM Sans',sans-serif}
@@ -144,7 +149,7 @@ details .details-body{padding:16px}
   .font-display.text-3xl{font-size:22px}
   /* Modales como bottom-sheets */
   .modal-overlay{padding:8px;align-items:flex-end}
-  .modal-overlay>.card{border-radius:16px 16px 6px 6px;max-height:90vh;overflow-y:auto;width:100%}
+  .modal-overlay>.card{border-radius:16px 16px 6px 6px;max-height:90vh;overflow:hidden;width:100%}
   .wiz-wide{max-width:100%!important}
   .card.p-5{padding:14px}
   /* Botones de modal: más espacio en la parte inferior */
@@ -1721,9 +1726,12 @@ function closeModalVerReceta(){
   document.getElementById('modal-ver-receta').classList.add('hidden');
 }
 
-function editarRecetaDesdeVer(){
+async function editarRecetaDesdeVer(){
   if(!_vrCurrentData){toast('No hay receta cargada','error');return;}
   closeModalVerReceta();
+  if(!_ins.length){
+    try{const r=await api('listarInsumos');if(r.ok&&Array.isArray(r.data))_ins=r.data;}catch(_){}
+  }
   openWizardRecetaEdit(_vrCurrentData);
 }
 
@@ -1740,7 +1748,7 @@ function openWizardRecetaEdit(data){
   // Pre-load components
   if(Array.isArray(data.componentes)){
     data.componentes.forEach(c=>{
-      let costoLinea=c.costoCalculado!=null?Number(c.costoCalculado):0;
+      let costoLinea=(c.costoLinea??c.costoCalculado)!=null?Number(c.costoLinea??c.costoCalculado):0;
       if(!costoLinea&&c.tipoComponente==='insumo'){
         const ins=_ins.find(i=>i.insumoId===c.componenteId);
         if(ins) costoLinea=calcCostoLinea(ins.costoBaseUnitario,c.cantidadUsada,c.unidadMedida,c.porcentajeMerma);
@@ -1776,7 +1784,7 @@ function descargarPDFReceta(){
   const porciones=Number(data.rendimiento||1);
   const compRows=comps.map(c=>{
     const ins=_ins.find(i=>i.insumoId===c.componenteId);
-    let cVal=c.costoCalculado!=null?Number(c.costoCalculado):null;
+    let cVal=(c.costoLinea??c.costoCalculado)!=null?Number(c.costoLinea??c.costoCalculado):null;
     if(cVal==null&&ins) cVal=calcCostoLinea(ins.costoBaseUnitario,c.cantidadUsada,c.unidadMedida,c.porcentajeMerma);
     const icon=c.tipoComponente==='subreceta'?'🔗':c.tipoComponente==='proceso'?'⏱':'📦';
     return `<tr><td>${icon} ${c.nombre||c.componenteId||'—'}</td>
@@ -1859,8 +1867,8 @@ async function verReceta(id){
         const nombre=c.nombre||c.componenteId||'—';
         const cant=`${c.cantidadUsada||0} ${c.unidadMedida||''}`;
         const merma=c.porcentajeMerma>0?`<span style="color:var(--texto3);font-size:10px"> −${c.porcentajeMerma}%mrm</span>`:'';
-        // Compute cost: prefer API costoCalculado, fallback to client-side
-        let costoVal=c.costoCalculado!=null?Number(c.costoCalculado):null;
+        // Compute cost: prefer API costoLinea, fallback to client-side
+        let costoVal=(c.costoLinea??c.costoCalculado)!=null?Number(c.costoLinea??c.costoCalculado):null;
         if(costoVal==null&&c.tipoComponente==='insumo'){
           const ins=_ins.find(i=>i.insumoId===c.componenteId);
           if(ins) costoVal=calcCostoLinea(ins.costoBaseUnitario,c.cantidadUsada,c.unidadMedida,c.porcentajeMerma);
